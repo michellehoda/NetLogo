@@ -11,3 +11,5 @@ We've all got them. NetLogo's are here: https://github.com/NetLogo/NetLogo/issue
 ## Developer documentation
 
 ...is in the [wiki](https://github.com/NetLogo/NetLogo/wiki).
+I am a Git commit!
+Another commit
