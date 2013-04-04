@@ -37,7 +37,7 @@ class Tabs(val workspace: GUIWorkspace,
     //addTab("Record", plotTab)
     // addTab(I18N.gui.get("tabs.info"), infoTab)
     //addTab(I18N.gui.get("tabs.run"), interfaceTab)    // commented out to change name of Interface panel (Aditi, March 5, 2013)
-    addTab("Run your model", interfaceTab)
+    addTab("Run", interfaceTab)
     interfaceTab.setEnabled(false)
     addTab(I18N.gui.get("tabs.code"), proceduresTab)
 

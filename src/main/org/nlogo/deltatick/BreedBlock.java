@@ -260,38 +260,33 @@ public strictfp class BreedBlock
                     //for (Map.Entry<String, Variation> entry : ((TraitBlockNew) block).getVariationHashMap().entrySet()) {
                     Iterator it = block.variationHashMap.entrySet().iterator();
                     while (it.hasNext()) {
-//                        String variationType = entry.getKey();
-//                        Variation variation = entry.getValue();
-                        //String variationType = entry.getKey();
                         Map.Entry entry = (Map.Entry) it.next();
                         Variation variation = (Variation) entry.getValue();
 
-                        // System.out.println("TraitName: " + traitName + " Variation: " + variationType + " Value: " + variation.value);
-                        //int k = variation.percent;
-                        //int k =  (int) Math.round(((double) (variation.percent/100.0)) * Double.parseDouble(number.getText()));
                         int k =  (int) Math.round(((variation.percent/100.0)) * Double.parseDouble(number.getText()));
 
                         if (it.hasNext()) {
-                            endValue = startValue + k - 1;
+                            //endValue = startValue + k - 1;
+                            endValue = startValue + k;
                         }
                         else {
-                            //endValue = (int) (Integer.parseInt(number.getText()) - 1);
-                            endValue = (Integer.parseInt(number.getText()) - 1);
+                            //endValue = (Integer.parseInt(number.getText()) - 1);
+                            endValue = (Integer.parseInt(number.getText()));
                         }
 
-
-                        if (endValue > (Integer.parseInt(number.getText()) - 1)) {
-                            endValue = Integer.parseInt(number.getText()) - 1;
-                        }
+//                        if (endValue > (Integer.parseInt(number.getText()) - 1)) {
+//                            endValue = Integer.parseInt(number.getText()) - 1;
+//                        }
 
                         code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
                                 " " + startValue + " " + endValue + "\n";
-                        //code += "foreach " + traitName + i + " [ ask ? [ set " + plural() + "-" + traitName + " " + variation.value + " \n";
+
                         code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
                         code += " ]] \n";
 
                         i++;
-                        startValue = endValue + 1;
+                        //startValue = endValue + 1;
+                        startValue = endValue;
                     }
 
                 }
@@ -333,7 +328,20 @@ public strictfp class BreedBlock
                     code += "set " + var.name + " " + var.updateReporter + "\n";
                 }
             }
-            code += "]\n";
+            code += "\n";
+            if (traitLabels.size() >= 1) {
+            code += "set label (word ";
+            for (int i = 0; i < traitLabels.size(); i++) {
+                code += traitLabels.get(i);
+                if (traitLabels.size() > 1) {
+//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+                    code += "\"-\"";
+                    i--;
+                }
+            }
+            code += " ) \n";
+        }
+        code += "]\n";
         }
         return code;
     }

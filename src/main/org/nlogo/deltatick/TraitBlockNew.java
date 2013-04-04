@@ -42,7 +42,7 @@ public class TraitBlockNew
     HashMap<String, String> variationNamesValues = new HashMap<String, String>();
 
     public TraitBlockNew (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
-        super (traitState.getNameTrait(), Color.lightGray);
+        super (traitState.getNameTrait(), ColorSchemer.getColor(4));
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,

@@ -92,9 +92,9 @@ public strictfp class BehaviorBlock
                           //passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
                           //passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
                           passBack += "ifelse random 2 = 0 \n";
-                          passBack += "[set " + traitName + " (" + traitName + " - " + this.getMyBreedBlock().plural() + "-" +
+                          passBack += "[set " + traitName + " (" + traitName + " - random-float " + this.getMyBreedBlock().plural() + "-" +
                                                         traitBlock.getTraitName() + "-mutation)]\n";
-                          passBack += "[set " + traitName + " (" + traitName + " + " + this.getMyBreedBlock().plural() + "-" +
+                          passBack += "[set " + traitName + " (" + traitName + " + random-float " + this.getMyBreedBlock().plural() + "-" +
                                                         traitBlock.getTraitName() + "-mutation)]";
                           passBack += "\n]]\n";
                       }

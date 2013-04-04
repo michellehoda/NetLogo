@@ -677,7 +677,7 @@ public class DeltaTickTab
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
             WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
-            String note = "Chance of mutation when a baby is born";
+            String note = "Chance of mutation";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
             noteWidget.validate();
