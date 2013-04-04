@@ -33,8 +33,7 @@ public class TraitPreview extends JPanel {
     private javax.swing.JButton cancel;
     private javax.swing.JButton add;
     private JLabel traitText;
-    private JLabel variationText;
-    private JLabel variationValueText;
+
     JPanel traitDistriPanel;
     TraitDisplay traitDisplay;
     LabelPanel labelPanel;
@@ -46,18 +45,13 @@ public class TraitPreview extends JPanel {
     private String selectedTraitName;
     private Trait selectedTrait;
     private JList myVariationsList;
-    HashMap<String, TraitBlock> breedTraitHashMap = new HashMap<String, TraitBlock>();
     //to store breed and corresponding trait
     ListSelectionModel listSelectionModel;
     JTable traitInfoTable;
     TraitDistribution traitDistribution;
 
-
     ArrayList<Trait> traitsList = new ArrayList<Trait>();
-    ArrayList<String> selectedVariations;
-    //HashMap<Trait, Variation> selectedTraitVariations = new HashMap<Trait, Variation>(); //??
-    HashMap<String, String> selectedTraitVariations = new HashMap<String, String>();
-    HashMap<String, String> selectedTraitValues = new HashMap<String, String>();
+
     public static final int NUMBER_COLUMNS = 3;
 
     // Holds final selected traits (and variations) as selected by the user
@@ -84,7 +78,7 @@ public class TraitPreview extends JPanel {
         String[] traitTypes = new String[traitsList.size()];
         int i = 0;
         for (Trait trait : traitsList) {
-            traitTypes[i] = trait.getNameTrait();
+            traitTypes[i] = new String(trait.getNameTrait());
             i++;
         }
          return traitTypes;
@@ -107,98 +101,19 @@ public class TraitPreview extends JPanel {
             }
         });
         jScrollPane1.setViewportView(myTraitsList);
-        listSelectionModel = myTraitsList.getSelectionModel();
-        //myTraitsList.setSelectedIndex(0);
-        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listSelectionModel.addListSelectionListener(new TraitListSelectionHandler());
+
         this.setVisible(true);
     }
 
+    public void setTraitsListListener(ListSelectionListener listSelectionListener) {
 
-    class TraitListSelectionHandler implements ListSelectionListener {
+        showMe();
 
-        public void valueChanged(ListSelectionEvent e) {
-            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-            myVariationsList = new JList();
-            if (lsm.isSelectionEmpty()) {
-                System.out.println("No trait selected");
-            }
-            else {  // gen data[][] based on selected trait
-                ArrayList<Object[]> tempTableData = new ArrayList<Object[]>();
-                for (Trait trait : traitsList) {
-                    if (trait.getNameTrait().equalsIgnoreCase(getSelectedTraitName())) {
-                        selectedTrait = trait;
-                        for (Map.Entry<String, Variation> entry : trait.getVariationHashMap().entrySet()) {
-                            String key = entry.getKey();
-                            Variation var = entry.getValue();
-                            Object[] row = new Object[NUMBER_COLUMNS];
-
-                            row[0] = new String(key);
-                            row[1] = new String(var.value);
-
-                            boolean varSelected = false;
-                            if (selectedTraitsMap.containsKey(getSelectedTraitName())) {
-                                //check if the variationhashmap in trait state has the variation selected
-                                varSelected = selectedTraitsMap.get(getSelectedTraitName()).getVariationHashMap().containsKey(key);
-                            }
-                            row[2] = new Boolean(varSelected);
-                            tempTableData.add(row);
-                        } // for map
-                    } // trait match
-                } // for trait
-
-                    // make table model & send data to tablemodel
-                TraitTableModel traitTableModel = new TraitTableModel();
-                traitTableModel.setTraitData(tempTableData);
-                traitTableModel.addTableModelListener(new traitTableModelListener());
-                traitInfoTable.setModel(traitTableModel);
-                traitInfoTable.validate();
-
-                // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
-                updateTraitDistriPanel(traitInfoTable.getModel(), true);
-
-                updatePieChart();
-
-
-                final String[] variationStrings = getVariationTypes(getSelectedTraitName()) ;
-                myVariationsList.setModel(new javax.swing.AbstractListModel() {
-                    public int getSize() {
-                        return variationStrings.length;
-                    }
-                    public Object getElementAt(int i) {
-                        return variationStrings[i];
-                    }
-                });
-            } // else
-
-
-        } // valueChanged
-    } // TraitListSelectionHandler
-
-    class traitTableModelListener implements TableModelListener {
-
-        public void tableChanged(TableModelEvent e) {
-
-            TableModel model = (TableModel)e.getSource();
-
-            // A new variation has been added/removed. Previous percentages are invalid
-            // Hence no need to read percentages from selectedTraitsMap. Set 2nd parameter to false
-            updateTraitDistriPanel(model, false);
-
-            // Update chart to reflect percentages
-            updatePieChart();
-
-
-            // Some variation selected/unselected
-            // Update the hash map
-            // In TableModelListener, map can ONLY be updated after updateTraitDistriPanel()
-            updateSelectedTraitsMap(model);
-
-            updateCheckBoxes(selectedTraitsMap);
-
-
-        }
+        listSelectionModel = myTraitsList.getSelectionModel();
+        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listSelectionModel.addListSelectionListener(listSelectionListener);
     }
+
 
     // MOUSE LISTENER TO DETECT CHANGES TO traitDistribution
     class traitDistriMouseMotionListener implements MouseMotionListener {
@@ -234,7 +149,9 @@ public class TraitPreview extends JPanel {
 
             if ((Boolean) model.getValueAt(row, 2) == true) {
                 String variationName = (String) model.getValueAt(row, 0);
-                tmpVarHashMap.put(variationName, selectedTrait.getVariationHashMap().get(variationName));
+                Variation tmpVariation = new Variation(selectedTrait.getVariationHashMap().get(variationName));
+                tmpVariation.value = new String((String) model.getValueAt(row, 1));
+                tmpVarHashMap.put(variationName, tmpVariation);
             }
         } // for
 
@@ -244,6 +161,12 @@ public class TraitPreview extends JPanel {
 
         if (someVariationSelected) {
             TraitState tmpTraitState = new TraitState(selectedTrait, traitDistribution.getSelectedVariationsPercent());
+            // Now set the percentages in tmpVarHashMap from traitDistribution.getSelectedVariationsPercent()
+            for (Map.Entry<String, String> entry: traitDistribution.getSelectedVariationsPercent().entrySet()) {
+                if (tmpVarHashMap.containsKey(entry.getKey())) {
+                    tmpVarHashMap.get(entry.getKey()).percent = (int) Math.round(Double.parseDouble(entry.getValue()));
+                }
+            }
             tmpTraitState.getVariationHashMap().clear();
             tmpTraitState.getVariationHashMap().putAll(tmpVarHashMap);
             selectedTraitsMap.put(selectedTraitName, tmpTraitState);
@@ -259,12 +182,11 @@ public class TraitPreview extends JPanel {
     // trait, then only needs to automatically set percentages, then readpercent = false
 
     private void updateTraitDistriPanel(TableModel model, boolean readPercent) {
-        selectedVariations = new ArrayList<String>();
+
+        ArrayList <String> selectedVariations = new ArrayList<String>();
         for (int row = 0; row < model.getRowCount(); row++) {
             if ((Boolean) model.getValueAt(row, 2) == true) {
                 selectedVariations.add((String) model.getValueAt(row, 0));
-                selectedTraitVariations.put(selectedTraitName, model.getValueAt(row, 0).toString());
-                selectedTraitValues.put(selectedTraitName, model.getValueAt(row, 1).toString());
             }
         }
         traitDistriPanel.remove(traitDistribution);
@@ -272,6 +194,7 @@ public class TraitPreview extends JPanel {
         if (readPercent &&
             selectedTraitsMap.containsKey(selectedTraitName)) {
             //traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations);
+            //TODO: do not use traitState.selectedVariationsHashMap. Instead create a temp map by iterating over traitState.variations (March 31, 2013)
             traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
         }
         else {
@@ -301,9 +224,6 @@ public class TraitPreview extends JPanel {
             //labelPanel.addTraitCheckBox(string);
     }
 
-
-
-
     public String[] getVariationTypes(String traitName) {
         String [] variations = null;
         for (Trait trait : traitsList) {
@@ -325,24 +245,21 @@ public class TraitPreview extends JPanel {
         return selectedTrait;
     }
 
-    public ArrayList<String> getSelectedVariations() {
-        return selectedVariations;
+    public void setSelectedTrait(String traitName) {
+        myTraitsList.setSelectedValue(traitName, true);
     }
 
     public LabelPanel getLabelPanel() {
         return labelPanel;
     }
 
-
     public void initComponents() {
         traitText = new JLabel("Pick a trait");
         traitText.setPreferredSize(new Dimension(20, 100));
-        //add = new JButton("Add");
 
         jScrollPane1 = new JScrollPane();
         jScrollPane1.setPreferredSize(new Dimension(150, 100));
         jScrollPane1.setMaximumSize(new Dimension(150, 100));
-        //cancel = new JButton("Cancel");
 
         traitInfoTable = new JTable(new TraitTableModel());
         traitDistriPanel = new JPanel();
@@ -357,17 +274,7 @@ public class TraitPreview extends JPanel {
         traitDistribution.addMouseMotionListener(new traitDistriMouseMotionListener());
         traitDistriPanel.add(traitDistribution);
 
-        //labelPanel = new LabelPanel();
-        //traitDistriPanel.add(labelPanel);
-
         traitDistriPanel.validate();
-
-
-//        traitDisplayPanel = new JPanel();
-        //traitDisplay.setLayout(new BoxLayout(traitDisplay, BoxLayout.X_AXIS));
-        //traitDisplay.setSize(new Dimension(100, 100));
-        //TitledBorder displayBorder = BorderFactory.createTitledBorder("Display traits ");
-
 
         traitInfoTable.setPreferredScrollableViewportSize(new Dimension(225, 100));
         traitInfoTable.setPreferredSize(new Dimension(225, 100));
@@ -389,13 +296,7 @@ public class TraitPreview extends JPanel {
                                         .add(header)
                                         .add(traitInfoTable)
                                 ))
-                                //.add(traitDistribution)
                         .add(traitDistriPanel)
-                        //.add(labelPanel)
-//                        .add(layout.createSequentialGroup()
-//                                .add(add)
-//                                .add(cancel)
-                        //)
         );
 
         layout.setVerticalGroup(
@@ -408,18 +309,114 @@ public class TraitPreview extends JPanel {
                                 .add(jScrollPane1)
                                 .add(traitInfoTable)
                         )
-                                //.add(traitDistribution)
                         .add(traitDistriPanel)
-                //.add(labelPanel)
-//                        .add(layout.createParallelGroup()
-//                                .add(cancel)
-//                                .add(add)
-//                        )
-
         );
         validate();
     }
 
+    // This function is called by the handler when a trait is clicked on (in the trait selection list)
+    public void updateTraitSelection(ListSelectionEvent e, TableModelListener tableModelListener) {
+
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        myVariationsList = new JList();
+        if (lsm.isSelectionEmpty()) {
+            System.out.println("No trait selected");
+        }
+        else {
+
+            // gen data[][] based on selected trait
+            ArrayList<Object[]> tempTableData = new ArrayList<Object[]>();
+            for (Trait trait : traitsList) {
+                if (trait.getNameTrait().equalsIgnoreCase(getSelectedTraitName())) {
+                    selectedTrait = trait;
+                    for (Map.Entry<String, Variation> entry : trait.getVariationHashMap().entrySet()) {
+                        String key = entry.getKey();
+                        Variation var = entry.getValue();
+                        Object[] row = new Object[NUMBER_COLUMNS];
+
+                        row[0] = new String(key);
+
+                        boolean varSelected = false;
+                        String value = new String (var.value);
+                        if (selectedTraitsMap.containsKey(getSelectedTraitName())) {
+                            //check if the variationhashmap in trait state has the variation selected & update value from traitstate
+                            varSelected = selectedTraitsMap.get(getSelectedTraitName()).getVariationHashMap().containsKey(key);
+                            if (varSelected) {
+                                value = new String(selectedTraitsMap.get(getSelectedTraitName()).getVariationHashMap().get(key).value);
+                            }
+                        }
+
+                        row[1] = new String(value);
+                        row[2] = new Boolean(varSelected);
+                        tempTableData.add(row);
+                    } // for map
+                } // trait match
+            } // for trait
+
+                // make table model & send data to tablemodel
+            TraitTableModel traitTableModel = new TraitTableModel();
+            traitTableModel.setTraitData(tempTableData);
+            traitTableModel.addTableModelListener(tableModelListener);
+            traitInfoTable.setModel(traitTableModel);
+            traitInfoTable.validate();
+
+            // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
+            updateTraitDistriPanel(traitInfoTable.getModel(), true);
+
+            updatePieChart();
+
+
+            final String[] variationStrings = getVariationTypes(getSelectedTraitName()) ;
+            myVariationsList.setModel(new javax.swing.AbstractListModel() {
+                public int getSize() {
+                    return variationStrings.length;
+                }
+                public Object getElementAt(int i) {
+                    return variationStrings[i];
+                }
+            });
+        } // else
+    }
+
+    public void updateVariationSelection(TableModelEvent e) {
+        TableModel model = (TableModel)e.getSource();
+
+        int value = 0;
+        String s = new String("");
+
+        int row = e.getFirstRow();
+        int col = e.getColumn();
+
+        if ((Boolean) model.getValueAt(row, col)) {
+            while (!(s.matches("\\d+"))) {
+                s = (String)JOptionPane.showInputDialog(
+                        myFrame,
+                        selectedTrait.getMessage(),
+                        "Customized Dialog",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        null,
+                        null);
+            }
+            value = Integer.parseInt(s);
+            model.setValueAt(s, row, col - 1);
+        }
+
+        // A new variation has been added/removed. Previous percentages are invalid
+        // Hence no need to read percentages from selectedTraitsMap. Set 2nd parameter to false
+        updateTraitDistriPanel(model, false);
+
+        // Update chart to reflect percentages
+        updatePieChart();
+
+        // Some variation selected/unselected
+        // Update the hash map
+        // In TableModelListener, map can ONLY be updated after updateTraitDistriPanel()
+        updateSelectedTraitsMap(model);
+
+        updateCheckBoxes(selectedTraitsMap);
+
+    }
 
     private void initColumnSizes(JTable table) {
         TraitTableModel model = (TraitTableModel)table.getModel();
@@ -497,40 +494,20 @@ public class TraitPreview extends JPanel {
        public Object getValueAt(int row, int col) {
             return tableData.get(row)[col];
        }
-
-       public void displayColorButton(int row, int col) {
-            if (getValueAt(row, 2).equals(false)) {
-                setValueAt("color", row, 3);
-           }
-       }
     }
 
     public TraitDistribution getTraitDistribution() {
         return traitDistribution;
     }
 
-    public HashMap<String, String> getSelectedTraitValues() {
-        return selectedTraitValues;
-    }
-
-    public HashMap<String, String> getSelectedTraitVariations() {
-        return selectedTraitVariations;
-    }
-
     public HashMap<String, TraitState> getTraitStateMap() {
         return selectedTraitsMap;
     }
 
-//    public void sendTraitBlockData() {
-//        for (Trait trait : traitsList) {
-//            if (trait.equals(selectedTrait)) {
-//                for (String t : trait.getVariationHashMap().keySet()) {
-//
-//
-//                }
-//            }
-//        }
-//    }
+    public void setSelectedTraitsMap(HashMap<String, TraitState> hashMap) {
+        selectedTraitsMap.clear();
+        selectedTraitsMap.putAll(hashMap);
+    }
 }
 
 

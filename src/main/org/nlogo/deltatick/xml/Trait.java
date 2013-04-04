@@ -16,10 +16,12 @@ import java.util.ArrayList;
  */
 
 public class Trait {
-    String traitName;
-    String setupCode;
-    String setupReporter;
+    String traitName = new String();
+    String setupCode = new String();
+    String setupReporter = new String();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
+    String message = new String();
+    String mutateCode = new String();
 
 
     public Trait() {
@@ -32,7 +34,9 @@ public class Trait {
         traitName = new String(trait.traitName);
         setupCode = new String(trait.setupCode);
         setupReporter = new String(trait.setupReporter);
+        message = new String(trait.message);
         variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
+        mutateCode = new String(trait.mutateCode);
     }
 
     public Trait(Node traitNode) {
@@ -51,9 +55,14 @@ public class Trait {
                 Variation variation = new Variation(traitName, name, value, Integer.parseInt(setupNumber));
                 variationHashMap.put(name, variation);
             }
-
             if (traitNodes.item(i).getNodeName() == "setupCode") {
                 setupCode = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName() == "message") {
+                message = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName() == "mutateCode") {
+                mutateCode = traitNodes.item(i).getTextContent();
             }
         }
     }
@@ -103,5 +112,13 @@ public class Trait {
     public ArrayList<String> getVariationsList() {
         ArrayList<String> variationsList = new ArrayList<String>(variationHashMap.keySet());
         return variationsList;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getMutateCode() {
+        return mutateCode;
     }
 }

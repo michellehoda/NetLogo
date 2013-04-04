@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.dnd;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -11,9 +12,11 @@ import java.awt.*;
  */
 // I want this to be added to the label, but it will take data from what students enter, not from an XML file
 
-public class BehaviorInput extends javax.swing.JTextField {
+public class BehaviorInput extends PrettyInput {
+    String toolTipText;
+
     public BehaviorInput(Component parent) {
-        super();
+        super(parent);
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(
                 new javax.swing.border.LineBorder(parent.getBackground().darker()),
@@ -22,11 +25,22 @@ public class BehaviorInput extends javax.swing.JTextField {
         setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-        //this.setToolTipText("Who?");
+        ////this.createToolTip();
+        ////this.setToolTipText("");
+        //this.setToolTipText( " X");
+        //this.createToolTip().setForeground(Color.blue);
+        //this.getToolTip().setToolTipText("X");
 
-        //this.getDocument().addDocumentListener(new myDocumentListener);
+//        JToolTip tTip = this.createToolTip();
+//        tTip.setForeground(Color.blue);
+//        tTip.setToolTipText("X");
+
+
+
 
 
     }
+
+
 
 }

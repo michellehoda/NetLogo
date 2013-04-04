@@ -35,6 +35,7 @@ public class BuildPanel
 
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
     List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
+    List<TraitBlockNew> myTraitsNew = new LinkedList<TraitBlockNew>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
@@ -77,25 +78,17 @@ public class BuildPanel
             // traitBlock declared as breed variable here -A. (Aug 8, 2012)
             HashSet<String> allTraits = new HashSet<String>(); // exclusive list of myTraits & myUsedBehInputs to add in breeds-own
                                                                         //-A. (Aug 10, 2012)
-            if ( myTraits.size() > 0 ) {
-                for ( TraitBlock traitBlock : myTraits ) {
-                    if ( traitBlock.breedName.equals(breedBlock.plural()) ) {
+            if ( myTraitsNew.size() > 0 ) {
+                for ( TraitBlockNew traitBlock : myTraitsNew ) {
+                    if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {      // TODO check if works March 8, 2013
+                        //allTraits.add(breedBlock.plural() + "-" + traitBlock.getName());
                         allTraits.add(traitBlock.getName());
-
                     }
                 }
             }
-            //commented out because I don't want beh inputs to appear as fixed values for variables when there are no traits -Aditi (feb 22, 2013)
-//            if ( breedBlock.myUsedBehaviorInputs.size() > 0) {
-//                for (String behInput : breedBlock.myUsedBehaviorInputs) {
-//                    allTraits.add(behInput);
-//
-//                }
-//            }
             for ( String string : allTraits ) {
                 passBack += string + "\n";
             }
-
             passBack += "]\n";
         }
 
@@ -168,6 +161,69 @@ public class BuildPanel
         return passBack;
     }
 
+public String newSaveAsXML() {
+    String passBack = "";
+    passBack += "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n" +
+            "<!DOCTYPE model SYSTEM \"DeltaTickModelFormat.dtd\">\n";
+
+    passBack += "<model>\n";
+
+    // declare breeds
+    for (BreedBlock breedBlock : myBreeds) {
+        passBack += breedBlock.declareBreedXML();
+
+    }
+
+//        passBack += "\n";
+//        for (BreedBlock breedBlock : myBreeds) {
+//            passBack += breedBlock.breedVars();
+//        }
+//
+//        for (TraitBlock traitBlock : myTraits) {
+//            passBack += traitBlock.getTraitName();
+//        }
+//
+//        passBack += "\n";
+//
+//        passBack += bgInfo.declareGlobals();
+//        passBack += "\n";
+//
+//        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
+//        passBack += "\n";
+//
+//        passBack += "to go\n";
+//        passBack += bgInfo.updateBlock(myBreeds, myEnvts);
+//
+//        for (BreedBlock breedBlock : myBreeds) {
+//            passBack += breedBlock.unPackAsCode();
+//        }
+//        passBack += "tick\n";
+//        if (myPlots.size() > 0) {
+//            passBack += "do-plotting\n";
+//        }
+//        passBack += "end\n";
+//        passBack += "\n";
+//
+//        passBack += "to draw\n";
+//        passBack += bgInfo.drawCode() + "\n";
+//        passBack += "end\n";
+//
+//        passBack += unPackProcedures();
+//        passBack += "\n";
+//
+//        if (myPlots.size() > 0) {
+//            passBack += "\n\n";
+//            passBack += "to do-plotting\n";
+//            for (PlotBlock plot : myPlots) {
+//                passBack += plot.unPackAsCode();
+//            }
+//            passBack += "end\n";
+//        }
+    passBack += "\n</model>";
+    return passBack;
+    }
+
+   //Michelle's code
     public String saveAsXML() {
         String passBack = "<";
 
@@ -275,18 +331,19 @@ public class BuildPanel
 
 
     // do we want variation to show up inside a breed block or to act like a condition block? - (feb 4)
-    public void addTrait(TraitBlock block) {
+    //public void addTrait(TraitBlock block) {
+    public void addTrait(TraitBlockNew block) {
         block.setBounds(0,
                         0,
                         block.getPreferredSize().width,
                         block.getPreferredSize().height);
-        //block.dropdownList.setEnabled(false);
-        block.colorButton.setEnabled(false);
+
+        //block.colorButton.setEnabled(false);
         block.doLayout();
         block.validate();
         block.repaint();
-        // try revalidate
-        myTraits.add(block);
+        //myTraits.add(block);
+        myTraitsNew.add(block);
     }
 
     public void addOperator(OperatorBlock oBlock) {
@@ -383,8 +440,8 @@ public class BuildPanel
         return myHisto;
     }
 
-    public List<TraitBlock> getMyTraits() {
-        return myTraits;
+    public List<TraitBlockNew> getMyTraits() {
+        return myTraitsNew;
     }
 
 
@@ -520,12 +577,10 @@ public class BuildPanel
         remove(envtBlock);
     }
 
-    public void removeTrait(TraitBlock traitBlock) {
-        myTraits.remove(traitBlock);
+    public void removeTrait(TraitBlockNew traitBlock) {
+        myTraitsNew.remove(traitBlock);
         remove(traitBlock);
     }
-
-
 
     public String library() {
         return bgInfo.getLibrary();

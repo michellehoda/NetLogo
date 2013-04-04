@@ -5,9 +5,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,8 +40,11 @@ public class LibraryHolder extends JPanel {
     int newPolicy;
     // should eventually have an array of panels that you can add to and remove from (Feb 21, 2012)
     Tab tab;
-    List<TraitBlock> traits = new LinkedList<TraitBlock>();;
+    List<TraitBlock> traits = new LinkedList<TraitBlock>();
+    List<TraitBlockNew> traitsNew = new LinkedList<TraitBlockNew>();
     List<OperatorBlock> operatorBlocksList = new LinkedList<OperatorBlock>();
+    ArrayList<BehaviorBlock> behaviorBlocksList = new ArrayList<BehaviorBlock>();
+    ArrayList<ConditionBlock> conditionBlocksList = new ArrayList<ConditionBlock>();
     ArrayList<String> variations;
 
 
@@ -57,8 +62,21 @@ public class LibraryHolder extends JPanel {
 
      // This is called only for TraitBlock & operatorBlock
       //TODo This changes the name of the tab to "panel" (March 9)
-    public void addTraittoTab( TraitBlock block, int numberTraits ) {
-        String tabName = new String("Your blocks" + numberTraits);
+    //Commented out to try TraitBlockNew (March 16, 2013)
+//    public void addTraittoTab( TraitBlock block, int numberTraits ) {
+//        String tabName = new String("Your blocks" + numberTraits);
+//
+//        if (numberTraits == 1) {
+//            panel = (JComponent) new JPanel();
+//            panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
+//        }
+//        panel.add(block);
+//        tabbedPane.addTab(tabName , panel);
+//        traits.add(block);
+//    }
+
+    public void addTraittoTab( TraitBlockNew block, int numberTraits ) {
+        String tabName = new String("Your blocks");
 
         if (numberTraits == 1) {
             panel = (JComponent) new JPanel();
@@ -66,10 +84,10 @@ public class LibraryHolder extends JPanel {
         }
         panel.add(block);
         tabbedPane.addTab(tabName , panel);
-        traits.add(block);
+        traitsNew.add(block);
     }
 
-    public void removeTraitBlock ( TraitBlock tBlock ) {
+    public void removeTraitBlock ( TraitBlockNew tBlock ) {
         traits.remove(tBlock);
         panel.remove(tBlock);
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
@@ -94,31 +112,13 @@ public class LibraryHolder extends JPanel {
         sp.setVisible(true);
         tabbedPane.addTab( "name", panel );
         panel.revalidate();
-
-        //sp.setPreferredSize(new Dimension(100, 100));
-        //panel.add(sp);
-
-        //sp.getViewport().add();
-
-        //tabbedPane.add( new JLabel ("name" + countTabs));
-        /*
-        tabbedPane.addTab( "name" + countTabs, panel);
-        tabbedPane.setTabComponentAt( countTabs, new Tab(tabbedPane));
-        */ //Commented out on March 1, 2012 (Aditi)
-
-        //panel.add(sp);
-
         JButton close = new JButton();
-
-        //arrayPanels.add(countTabs, panel);
         countTabs++;
        }
 
 
     public void addBlock ( CodeBlock block ) {
         panel.add ( block );
-        //sp.add (block);
-        //sp.revalidate();
     }
 
     public void setTabName( String name ) {
@@ -140,8 +140,24 @@ public class LibraryHolder extends JPanel {
         //traits.clear();
 
     }
-    public List<TraitBlock> getTraitBlocks() {
-        return traits;
+    public List<TraitBlockNew> getTraitBlocks() {
+        return traitsNew;
+    }
+
+    public void addToBehaviorBlocksList(BehaviorBlock behBlock) {
+        behaviorBlocksList.add(behBlock);
+    }
+
+    public ArrayList<BehaviorBlock> getBehaviorBlocksList() {
+        return behaviorBlocksList;
+    }
+
+    public void addToConditionBlocksList(ConditionBlock conditionBlock) {
+        conditionBlocksList.add(conditionBlock);
+    }
+
+    public ArrayList<ConditionBlock> getConditionBlocksList() {
+        return conditionBlocksList;
     }
 
 }

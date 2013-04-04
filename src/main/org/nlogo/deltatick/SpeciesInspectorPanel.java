@@ -8,10 +8,17 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,13 +56,12 @@ public class SpeciesInspectorPanel extends JPanel {
         lifeSpanBlank.setMaximumSize(new Dimension(20, 30));
         updateText();
         //activateButtons();
-
-
     }
 
     public void updateText() {
         energyBlank.setText(myParent.getMaxEnergy());
         lifeSpanBlank.setText(myParent.getMaxAge());
+        lifeSpanLabel.setText("How old do " + myParent.plural() + " live to be?");
     }
 
     public void addPanels(Container pane) {
@@ -135,14 +141,17 @@ public class SpeciesInspectorPanel extends JPanel {
         TitledBorder titleSidePanel;
         titleSidePanel = BorderFactory.createTitledBorder("Display");
         sidePanel.setBorder(titleSidePanel);
+        //sidePanel.setPreferredSize(new Dimension(600, 200));
         traitDisplay = new TraitDisplay(sidePanel, myFrame);
+
         sidePanel.add(traitDisplay);
+        sidePanel.setVisible(false); // testing jframe size
         sidePanel.validate();
     }
 
     public void setupMidPanel() {
         midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
-        midPanel.setPreferredSize(new Dimension(500, 200));
+        midPanel.setPreferredSize(new Dimension(400, 200));
 
         TitledBorder titleMidPanel;
         titleMidPanel = BorderFactory.createTitledBorder("Preview Traits");
@@ -150,17 +159,17 @@ public class SpeciesInspectorPanel extends JPanel {
         labelPanel = new LabelPanel();
         TitledBorder titleLabelPanel;
         titleLabelPanel = BorderFactory.createTitledBorder("Set Labels");
-
         labelPanel.setBorder(titleLabelPanel);
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
-        //labelPanel.initiComponents();
-
         midPanel.add(traitPreview);
-        midPanel.add(labelPanel);
         traitPreview.setTraits(myParent.getTraits());
+        traitPreview.setTraitsListListener(new TraitListSelectionHandler());
+        traitPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        midPanel.add(traitPreview);
-        traitPreview.showMe();
+        midPanel.add(labelPanel);
+        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+
         midPanel.validate();
     }
 
@@ -216,9 +225,9 @@ public class SpeciesInspectorPanel extends JPanel {
         return myParent;
     }
 
-    public void setSelectedTrait() {
-        speciesInspector.addToSelectedTraitsList(traitPreview.getSelectedTrait());
-    }
+//    public void setSelectedTrait() {
+//        speciesInspector.addToSelectedTraitsList(traitPreview.getSelectedTrait());
+//    }
 
     public void setSelectedVariations(Trait trait, Variation variation) {
         speciesInspector.addtoSelectedVariations(trait, variation);
@@ -231,5 +240,42 @@ public class SpeciesInspectorPanel extends JPanel {
     public TraitPreview getTraitPreview() {
         return traitPreview;
     }
+
+    // Implements listener when a trait is clicked on
+    class TraitListSelectionHandler implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            //sidePanel.setVisible(true);
+            traitPreview.updateTraitSelection(e, new traitTableModelListener());
+            myFrame.pack();
+
+        } // valueChanged
+    } // TraitListSelectionHandler
+
+    // Implements listener when the variation table is modified
+    class traitTableModelListener implements TableModelListener {
+        public void tableChanged(TableModelEvent e) {
+            if (e.getColumn() == 2) {
+                traitPreview.updateVariationSelection(e);
+                updateTraitDisplay();
+            }
+        }
+    }
+
+    public void updateTraitDisplay() {
+        traitDisplay.validate();
+        sidePanel.validate();
+        if (traitPreview.getTraitStateMap().size() == 0) {
+            sidePanel.setVisible(false);
+        }
+        else {
+            sidePanel.setVisible(true);
+        }
+        sidePanel.validate();
+
+        myFrame.pack();
+    }
+
+
+
 
 }

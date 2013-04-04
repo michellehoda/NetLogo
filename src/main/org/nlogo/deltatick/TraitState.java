@@ -19,14 +19,13 @@ public class TraitState extends Trait {
 
     public HashMap<String, String> selectedVariationsPercent;
 
+    public TraitState(TraitState ts) {
+        super(ts);
+        selectedVariationsPercent = new HashMap<String, String>(ts.selectedVariationsPercent);
+    }
+
     public TraitState(Trait t, HashMap<String, String> hm) {
         super(t);
-
-//        Iterator iterator = hm.entrySet().iterator();
-//        while(iterator.hasNext()) {
-//            Map.Entry pairs = (Map.Entry) iterator.next();
-//            System.out.println(pairs.getKey() + " " + pairs.getValue());
-//        }
 
         for (Map.Entry<String, String> entry : hm.entrySet()) {
             int percent = (int) Math.round(Double.parseDouble(entry.getValue()));
@@ -39,6 +38,7 @@ public class TraitState extends Trait {
 
         selectedVariationsPercent = new HashMap<String, String>(hm);
     }
+
 
 //    @Override
 //    public HashMap<String, String> getValuesPercentList() {

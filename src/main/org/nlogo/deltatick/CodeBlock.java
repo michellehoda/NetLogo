@@ -1,17 +1,16 @@
 package org.nlogo.deltatick;
 
 
-import org.nlogo.deltatick.dnd.AgentInput;
-import org.nlogo.deltatick.dnd.BehaviorInput;
-import org.nlogo.deltatick.dnd.EnergyInput;
-import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.dnd.*;
 
 //swing is for GUI components -A. (sept 10)
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -31,36 +30,61 @@ public abstract class CodeBlock
 
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
-    JLabel nameLabel;
+    //JLabel nameLabel;
     String code;
-    private JButton exitButton = new JButton();
+    //private JButton exitButton = new JButton();
     String ifCode;
 
     // the following are linked so that they're always in order
-    Map<String, JTextField> inputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> energyInputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> behaviorInputs = new LinkedHashMap<String, JTextField>();
-    Map<String, JTextField> agentInputs = new LinkedHashMap<String, JTextField>();
+    Map<String, PrettyInput> inputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> energyInputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> behaviorInputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> agentInputs = new LinkedHashMap<String, PrettyInput>();
+    Map<String, PrettyInput> percentInputs = new LinkedHashMap<String, PrettyInput>();
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
     //BoxLayout either stacks components on top of each other, or in a row -A. (sept 9)
-
     BoxLayout myLayout;
 
     //defining an object, myParent of class, CodeBlock -A. (sept 10)
     CodeBlock myParent;
-
     Color color;
-
     JPanel label = new JPanel();
+    JPanel removeButtonPanel = new JPanel();
     RemoveButton removeButton = new RemoveButton(this);
     //constructor of RemoveButton takes a CodeBlock as parameter hence "this" -A. (Sept 10)
 
     public CodeBlock() {
 
     }
+
+//    // Copy constructor
+//    public CodeBlock(CodeBlock block) {
+//        code = new String(block.code);
+//        ifCode = new String(block.ifCode);
+//        inputs = new LinkedHashMap<String, JTextField>(block.inputs);
+//        energyInputs = new LinkedHashMap<String, JTextField>(block.energyInputs);
+//        behaviorInputs = new LinkedHashMap<String, PrettyInput>(block.behaviorInputs);
+//        agentInputs = new LinkedHashMap<String, JTextField>(block.agentInputs);
+//        percentInputs = new LinkedHashMap<String, JTextField>(block.percentInputs);
+//        myBlocks = new LinkedList<CodeBlock>(block.myBlocks);
+//
+//        myLayout = block.myLayout;
+//        myParent = block.myParent;
+//        color = block.color;
+//        label = block.label;
+//        removeButtonPanel = block.removeButtonPanel;
+//        removeButton = block.removeButton;
+//
+//    }
+//
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
     public CodeBlock(String name, Color color) {
+
+        removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        removeButtonPanel.add(removeButton);
+        removeButton.setVisible(false);
+
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(myLayout);
         this.color = color;
@@ -68,9 +92,18 @@ public abstract class CodeBlock
         this.setForeground(color);
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         setName(name);
+        add(removeButtonPanel);
         makeLabel();
         add(label);
+
     }
+
+    //copy constructor for modelReader (April 1, 2013)
+//    public CodeBlock(CodeBlock codeBlock) {
+//        myLayout = codeBlock.myLayout;
+//
+//
+//    }
 
 
     //this method overrides other default definition is out there to getMinimumSize -A. (sept 10)
@@ -101,14 +134,18 @@ public abstract class CodeBlock
         name.setFont(new java.awt.Font("Arial", font.getStyle(), 11));
          // for PC
 
-        label.add(removeButton);
-        removeButton.setVisible(false);
+//        label.add(removeButton);
+//        removeButton.setVisible(false);
+
         label.setBackground(getBackground());
-        if (this instanceof TraitBlock) {
-            JLabel condition = new JLabel();
-            condition.setText("If");
-            label.add(condition);
+        if (this instanceof QuantityBlock) {
+            ((QuantityBlock)this).setLabelImage();
         }
+//        if (this instanceof TraitBlock) {
+//            JLabel condition = new JLabel();
+//            condition.setText("If");
+//            label.add(condition);
+//        }
         label.add(name);
     }
 
@@ -122,13 +159,20 @@ public abstract class CodeBlock
             setPreferredSize(new Dimension(10, 10));
             setAction(deleteAction);
             setBorder(null);
-            setForeground(java.awt.Color.gray);
-            setBorderPainted(false);
-            setMargin(new java.awt.Insets(5, 5, 5, 5));
+            try {
+            Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
+            setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
+            //setForeground(java.awt.Color.gray);
+            //setForeground(Color.DARK_GRAY);
+            //setBorderPainted(false);
+            setMargin(new java.awt.Insets(0, 0, 0, 0));
         }
 
         private final javax.swing.Action deleteAction =
-                new javax.swing.AbstractAction("X") {
+                new javax.swing.AbstractAction() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         myParent.die();
                     }
@@ -274,22 +318,39 @@ public abstract class CodeBlock
         label.add(input);
     }
 
+    public void addPercentInput(String inputName, String defaultValue) {
+        PercentInput input = new PercentInput(this);
+        input.setName(inputName);
+        input.setText(defaultValue);
+
+        //inputs is a linked hashmap <String, JTextField> (march 2)
+        percentInputs.put(inputName, input);
+        label.add(input);
+        updatePercentLabel();
+    }
+
+    public void updatePercentLabel() {
+        if (percentInputs.size() > 0) {
+            JLabel percent = new JLabel("%");
+            label.add(percent);
+        }
+    }
+
 
     public void addInputEnergy(String inputName, String defaultValue) {
         EnergyInput energyInput = new EnergyInput(this);
         energyInput.setName(inputName);
         energyInput.setText(defaultValue);
-
         energyInputs.put(inputName, energyInput);
         label.add(energyInput);
     }
 
 
-    public void addBehaviorInput(String inputName, String defaultValue) {
+    public void addBehaviorInput(String inputName, String defaultValue, String toolTipString) {
         BehaviorInput behaviorInput = new BehaviorInput(this);
         behaviorInput.setName(inputName);
         behaviorInput.setText(defaultValue);
-
+        behaviorInput.setToolTipText("<html><font size=\"4\">" + toolTipString + "</font></html>");
         behaviorInputs.put(inputName, behaviorInput);
         label.add(behaviorInput);
     }
@@ -298,17 +359,24 @@ public abstract class CodeBlock
         AgentInput agentInput = new AgentInput(this);
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
-
         agentInputs.put(inputName, agentInput);
         label.add(agentInput);
     }
 
-    public Map<String, JTextField> getBehaviorInputs() {
+    public Map<String, PrettyInput> getInputs() {
+        return inputs;
+    }
+
+    public Map<String, PrettyInput> getBehaviorInputs() {
         return behaviorInputs;
     }
 
-    public Map<String, JTextField> getAgentInputs() {
+    public Map<String, PrettyInput> getAgentInputs() {
         return agentInputs;
+    }
+
+    public Map<String, PrettyInput> getPercentInputs() {
+        return percentInputs;
     }
 
 
@@ -316,8 +384,6 @@ public abstract class CodeBlock
         DistanceInput distanceInput = new DistanceInput(this);
         distanceInput.setName(inputName);
         distanceInput.setText(defaultValue);
-
-        //behaviorInputs.put(inputName, distanceInput);
         label.add(distanceInput);
     }
 
@@ -341,6 +407,7 @@ public abstract class CodeBlock
     // List<CodeBlock> myBlocks = new LinkedList<CodeBlock>() [myBlocks is a linked list]
     //any block that goes into Breed, Plot or Envt block becomes part of this myBlocks -A. (sept 9)
     public void addBlock(CodeBlock block) {
+
         myBlocks.add(block);
         this.add(block);
         block.enableInputs();
@@ -381,6 +448,16 @@ public abstract class CodeBlock
         }
         else {
             ((BreedBlock) this).myUsedAgentInputs.add(agentInputName);
+
+        }
+    }
+
+    public void addPercentInputToList(String percentInputName) {
+        if (myParent != null) {
+            myParent.addAgentInputToList(percentInputName);
+        }
+        else {
+            ((BreedBlock) this).myUsedPercentInputs.add(percentInputName);
 
         }
     }
@@ -508,21 +585,22 @@ public abstract class CodeBlock
 
         if (parent instanceof BreedBlock) {
             checkParent = true;
-            if (this instanceof TraitBlock) {
-                ((BuildPanel) pParent).removeTrait((TraitBlock) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
-                ((BreedBlock) parent).removeTraitBlock((TraitBlock) this);   // removes from BreedBlock -A. (Aug 8, 2012)
-            }
+            // parent.removeTraitBlock() Not needed because traitblock does not directly go inside breedblock (like it used to)
+//            if (this instanceof TraitBlockNew) {
+//                ((BuildPanel) pParent).removeTrait((TraitBlockNew) this);   // remove from myTraits & buildPanel -A.(Aug 8, 2012)
+//                ((BreedBlock) parent).removeTraitBlock((TraitBlockNew) this);   // removes from BreedBlock -A. (Aug 8, 2012)
+//            }
         }
         if (parent instanceof JPanel) {
             if (this instanceof TraitBlock) {
                 for (Component child : pParent.getComponents()) {
                     if (child.getClass() == BuildPanel.class) {
-                        ((BuildPanel) child).removeTrait((TraitBlock) this);
+                        ((BuildPanel) child).removeTrait((TraitBlockNew) this);
                     }
                 }
                 for (Component child : parent.getComponents()) {
                     if (child.getClass() == LibraryHolder.class) {
-                        ((LibraryHolder) child).removeTraitBlock((TraitBlock) this);
+                        ((LibraryHolder) child).removeTraitBlock((TraitBlockNew) this);
                     }
                 }
             }
@@ -536,10 +614,11 @@ public abstract class CodeBlock
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
 
                 for (Component child : getComponents()) {
-                    if (child instanceof TraitBlock) {
-                        ((BreedBlock) this).removeTraitBlock((TraitBlock) child);
-                        ((BuildPanel) parent).removeTrait((TraitBlock) child);
-                    }
+                    // parent.removeTraitBlock() Not needed because traitblock does not directly go inside breedblock (like it used to)
+//                    if (child instanceof TraitBlockNew) {
+//                        ((BreedBlock) this).removeTraitBlock((TraitBlockNew) child);
+//                        ((BuildPanel) parent).removeTrait((TraitBlockNew) child);
+//                    }
                 }
             }
             if (this instanceof PlotBlock) {

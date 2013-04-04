@@ -14,10 +14,10 @@ import org.nlogo.deltatick.xml.Variation;
  * Time: 5:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public class EnergyInput extends javax.swing.JTextField {
+public class EnergyInput extends PrettyInput {
 
     public EnergyInput(Component parent) {
-        super();
+        super(parent);
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(
                 new javax.swing.border.LineBorder(parent.getBackground().darker()),
@@ -26,7 +26,7 @@ public class EnergyInput extends javax.swing.JTextField {
         setBackground( Color.white );
         setFont(new java.awt.Font("Courier New", 1, 12));
         setSize(this.getWidth(), 10);
-        this.setToolTipText("How fast?");
+        //this.setToolTipText("How fast?");
     }
 
 

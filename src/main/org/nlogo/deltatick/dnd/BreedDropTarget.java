@@ -1,10 +1,8 @@
 package org.nlogo.deltatick.dnd;
 
-import ch.randelshofer.quaqua.QuaquaComboPopup;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -17,8 +15,8 @@ public class BreedDropTarget
 
     public BreedDropTarget(BreedBlock block, DeltaTickTab deltaTickTab) {
         super(block);
+
         this.deltaTickTab = deltaTickTab;
-        boolean breedwithTrait;
     }
 
     protected boolean dropComponent(Transferable transferable)
@@ -31,12 +29,23 @@ public class BreedDropTarget
                 return true;
             } else if (o instanceof BehaviorBlock) {
                 addCodeBlock((BehaviorBlock) o);
+                ((BehaviorBlock) o).setMyBreedBlock((BreedBlock) this.block);
+                //Inform buildPanel that a reproduce block is being used to make slider on interface
+                if (((BehaviorBlock) o).getIsMutate() == true) {
+                    ((BreedBlock) block).setReproduceUsed(true);
+                }
+                new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
             else if (o instanceof TraitBlock) {
+//                ((TraitBlock) o).setMyParent((BreedBlock) block);
+//                TraitBlock tBlock = new TraitBlock((TraitBlock) o);
+//                addCodeBlock(tBlock);
+                //((TraitBlock) tBlock).setMyParent((BreedBlock) block);
+                //deltaTickTab.addTrait((TraitBlock) tBlock);
                 addCodeBlock((TraitBlock) o);
                 ((TraitBlock) o).setMyParent((BreedBlock) block);
-                deltaTickTab.addTrait((TraitBlock) o);
+                deltaTickTab.addTrait((TraitBlock)o);
                 return true;
             } else if (o instanceof OperatorBlock) {
                 addCodeBlock((OperatorBlock) o);

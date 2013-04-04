@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.reps;
 
+//import net.sf.cglib.core.Local;
 import org.jfree.chart.*;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -12,8 +13,11 @@ import org.nlogo.headless.Shell;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -32,6 +36,7 @@ public class Piechart extends JPanel {
     JFreeChart chart;
     DefaultPieDataset dataset;
     TraitDisplay.PaintSupplier paintSupplier;
+    double startAngle;
 
 //    public Piechart() {
 //        this.dummy = new HashMap<String, String>();
@@ -59,13 +64,15 @@ public class Piechart extends JPanel {
     public Piechart(String traitName, TraitDisplay.PaintSupplier paintSupplier) {
         trait = traitName;
         this.paintSupplier = paintSupplier;
+        startAngle = Math.random() * 360.0;
         dataset = new DefaultPieDataset();
         selectedVariationsPerc = new HashMap<String, Double>();
         dataset = (DefaultPieDataset) createDataset();
         chart = createChart(dataset);
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
+        chartPanel.setPreferredSize(new Dimension(320, 250));
+        //chartPanel.setMaximumSize(new Dimension(250,250));
         this.setVisible(true);
         this.validate();
     }
@@ -99,26 +106,31 @@ public class Piechart extends JPanel {
         );
 
         chart.setBorderVisible(false);
-        chart.setBackgroundPaint(Color.WHITE);
+        chart.setBackgroundPaint(null);
+        chart.setBorderVisible(false);
 
         PiePlot plot = (PiePlot) chart.getPlot();
+
         plot.setSectionOutlinesVisible(false);
         plot.setIgnoreZeroValues(true);
-        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 11));
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 10));
+        //plot.setSimpleLabels(true);
         plot.setNoDataMessage("No data available");
         plot.setCircular(false);
         plot.setLabelGap(0.02);
-        plot.setBackgroundPaint(Color.white);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
-        plot.setShadowPaint(Color.WHITE);
+        plot.setBackgroundPaint(null);
+        DecimalFormat df = (DecimalFormat) NumberFormat.getPercentInstance(Locale.US);
+        df.applyPattern("##.##%");
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", df, df));
+        plot.setShadowPaint(null);
+        plot.setStartAngle(startAngle);
+        plot.setOutlineVisible(false);
 
         paintSupplier.reset();
         for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
             plot.setSectionPaint((String) entry.getKey(), paintSupplier.getNextPaint());
         }
-
         // Set Colors
-
         return chart;
     }
 
@@ -145,9 +157,9 @@ public class Piechart extends JPanel {
 //        ((PiePlot) chart.getPlot()).setDataset(dataset);
 
         chartPanel.setChart(chart);
-        //chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
-        //chartPanel.setBackground(Color.white);
+
+        //chartPanel.setPreferredSize(new Dimension(300, 250));
+
 
         if (varPercent.size() > 0) {
             chartPanel.setVisible(true);
