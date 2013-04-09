@@ -1,6 +1,7 @@
 package org.nlogo.deltatick;
 
 
+import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.deltatick.dnd.*;
 
 //swing is for GUI components -A. (sept 10)
@@ -363,18 +364,30 @@ public abstract class CodeBlock
         label.add(agentInput);
     }
 
+    public  PrettyInput getInput(String name) {
+        return inputs.get(name);
+    }
     public Map<String, PrettyInput> getInputs() {
         return inputs;
     }
 
+    public PrettyInput getBehaviorInput(String name) {
+        return behaviorInputs.get(name);
+    }
     public Map<String, PrettyInput> getBehaviorInputs() {
         return behaviorInputs;
     }
 
+    public PrettyInput getAgentInput(String name) {
+        return agentInputs.get(name);
+    }
     public Map<String, PrettyInput> getAgentInputs() {
         return agentInputs;
     }
 
+    public PrettyInput getPercentInput(String name) {
+        return percentInputs.get(name);
+    }
     public Map<String, PrettyInput> getPercentInputs() {
         return percentInputs;
     }

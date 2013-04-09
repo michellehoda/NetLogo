@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.xml;
 
+import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
 import org.nlogo.deltatick.dnd.AgentInput;
@@ -25,6 +26,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.w3c.dom.*;
 
@@ -81,30 +83,39 @@ public class DeltaTickModelReader {
                     if (behaviorChildNodes.item(m).getNodeName() == "agentInput") {
                         String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
                         String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
-                        for (PrettyInput prettyInput : ((BehaviorBlock) o).getAgentInputs().values()) {
-                            prettyInput.setName(inputName);
-                            prettyInput.setText(defaultValue);
-                        }
-                        //AgentInput agentInput = new AgentInput((BehaviorBlock) o);
-                        //agentInput.setName(inputName);
-                        //agentInput.setText(defaultValue);
-                        //((BehaviorBlock)o).getAgentInputs().put(inputName, agentInput);
+                        // Set corresponding agent input's value
+                        ((BehaviorBlock) o).getAgentInput(inputName).setText(defaultValue);
+//                        for (PrettyInput prettyInput : ((BehaviorBlock) o).getAgentInputs().values()) {
+//                            prettyInput.setName(inputName);
+//                            prettyInput.setText(defaultValue);
+//                        }
                     }
                     if (behaviorChildNodes.item(m).getNodeName() == "percentInput") {
                         String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
                         String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
-                        for (PrettyInput prettyInput : ((BehaviorBlock) o).getPercentInputs().values()) {
-                            prettyInput.setName(inputName);
-                            prettyInput.setText(defaultValue);
-                        }
+                        // Set corresponding percent input's value
+                        ((BehaviorBlock) o).getPercentInput(inputName).setText(defaultValue);
+//                        for (PrettyInput prettyInput : ((BehaviorBlock) o).getPercentInputs().values()) {
+//                            prettyInput.setName(inputName);
+//                            prettyInput.setText(defaultValue);
+//                        }
                     }
                     if (behaviorChildNodes.item(m).getNodeName() == "energyInput") {
                         ((BehaviorBlock) o).addInputEnergy(behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent(),
                                 behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent());
                     }
                     if (behaviorChildNodes.item(m).getNodeName() == "behaviorInput") {
-                        ((BehaviorBlock) o).addBehaviorInput(behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent(),
-                                behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent(), "tooltip");
+                       String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
+                        // Set corresponding behavior input's value
+                        ((BehaviorBlock) o).getBehaviorInput(inputName).setText(defaultValue);
+
+//                        for (PrettyInput prettyInput : ((BehaviorBlock) o).getBehaviorInputs().values()) {
+//                            prettyInput.setName(inputName);
+//                            prettyInput.setText(defaultValue);
+//                        }
+//                        ((BehaviorBlock) o).addBehaviorInput(behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent(),
+//                                behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent(), "tooltip");
                     }
                 }
 
@@ -113,12 +124,14 @@ public class DeltaTickModelReader {
 
     }
 
+    // Opens a model file
     public void openModel(File modelFile) {
         try {
             DocumentBuilder builder =
                     DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document model = builder.parse(modelFile);
 
+            // Open the library
             NodeList usedLibraries = model.getElementsByTagName("usedLibrary");
             for (int i = 0; i < usedLibraries.getLength(); i++) {
                 Node usedLibrary = usedLibraries.item(i);
@@ -254,13 +267,49 @@ public class DeltaTickModelReader {
 
                 for (CodeBlock codeBlock : bBlock.getMyBlocks()) {
                     if (codeBlock instanceof BehaviorBlock) {
-                        Element behaviorBlock = doc.createElement("behaviorBlock");
+//                        Element behaviorBlock = doc.createElement("behaviorBlock");
+//                        breedBlock.appendChild(behaviorBlock);
+//                        behaviorBlock.setAttribute("name", codeBlock.getName());
+//                        //mutate attribute
+//                        String isMutate = (((BehaviorBlock) codeBlock).getIsMutate())? "true" : "false";
+//                        behaviorBlock.setAttribute("mutate", isMutate);
+//                        // Process PrettyInputs (INPUTS)
+//                        for (Map.Entry entry : codeBlock.getInputs().entrySet()) {
+//                            Element inputElement = doc.createElement("input");
+//                            inputElement.setAttribute("name", (String) entry.getKey());
+//                            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+//                            inputElement.setAttribute("tooltip", ((PrettyInput) entry.getValue()).getToolTip().getTipText() );
+//                            behaviorBlock.appendChild(inputElement);
+//                        }
+//                        // Process PrettyInputs (BEHAVIOR INPUTS)
+//                        for (Map.Entry entry : codeBlock.getBehaviorInputs().entrySet()) {
+//                            Element inputElement = doc.createElement("input");
+//                            inputElement.setAttribute("name", (String) entry.getKey());
+//                            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+//                            inputElement.setAttribute("tooltip", ((PrettyInput) entry.getValue()).getToolTip().getTipText() );
+//                            behaviorBlock.appendChild(inputElement);
+//                        }
+//                        // Process PrettyInputs (AGENT INPUTS)
+//                        for (Map.Entry entry : codeBlock.getAgentInputs().entrySet()) {
+//                            Element inputElement = doc.createElement("input");
+//                            inputElement.setAttribute("name", (String) entry.getKey());
+//                            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+//                            inputElement.setAttribute("tooltip", ((PrettyInput) entry.getValue()).getToolTip().getTipText() );
+//                            behaviorBlock.appendChild(inputElement);
+//                        }
+//                        // Process PrettyInputs (PERCENT INPUTS)
+//                        for (Map.Entry entry : codeBlock.getPercentInputs().entrySet()) {
+//                            Element inputElement = doc.createElement("input");
+//                            inputElement.setAttribute("name", (String) entry.getKey());
+//                            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+//                            inputElement.setAttribute("tooltip", ((PrettyInput) entry.getValue()).getToolTip().getTipText() );
+//                            behaviorBlock.appendChild(inputElement);
+//                        }
+//
+                        Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) codeBlock);
                         breedBlock.appendChild(behaviorBlock);
-                        behaviorBlock.setAttribute("name", codeBlock.getName());
-                        //mutate attribute
-
-
                     }
+
                     if (codeBlock instanceof ConditionBlock) {
                         Element conditionBlock = doc.createElement("conditionBlock");
                         breedBlock.appendChild(conditionBlock);
@@ -268,9 +317,11 @@ public class DeltaTickModelReader {
                         //mutate attribute
 
                         for (CodeBlock cBlock : ((ConditionBlock) codeBlock).getMyBlocks()) {
-                            Element behaBlock = doc.createElement("behaviorBlock");
-                            conditionBlock.appendChild(behaBlock);
-                            behaBlock.setAttribute("name", cBlock.getName());
+//                            Element behaBlock = doc.createElement("behaviorBlock");
+//                            conditionBlock.appendChild(behaBlock);
+//                            behaBlock.setAttribute("name", cBlock.getName());
+                            Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) cBlock);
+                            conditionBlock.appendChild(behaviorBlock);
                         }
                     }
                 }
@@ -313,5 +364,45 @@ public class DeltaTickModelReader {
 	  }
     }
 
+    public Element makeElementFromBehaviorBlock(Document doc, BehaviorBlock block) {
+
+        Element behaviorBlock = doc.createElement("behaviorBlock");
+        //breedBlock.appendChild(behaviorBlock);
+        behaviorBlock.setAttribute("name", block.getName());
+        //mutate attribute
+        String isMutate = (((BehaviorBlock) block).getIsMutate())? "true" : "false";
+        behaviorBlock.setAttribute("mutate", isMutate);
+        // Process PrettyInputs (INPUTS)
+        for (Map.Entry entry : block.getInputs().entrySet()) {
+            Element inputElement = doc.createElement("input");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            behaviorBlock.appendChild(inputElement);
+        }
+        // Process PrettyInputs (BEHAVIOR INPUTS)
+        for (Map.Entry entry : block.getBehaviorInputs().entrySet()) {
+            Element inputElement = doc.createElement("behaviorInput");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            behaviorBlock.appendChild(inputElement);
+        }
+        // Process PrettyInputs (AGENT INPUTS)
+        for (Map.Entry entry : block.getAgentInputs().entrySet()) {
+            Element inputElement = doc.createElement("agentInput");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            behaviorBlock.appendChild(inputElement);
+        }
+        // Process PrettyInputs (PERCENT INPUTS)
+        for (Map.Entry entry : block.getPercentInputs().entrySet()) {
+            Element inputElement = doc.createElement("percentInput");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            behaviorBlock.appendChild(inputElement);
+        }
+
+
+        return behaviorBlock;
+    }
 
 }
