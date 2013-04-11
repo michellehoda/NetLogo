@@ -84,7 +84,7 @@ public class DeltaTickTab
     int interfacePlotCount;
     int interfaceHistoCount; // to make sure extra histos are not added (Jan 15, 2013)
     int interfaceGraphCount;
-    int interfaceNoteCount; //to make sure mutation note is created just once (March 29, 2013)
+    int interfaceSliderCount = 0; //to make sure mutation note is created just once (March 29, 2013)
 
 
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
@@ -654,30 +654,31 @@ public class DeltaTickTab
 
     public void populateMutationSlider() {
         boolean putNoteWidget = false;
+        interfaceSliderCount = 0;
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
+                    System.out.println(bBlock.getMyTraitBlocks().size());
                     SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-
-                    System.out.println("deltatick max " + sliderWidget.maximum() + " " + sliderWidget.increment());
-                    System.out.println("deltatick min " + sliderWidget.minimum());
-                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, 120, true, false);
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
                     sliderWidget.name_$eq(sliderName);
                     sliderWidget.validate();
                     sliderWidgets.put(sliderName, ww);
+                    interfaceSliderCount++;
+                    System.out.println("dtt " + sliderWidgets.size() + " " + interfaceSliderCount);
                 }
 
             }
-            interfaceNoteCount++;
+
             revalidate();
         }
         //make a note only once (March 29, 2013)
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
             WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
-            String note = "Chance of mutation";
+            String note = "Size of mutation??";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
             noteWidget.validate();
@@ -689,49 +690,91 @@ public class DeltaTickTab
         for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
-            sliderWidgets.remove(w);
+            //sliderWidgets.remove(w);
             interfacePanel.removeWidget(w);
         }
+        sliderWidgets.clear();
         for (Map.Entry<String, WidgetWrapper> entry : noteWidgets.entrySet()) {
             WidgetWrapper w = entry.getValue();
 
-            noteWidgets.remove(w);
+            //noteWidgets.remove(w);
             interfacePanel.removeWidget(w);
         }
+        noteWidgets.clear();
         revalidate();
     }
 
 
     public void populatePlots() {
+        int plotCount = 0;
         try {
-           for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
-               org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
-               //WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + (((int) interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
-               WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
-               plotWidget.displayName(plotBlock.getName());
-               org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
-               plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
-               interfacePlotCount++;
-
-               for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
-                            if (newPlot.getPen(quantBlock.getName()).toString().equals("None")) {
-                                // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
-                                PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
-                                plotPen.updateCode(quantBlock.getPenUpdateCode());
-                            }
-               }
-               //interfacePlotCount++;
-           }
-
+            ////for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
-                for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
-                    if (workspace.plotManager().getPlot(plotBlock.getName()).getPen(qBlock.getName()).toString().equals("None")) {
-                        PlotPen newPlotPen = workspace.plotManager().getPlot(plotBlock.getName()).createPlotPen(qBlock.getName(), false);
-                        newPlotPen.updateCode(qBlock.getPenUpdateCode());
-                        //newPlotPen._hidden = true;
+                if (plotWrappers.containsKey(plotBlock.getName()) == false) {
+                    // Plot not previously present ==> new plot must be created
+
+                    ////org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
+                    org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getName());
+
+                    ////WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
+                    WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160), true, false);
+
+                    plotWidget.displayName(plotBlock.getName());
+
+                    ////org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
+                    org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    plotBlock.setNetLogoPlot(newPlot);
+
+                    ////plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
+                    plotWrappers.put(plotBlock.getName(), ww);
+
+                    ////interfacePlotCount++;
+
+                    // Clear plot pens
+
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        if (newPlot.getPen(quantBlock.getPenName()).toString().equals("None")) {
+                            // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
+                            PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
+                            plotPen.updateCode(quantBlock.getPenUpdateCode());
+                        }
+                    }
+                    ////interfacePlotCount++;
+                }
+                else {
+                    // Plot already exists, just recalculate its position
+                    WidgetWrapper ww = plotWrappers.get(plotBlock.getName());
+                    ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
+
+
+                    // Make sure plot pens are up to date
+                    org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    //thisPlot.removeAllPens();
+                    for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
+                        if (thisPlot.getPen(qBlock.getPenName()).toString().equals("None")) {
+                            PlotPen newPlotPen = thisPlot.createPlotPen(qBlock.getPenName(), false);
+                            newPlotPen.updateCode(qBlock.getPenUpdateCode());
+                            newPlotPen.plot(thisPlot.xMax(), thisPlot.yMax());
+                            //newPlotPen._hidden = true;
+                        }
                     }
                 }
+
+                // Proceed to next plot
+                plotCount++;
             }
+
+//            for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
+//                for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
+//                    if (workspace.plotManager().getPlot(plotBlock.getName()).getPen(qBlock.getName()).toString().equals("None")) {
+//                        PlotPen newPlotPen = workspace.plotManager().getPlot(plotBlock.getName()).createPlotPen(qBlock.getName(), false);
+//                        newPlotPen.updateCode(qBlock.getPenUpdateCode());
+//                        //newPlotPen._hidden = true;
+//                    }
+//                }
+//            }
+
+            // The following code may be unnecessary because histograms are contained in builPanel.getMyPlots()
             for (HistogramBlock hBlock : buildPanel.getMyHisto().subList(interfaceHistoCount, buildPanel.getMyHisto().size())) {
                 org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
                 interfacePanel.addWidget(plotWidget, 5, 50, true, false);
@@ -758,9 +801,9 @@ public class DeltaTickTab
             for (Map.Entry<String, WidgetWrapper> entry : plotWrappers.entrySet()) {
                 String p = entry.getKey();
                 WidgetWrapper w = entry.getValue();
-                if (buildPanel.getMyPlot(p) == false) {
+                if (buildPanel.plotExists(p) == false) {
                     interfacePanel.removeWidget(w);
-                    interfacePlotCount--;
+                    ////interfacePlotCount--;
                     plotWrappers.remove(p);
                     workspace.plotManager().forgetPlot(workspace.plotManager().getPlot(p));
                 }

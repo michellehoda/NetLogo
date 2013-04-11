@@ -34,7 +34,7 @@ public class BuildPanel
     // uniformly named methods to get, remove and insert an element at the beginning and end of the list. -a.
 
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
-    List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
+    //List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
     List<TraitBlockNew> myTraitsNew = new LinkedList<TraitBlockNew>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
@@ -42,6 +42,8 @@ public class BuildPanel
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
     //ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
     JLabel label;
+
+    static int plotNumber = 0;
 
 
     //DataFlavor"[]" is an array - A. (sept 8)
@@ -104,7 +106,7 @@ public class BuildPanel
         passBack += "\n";
 
         //TraitBlock's setup code doesn't come from here at all. It comes from breeds -A. (Aug 8, 2012)
-        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
+        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots);
         passBack += "\n";
 
         // begin function to go
@@ -237,7 +239,7 @@ public String newSaveAsXML() {
             passBack += breedBlock.breedVars();
         }
 
-        for (TraitBlock traitBlock : myTraits) {
+        for (TraitBlockNew traitBlock : myTraitsNew) {
             passBack += traitBlock.getTraitName();
         }
 
@@ -246,7 +248,7 @@ public String newSaveAsXML() {
         passBack += bgInfo.declareGlobals();
         passBack += "\n";
 
-        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
+        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots);
         passBack += "\n";
 
         passBack += "to go\n";
@@ -352,8 +354,10 @@ public String newSaveAsXML() {
 
 
     public void addPlot(PlotBlock block) {
+        plotNumber++;
         myPlots.add(block);
-        block.setPlotName("plot " + myPlots.size());
+        //int plotNumber = myPlots.size() + myHisto.size();
+        block.setPlotName("plot " + plotNumber);
         block.setBounds(200,
                 0,
                 block.getPreferredSize().width,
@@ -365,18 +369,19 @@ public String newSaveAsXML() {
         block.repaint();
     }
 
-    public void addHisto(HistogramBlock block) {
-        myHisto.add(block);
-        block.setHistoName("New Histogram " + myHisto.size());
-        block.setBounds(200,
-                0,
-                block.getPreferredSize().width,
-                block.getPreferredSize().height);
-        add(block);
-        block.doLayout();
-        block.validate();
-        block.repaint();
-    }
+    // Not used
+//    public void addHisto(HistogramBlock block) {
+//        myHisto.add(block);
+//        block.setHistoName("New Histogram " + myHisto.size());
+//        block.setBounds(200,
+//                0,
+//                block.getPreferredSize().width,
+//                block.getPreferredSize().height);
+//        add(block);
+//        block.doLayout();
+//        block.validate();
+//        block.repaint();
+//    }
 
     //make linked list for envt? -A. (sept 8)
     public void addEnvt(EnvtBlock block) {
@@ -418,7 +423,7 @@ public String newSaveAsXML() {
         return myPlots;
     }
 
-    public boolean getMyPlot(String name) {
+    public boolean plotExists(String name) {
         boolean check = false;
         for (PlotBlock plotBlock : this.getMyPlots()) {
             if (plotBlock.getName().equalsIgnoreCase(name)) {
@@ -440,6 +445,14 @@ public String newSaveAsXML() {
         return myHisto;
     }
 
+    public TraitBlockNew getMyTrait(String traitName) {
+        for (TraitBlockNew traitBlockNew : myTraitsNew) {
+            if (traitBlockNew.getTraitName().equalsIgnoreCase(traitName)) {
+                return traitBlockNew;
+            }
+        }
+        return null;
+    }
     public List<TraitBlockNew> getMyTraits() {
         return myTraitsNew;
     }
@@ -482,6 +495,37 @@ public String newSaveAsXML() {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
 
+        // Mutate procedure
+        boolean needMutateCode = false;
+        for (BreedBlock bBlock : myBreeds) {
+            if (bBlock.getReproduceUsed() && bBlock.getMyTraitBlocks().size() > 0) {
+                needMutateCode = true;
+            }
+        }
+
+        if (needMutateCode) {
+            passBack += "to mutate\n";
+            // Check breed
+            for (BreedBlock breedBlock : myBreeds)  {
+                if (breedBlock.getReproduceUsed()) {
+
+                passBack += "\t\tif breed = " + breedBlock.plural() + " [\n";
+                // Foreach trait of that breed
+                for (TraitBlockNew traitBlock: breedBlock.getMyTraitBlocks()) {
+                    String traitName = traitBlock.getTraitName();
+                    passBack += "ifelse random 2 = 0 \n";
+                    passBack += "[set " + traitName + " (" + traitName + " - random-float " + breedBlock.plural() + "-" +
+                                                        traitBlock.getTraitName() + "-mutation)]\n";
+                    passBack += "[set " + traitName + " (" + traitName + " + random-float " + breedBlock.plural() + "-" +
+                                                        traitBlock.getTraitName() + "-mutation)]\n";
+                }
+                passBack += "\t\t]\n"; // corresponds to if condition
+                }
+            }
+            passBack += " end\n\n";
+
+        }
+
         return passBack;
     }
 
@@ -490,7 +534,8 @@ public String newSaveAsXML() {
         myBreeds.clear();
         myPlots.clear();
         myHisto.clear();
-        myTraits.clear();
+        //myTraits.clear();
+        myTraitsNew.clear();
         myEnvts.clear();
         removeAll();
         doLayout();
@@ -524,9 +569,9 @@ public String newSaveAsXML() {
     }
 
     public String[] getTraitNames() {
-        String[] names = new String [myTraits.size()];
+        String[] names = new String [myTraitsNew.size()];
         int i = 0;
-        for ( TraitBlock traitBlock : myTraits ) {
+        for ( TraitBlockNew traitBlock : myTraitsNew ) {
             names[i] = traitBlock.getTraitName();
             i++;
         }
@@ -588,7 +633,7 @@ public String newSaveAsXML() {
 
     public ArrayList<String> getVariations () {
         ArrayList<String> tmp = new ArrayList<String>();
-        for ( TraitBlock tBlock : myTraits ) {
+        for ( TraitBlockNew tBlock : myTraitsNew ) {
             tmp = tBlock.varList;
         }
         return tmp;
