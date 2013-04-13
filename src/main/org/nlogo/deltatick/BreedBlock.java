@@ -73,6 +73,8 @@ public strictfp class BreedBlock
     JPanel rectPanel;
     boolean removedRectPanel = false;
     boolean reproduceUsed = false;
+    int curIconIndex;
+    Color curColor;
 
     // Each breedblock has a species inspector panel
     // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
@@ -94,6 +96,8 @@ public strictfp class BreedBlock
         this.maxAge = breed.getOwnVarMaxReporter("age");
         this.maxEnergy = breed.getOwnVarMaxReporter("energy");
         number.setText(breed.getStartQuant());
+        curIconIndex = 0;
+        curColor = Color.GRAY;
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
@@ -122,7 +126,7 @@ public strictfp class BreedBlock
         if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
             remove(rectPanel);
             removedRectPanel = true;
-            }
+        }
 
         block.setMyParent(this);
         block.doLayout();
@@ -531,13 +535,16 @@ public strictfp class BreedBlock
 
     // when clicks on shape selection -a.
     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        ShapeSelector myShapeSelector = new ShapeSelector(parentFrame, allShapes(), this);
+        ShapeSelector myShapeSelector = new ShapeSelector(parentFrame, allShapes(), this, curIconIndex, curColor);
         myShapeSelector.setVisible(true);
+        System.out.println(myShapeSelector.getChosenValue());
         if (myShapeSelector.getChosenValue() >= 0) {
             ShapeIcon shapeIcon = new ShapeIcon(myShapeSelector.getShape());
             shapeIcon.setColor(myShapeSelector.getSelectedColor());
             breedShapeButton.setIcon(shapeIcon);
             breedShape = myShapeSelector.getChosenShape();
+            curColor = myShapeSelector.getSelectedColor();
+            curIconIndex = myShapeSelector.getChosenValue();
         }
     }
 

@@ -659,5 +659,9 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     public Color getSelectedColor() {
         return selectedColor;
     }
+    
+    public void setSelectedColor(Color setColor) {
+    	selectedColor = setColor;
+    }
 
 }
