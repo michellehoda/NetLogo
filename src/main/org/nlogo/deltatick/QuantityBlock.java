@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.hotlink.graph.Plot;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -50,6 +51,19 @@ public strictfp class QuantityBlock
         colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
         //label.add(colorButton);
         updateLabelImage();
+    }
+
+    // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
+    @Override
+    public void die() {
+        super.die();
+        //Container parent = getParent();
+        if (myParent instanceof PlotBlock) {
+            if (((PlotBlock) myParent).getNetLogoPlot() != null) {
+            // Remove pen
+            ((PlotBlock) myParent).getNetLogoPlot().removePen(getPenName());
+            }
+        }
     }
 
     public String unPackAsCode() {

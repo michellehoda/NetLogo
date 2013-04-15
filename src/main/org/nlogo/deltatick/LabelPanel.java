@@ -1,6 +1,7 @@
 package org.nlogo.deltatick;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class LabelPanel extends JPanel {
 
     public LabelPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setPreferredSize(new Dimension(50, 50));
         this.traitNames.add("age");
         this.traitNames.add("energy");
         initiComponents(traitNames);
@@ -33,11 +35,13 @@ public class LabelPanel extends JPanel {
             allCheckBoxes.put(nam, box);
             this.add(box);
         }
+        this.validate();
     }
 
     public void addTraitCheckBox(String trait) {
         JCheckBox box = new JCheckBox(trait);
         this.add(box);
+        this.validate();
     }
 
     public void updateData(HashMap<String, TraitState> t) {

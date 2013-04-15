@@ -2,6 +2,7 @@
 
 package org.nlogo.app;
 
+import apple.laf.JRSUIConstants;
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;
@@ -9,10 +10,7 @@ import org.nlogo.api.VersionHistory;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotManager;
 import org.nlogo.plot.PlotPen;
-import org.nlogo.window.EditorColorizer;
-import org.nlogo.window.PlotWidget;
-import org.nlogo.window.PlotWidgetExportType;
-import org.nlogo.window.Widget;
+import org.nlogo.window.*;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -182,6 +180,10 @@ strictfp class InterfacePanel
           ("unknown widget type: " + type);
     }
   }
+
+    public Widget makePlotWidget(String plotName) {
+        return org.nlogo.window.PlotWidget.apply(plotName, workspace.plotManager());
+    }
 
   @Override
   protected void deleteWidgets(List<WidgetWrapper> hitList) {

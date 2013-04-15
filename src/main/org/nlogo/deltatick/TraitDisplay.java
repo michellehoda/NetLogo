@@ -24,6 +24,9 @@ public class TraitDisplay extends JPanel {
     JPanel sidePanel;
     JFrame myFrame;
 
+    public static final int TRAITDISPLAY_WIDTH = Piechart.PIECHART_WIDTH + Barchart.BARCHART_WIDTH;
+    public static final int TRAITDISPLAY_HEIGHT = Math.max(Piechart.PIECHART_HEIGHT, Barchart.BARCHART_HEIGHT);
+
     public TraitDisplay() {
 
     }
@@ -67,7 +70,7 @@ public class TraitDisplay extends JPanel {
         }
 
         this.validate();
-        this.setPreferredSize(new Dimension(600, 250*chartsPanelMap.size()));
+        this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT*chartsPanelMap.size()));
         //myFrame.pack();
 
     }
@@ -81,7 +84,7 @@ public class TraitDisplay extends JPanel {
 
             // Set up this panel
             this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-            this.setPreferredSize(new Dimension(600, 250));
+            this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT));
             this.setVisible(true);
 
             // Trait+Variation selected for the first time, i.e. no previously selected variation

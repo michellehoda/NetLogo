@@ -32,7 +32,7 @@ public class BehaviorDropTarget
                 addCodeBlock((TraitBlockNew) o);
                 ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
                 ((TraitBlockNew) o).hideRemoveButton();
-                behBlock.setIsTrait(true);
+                //behBlock.setIsTrait(true); // behBlock.setTrait will set isTrait to true. Explicitly and separately setting it is unnecessary
                 behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
                 behBlock.setTrait((TraitBlockNew) o);
                 behBlock.getMyBreedBlock().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)

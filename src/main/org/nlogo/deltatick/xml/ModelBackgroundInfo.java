@@ -1,9 +1,6 @@
 package org.nlogo.deltatick.xml;
 
-import org.nlogo.deltatick.BreedBlock;
-import org.nlogo.deltatick.EnvtBlock;
-import org.nlogo.deltatick.PlotBlock;
-import org.nlogo.deltatick.TraitBlock;
+import org.nlogo.deltatick.*;
 import org.nlogo.prim._patches;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -106,7 +103,7 @@ public class ModelBackgroundInfo {
     }
 
     //will have to insert setup code for patches here as well -A. (sept 13)
-    public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlock> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
+    public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlockNew> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
         String code = "to setup\n";
         code += "  clear-all\n";
         //code += "ask patches [set pcolor white]\n";
