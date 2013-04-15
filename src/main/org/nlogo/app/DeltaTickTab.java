@@ -659,7 +659,6 @@ public class DeltaTickTab
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
-                    System.out.println(bBlock.getMyTraitBlocks().size());
                     SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
                     WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
@@ -667,7 +666,6 @@ public class DeltaTickTab
                     sliderWidget.validate();
                     sliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
-                    System.out.println("dtt " + sliderWidgets.size() + " " + interfaceSliderCount);
                 }
 
             }
@@ -678,7 +676,7 @@ public class DeltaTickTab
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
             WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
-            String note = "Size of mutation??";
+            String note = "Chance of mutation??";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
             noteWidget.validate();
@@ -750,6 +748,7 @@ public class DeltaTickTab
                     // Make sure plot pens are up to date
                     org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getName());
                     //thisPlot.removeAllPens();
+                    //TODO: Access plot editor
                     for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
                         if (thisPlot.getPen(qBlock.getPenName()).toString().equals("None")) {
                             PlotPen newPlotPen = thisPlot.createPlotPen(qBlock.getPenName(), false);

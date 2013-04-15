@@ -50,6 +50,9 @@ public class Barchart extends JPanel {
     HashMap<String, Double> selectedVariationsPerc;
     TraitDisplay.PaintSupplier paintSupplier;
 
+    public static final int BARCHART_WIDTH = 250;
+    public static final int BARCHART_HEIGHT = 250;
+
 //    public Barchart() {
 //        trait = new String("Pick a trait");
 //        dataset = new DefaultCategoryDataset();
@@ -65,7 +68,7 @@ public class Barchart extends JPanel {
         chart = createChart(dataset);
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
+        chartPanel.setPreferredSize(new Dimension(BARCHART_WIDTH, BARCHART_HEIGHT));
         this.setVisible(true);
         this.validate();
 
@@ -145,7 +148,7 @@ public class Barchart extends JPanel {
         //((CategoryPlot) chart.getPlot()).setDataset(dataset);
 
         chartPanel.setChart(chart);
-        chartPanel.setPreferredSize(new Dimension(250, 250));
+        chartPanel.setPreferredSize(new Dimension(BARCHART_WIDTH, BARCHART_HEIGHT));
 
         if (varPercent.size() > 0) {
             chartPanel.setVisible(true);

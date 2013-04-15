@@ -52,7 +52,29 @@ public class TraitPreview extends JPanel {
 
     ArrayList<Trait> traitsList = new ArrayList<Trait>();
 
+    // Number of colums in the trait info table
     public static final int NUMBER_COLUMNS = 3;
+    // column index where value is stored/displayed
+    public static final int VARVALUE_COLUMN_INDEX = 0;
+    public static final int VARVALUE_COLUMN_WIDTH = 50;
+    // column index where variation name is stored/displayed
+    public static final int VARNAME_COLUMN_INDEX = 1;
+    public static final int VARNAME_COLUMN_WIDTH = 75;
+    public static final int VARCHECKBOX_COLUMN_INDEX = 2;
+    public static final int VARCHECKBOX_COLUMN_WIDTH = 75;
+
+
+    public static final int TRAIT_TEXT_HEIGHT = 20;
+    public static final int TRAIT_SCROLLPANE_WIDTH = 150;
+    public static final int TRAIT_SCROLLPANE_HEIGHT = 100;
+    public static final int TRAIT_TABLE_WIDTH = VARVALUE_COLUMN_WIDTH+VARNAME_COLUMN_WIDTH+VARCHECKBOX_COLUMN_WIDTH;
+    public static final int TRAIT_TABLE_HEIGHT = TRAIT_SCROLLPANE_HEIGHT;
+    public static final int TRAIT_DISTRIPANEL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
+    public static final int TRAIT_DISTRIPANEL_HEIGHT = 30;
+
+    // TOTAL HEIGHT AND WIDTH OF TRAITPREVIEW
+    public static final int TRAITPREVIEW_TOTAL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
+    public static final int TRAITPREVIEW_TOTAL_HEIGHT = TRAIT_TEXT_HEIGHT+TRAIT_TABLE_HEIGHT+TRAIT_DISTRIPANEL_HEIGHT;
 
     // Holds final selected traits (and variations) as selected by the user
     // This should be used to instantiate the trait block
@@ -145,12 +167,12 @@ public class TraitPreview extends JPanel {
         //HashMap<String, Variation> tmpVarHashMap = new HashMap<String, Variation>(selectedTrait.getVariationHashMap());
         HashMap<String, Variation> tmpVarHashMap = new HashMap<String, Variation>();
         for (int row = 0; row < model.getRowCount(); row++) {
-            someVariationSelected = someVariationSelected || ((Boolean) model.getValueAt(row, 2));
+            someVariationSelected = someVariationSelected || ((Boolean) model.getValueAt(row, VARCHECKBOX_COLUMN_INDEX));
 
-            if ((Boolean) model.getValueAt(row, 2) == true) {
-                String variationName = (String) model.getValueAt(row, 0);
+            if ((Boolean) model.getValueAt(row, VARCHECKBOX_COLUMN_INDEX) == true) {
+                String variationName = (String) model.getValueAt(row, VARNAME_COLUMN_INDEX);
                 Variation tmpVariation = new Variation(selectedTrait.getVariationHashMap().get(variationName));
-                tmpVariation.value = new String((String) model.getValueAt(row, 1));
+                tmpVariation.value = new String((String) model.getValueAt(row, VARVALUE_COLUMN_INDEX));
                 tmpVarHashMap.put(variationName, tmpVariation);
             }
         } // for
@@ -185,8 +207,8 @@ public class TraitPreview extends JPanel {
 
         ArrayList <String> selectedVariations = new ArrayList<String>();
         for (int row = 0; row < model.getRowCount(); row++) {
-            if ((Boolean) model.getValueAt(row, 2) == true) {
-                selectedVariations.add((String) model.getValueAt(row, 0));
+            if ((Boolean) model.getValueAt(row, VARCHECKBOX_COLUMN_INDEX) == true) {
+                selectedVariations.add((String) model.getValueAt(row, VARNAME_COLUMN_INDEX));
             }
         }
         traitDistriPanel.remove(traitDistribution);
@@ -254,18 +276,18 @@ public class TraitPreview extends JPanel {
     }
 
     public void initComponents() {
-        traitText = new JLabel("Pick a trait");
-        traitText.setPreferredSize(new Dimension(20, 100));
+        traitText = new JLabel("Trait");
+        traitText.setPreferredSize(new Dimension(TRAIT_SCROLLPANE_WIDTH, TRAIT_TEXT_HEIGHT));
 
         jScrollPane1 = new JScrollPane();
-        jScrollPane1.setPreferredSize(new Dimension(150, 100));
-        jScrollPane1.setMaximumSize(new Dimension(150, 100));
+        jScrollPane1.setPreferredSize(new Dimension(TRAIT_SCROLLPANE_WIDTH, TRAIT_SCROLLPANE_HEIGHT));
+        jScrollPane1.setMaximumSize(new Dimension(TRAIT_SCROLLPANE_WIDTH, TRAIT_SCROLLPANE_HEIGHT));
 
         traitInfoTable = new JTable(new TraitTableModel());
         traitDistriPanel = new JPanel();
         traitDistriPanel.setLayout(new BoxLayout(traitDistriPanel, BoxLayout.Y_AXIS));
-        traitDistriPanel.setPreferredSize(new Dimension(350, 30));
-        traitDistriPanel.setMinimumSize(new Dimension(350,30));
+        traitDistriPanel.setPreferredSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
+        traitDistriPanel.setMinimumSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
         TitledBorder titleMidPanel;
         titleMidPanel = BorderFactory.createTitledBorder("Variations in " + breed);
         traitDistriPanel.setBorder(titleMidPanel);
@@ -276,8 +298,8 @@ public class TraitPreview extends JPanel {
 
         traitDistriPanel.validate();
 
-        traitInfoTable.setPreferredScrollableViewportSize(new Dimension(225, 100));
-        traitInfoTable.setPreferredSize(new Dimension(225, 100));
+        traitInfoTable.setPreferredScrollableViewportSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
+        traitInfoTable.setPreferredSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
         traitInfoTable.validate();
         JTableHeader header = traitInfoTable.getTableHeader();
         initColumnSizes(traitInfoTable);
@@ -334,8 +356,6 @@ public class TraitPreview extends JPanel {
                         Variation var = entry.getValue();
                         Object[] row = new Object[NUMBER_COLUMNS];
 
-                        row[0] = new String(key);
-
                         boolean varSelected = false;
                         String value = new String (var.value);
                         if (selectedTraitsMap.containsKey(getSelectedTraitName())) {
@@ -346,7 +366,8 @@ public class TraitPreview extends JPanel {
                             }
                         }
 
-                        row[1] = new String(value);
+                        row[0] = new String(value);
+                        row[1] = new String(key);
                         row[2] = new Boolean(varSelected);
                         tempTableData.add(row);
                     } // for map
@@ -386,21 +407,21 @@ public class TraitPreview extends JPanel {
 
         int row = e.getFirstRow();
         int col = e.getColumn();
-
-        if ((Boolean) model.getValueAt(row, col)) {
-            while (!(s.matches("\\d+"))) {
-                s = (String)JOptionPane.showInputDialog(
-                        myFrame,
-                        selectedTrait.getMessage(),
-                        "Customized Dialog",
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        null,
-                        null);
-            }
-            value = Integer.parseInt(s);
-            model.setValueAt(s, row, col - 1);
-        }
+    //Giving kids the option of setting a value for their variation (April 14, 2013)
+//        if ((Boolean) model.getValueAt(row, col)) {
+//            while (!(s.matches("\\d+"))) {
+//                s = (String)JOptionPane.showInputDialog(
+//                        myFrame,
+//                        selectedTrait.getMessage(),
+//                        "Customized Dialog",
+//                        JOptionPane.PLAIN_MESSAGE,
+//                        null,
+//                        null,
+//                        null);
+//            }
+//            value = Integer.parseInt(s);
+//            model.setValueAt(s, row, VARVALUE_COLUMN_INDEX);
+//        }
 
         // A new variation has been added/removed. Previous percentages are invalid
         // Hence no need to read percentages from selectedTraitsMap. Set 2nd parameter to false
@@ -427,17 +448,20 @@ public class TraitPreview extends JPanel {
         TableCellRenderer headerRenderer =
             table.getTableHeader().getDefaultRenderer();
 
-        for (int i = 0; i < NUMBER_COLUMNS; i++) {
-            column = table.getColumnModel().getColumn(i);
-            headerWidth = 75;
-            cellWidth = 75;
-            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
-        }
+//        for (int i = 0; i < NUMBER_COLUMNS; i++) {
+//            column = table.getColumnModel().getColumn(i);
+//            headerWidth = 75;
+//            cellWidth = 75;
+//            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
+//        }
+        table.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setPreferredWidth(VARVALUE_COLUMN_WIDTH);
+        table.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setPreferredWidth(VARNAME_COLUMN_WIDTH);
+        table.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setPreferredWidth(VARCHECKBOX_COLUMN_WIDTH);
     }
 
 
     class TraitTableModel extends AbstractTableModel {
-        private String[] columnNames = {"Variation name", "Value", "Add variation?"};
+        private String[] columnNames = {"Value", "Description", "Add variation?"};
         //, "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
@@ -456,7 +480,7 @@ public class TraitPreview extends JPanel {
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex){
-            if (columnIndex == 2) {
+            if (columnIndex == VARCHECKBOX_COLUMN_INDEX) {
                 return true;
             }
             else {
@@ -494,6 +518,13 @@ public class TraitPreview extends JPanel {
        public Object getValueAt(int row, int col) {
             return tableData.get(row)[col];
        }
+    }
+
+    public int getTotalWidth() {
+        return (TRAITPREVIEW_TOTAL_WIDTH + labelPanel.getPreferredSize().width + 50);
+    }
+    public int getTotalHeight() {
+        return (TRAITPREVIEW_TOTAL_HEIGHT + labelPanel.getPreferredSize().height + 50);
     }
 
     public TraitDistribution getTraitDistribution() {

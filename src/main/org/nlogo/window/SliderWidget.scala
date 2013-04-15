@@ -114,10 +114,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
         org.nlogo.window.Events.PeriodicUpdateEvent.Handler with org.nlogo.window.Events.AfterLoadEvent.Handler {
   def this(random: MersenneTwisterFast) = this (false, random)
 
-  //Changed for DeltaTick (April 3, 2013)
-  var minimumCode: String = "0"
-  var maximumCode: String = "1.0"
-  var incrementCode: String = "0.1"
+  //Changed for DeltaTick (Aditi, April 3, 2013)
+  var minimumCode: String = "0.0"
+  var maximumCode: String = "100.0"
+  var incrementCode: String = "1.0"
   var defaultValue = 1d
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
   override def propertySet = Properties.slider

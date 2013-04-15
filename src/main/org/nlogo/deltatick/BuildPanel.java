@@ -513,11 +513,16 @@ public String newSaveAsXML() {
                 // Foreach trait of that breed
                 for (TraitBlockNew traitBlock: breedBlock.getMyTraitBlocks()) {
                     String traitName = traitBlock.getTraitName();
-                    passBack += "ifelse random 2 = 0 \n";
-                    passBack += "[set " + traitName + " (" + traitName + " - random-float " + breedBlock.plural() + "-" +
-                                                        traitBlock.getTraitName() + "-mutation)]\n";
-                    passBack += "[set " + traitName + " (" + traitName + " + random-float " + breedBlock.plural() + "-" +
-                                                        traitBlock.getTraitName() + "-mutation)]\n";
+                    passBack += "if random-float 100 < " + breedBlock.plural() + "-" + traitBlock.getTraitName() + "-mutation [";
+                    passBack += "ifelse random-float 100 < 50 [";
+                    passBack += "\nset " + traitName + " (" + traitName + " + .5 )]\n";
+                    passBack += "\n[set " + traitName + " (" + traitName + " - .5 )]\n";
+                    passBack += "\n]";
+
+//                    passBack += "[set " + traitName + " (" + traitName + " - random-float " + breedBlock.plural() + "-" +
+//                                                        traitBlock.getTraitName() + "-mutation)]\n";
+//                    passBack += "[set " + traitName + " (" + traitName + " + random-float " + breedBlock.plural() + "-" +
+//                                                        traitBlock.getTraitName() + "-mutation)]\n";
                 }
                 passBack += "\t\t]\n"; // corresponds to if condition
                 }

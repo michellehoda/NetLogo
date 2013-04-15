@@ -266,26 +266,23 @@ public strictfp class BreedBlock
                         int k =  (int) Math.round(((variation.percent/100.0)) * Double.parseDouble(number.getText()));
 
                         if (it.hasNext()) {
-                            //endValue = startValue + k - 1;
                             endValue = startValue + k;
                         }
                         else {
-                            //endValue = (Integer.parseInt(number.getText()) - 1);
                             endValue = (Integer.parseInt(number.getText()));
                         }
-
-//                        if (endValue > (Integer.parseInt(number.getText()) - 1)) {
-//                            endValue = Integer.parseInt(number.getText()) - 1;
-//                        }
 
                         code += "let " + traitName + i + " sublist all-" + plural() + "-" + traitName +
                                 " " + startValue + " " + endValue + "\n";
 
                         code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
+                        if (traitName.equalsIgnoreCase("body-size")) {
+                            code += "set size body-size\n";
+                        }
                         code += " ]] \n";
 
                         i++;
-                        //startValue = endValue + 1;
+
                         startValue = endValue;
                     }
 
@@ -326,6 +323,13 @@ public strictfp class BreedBlock
             for (OwnVar var : breed.getOwnVars()) {
                 if (var.updateReporter != null) {
                     code += "set " + var.name + " " + var.updateReporter + "\n";
+                }
+            }
+            for (TraitBlockNew tBlock : myTraitBlocks) {    // setting size of turtles if "body-size" is a trait (April 11, 2013)
+                System.out.println(tBlock.getTraitName());
+                System.out.println(tBlock.getMyTraitName());
+                if (tBlock.getMyTraitName().equalsIgnoreCase("body-size")) {
+                    code += "set size body-size\n";
                 }
             }
             code += "\n";

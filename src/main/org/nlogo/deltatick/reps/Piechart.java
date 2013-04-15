@@ -39,6 +39,9 @@ public class Piechart extends JPanel {
     TraitDisplay.PaintSupplier paintSupplier;
     double startAngle;
 
+    public static final int PIECHART_WIDTH = 230;
+    public static final int PIECHART_HEIGHT = 250;
+
 //    public Piechart() {
 //        this.dummy = new HashMap<String, String>();
 //        this.trait = new String("");
@@ -72,7 +75,8 @@ public class Piechart extends JPanel {
         chart = createChart(dataset);
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(320, 250));
+        chartPanel.setPreferredSize(new Dimension(PIECHART_WIDTH, PIECHART_HEIGHT));
+        chartPanel.setMaximumSize(new Dimension(PIECHART_WIDTH, PIECHART_HEIGHT));
         //chartPanel.setMaximumSize(new Dimension(250,250));
         this.setVisible(true);
         this.validate();
@@ -123,6 +127,7 @@ public class Piechart extends JPanel {
         DecimalFormat df = (DecimalFormat) NumberFormat.getPercentInstance(Locale.US);
         df.applyPattern("##.##%");
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})", df, df));
+        plot.setSimpleLabels(true);
         plot.setShadowPaint(null);
         plot.setStartAngle(startAngle);
         plot.setOutlineVisible(false);
