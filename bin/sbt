@@ -1,17 +1,24 @@
 #!/bin/sh
 
-if [ `uname -s` = Linux ] ; then
-  export JAVA_HOME=/usr/lib/jvm/java-6-sun
+if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+    export JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
 else
-  if [ `uname -s` = Darwin ] ; then
-    export JAVA_HOME=`/usr/libexec/java_home -F -v1.6+`
-  else
-    export JAVA_HOME=/usr
-  fi
+    if [ `uname -s` = Linux ] ; then
+	export JAVA_HOME=/usr/lib/jvm/java-6-sun
+    else
+	if [ `uname -s` = Darwin ] ; then
+	    export JAVA_HOME=`/usr/libexec/java_home -F -v1.6+`
+	else
+	    export JAVA_HOME=/usr
+	fi
+    fi
 fi
 
 export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
+NETLOGO_ROOT=/cygdrive/c/Users/salil/Documents/MISC/NetLogo
+
+SBTJAR_DIR=$NETLOGO_ROOT/`dirname $0`
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 # add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
@@ -21,5 +28,5 @@ $JAVA \
   $JAVA_OPTS \
   -Djava.awt.headless=true \
   -Dapple.awt.graphics.UseQuartz=false \
-  -classpath $JAVA_HOME/lib/tools.jar:`dirname $0`/sbt-launch.jar \
+  -classpath `cygpath -wp $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar` \
   xsbt.boot.Boot "$@"
