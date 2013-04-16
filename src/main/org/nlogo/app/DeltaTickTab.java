@@ -32,7 +32,7 @@ import java.util.Map;
  * Time: 10:24:15 PM
  * To change this template use File | Settings | File Templates.
  */
-//TODO set the window to a larger size -A. 
+//TODO set the window to a larger size -A.
 public class DeltaTickTab
 	extends javax.swing.JPanel
     implements Events.SwitchedTabsEvent.Handler {
@@ -112,7 +112,7 @@ public class DeltaTickTab
 
 
         this.plotManager = workspace.plotManager();
-        
+
         this.breedTypeSelector = new BreedTypeSelector(workspace.getFrame());
         //this.it = it;
         this.traitSelector = new TraitSelectorOld( workspace.getFrame() );
@@ -255,7 +255,7 @@ public class DeltaTickTab
         }
     }
 
-    
+
     private final javax.swing.Action addBreedAction =
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
@@ -395,13 +395,16 @@ public class DeltaTickTab
             }
 
             myParent.getTraitLabels().clear();
-            for (Map.Entry<String, JCheckBox> map : speciesInspectorPanel.getTraitPreview().getLabelPanel().getCheckBoxes().entrySet()) {
-                String trait = map.getKey();
-                JCheckBox checkBox = map.getValue();
-                if (checkBox.isSelected()) {
-                    myParent.addToTraitLabels(trait);
-                }
+            for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
+                myParent.addToTraitLabels(traitLabel);
             }
+//            for (Map.Entry<String, JCheckBox> map : speciesInspectorPanel.getTraitPreview().getLabelPanel().getCheckBoxes().entrySet()) {
+//                String trait = map.getKey();
+//                JCheckBox checkBox = map.getValue();
+//                if (checkBox.isSelected()) {
+//                    myParent.addToTraitLabels(trait);
+//                }
+//            }
                 //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
     }

@@ -298,27 +298,9 @@ public strictfp class BreedBlock
         if (traitLabels.size() > 0) {
             code += "ask " + plural() + "[";
             code += setTraitLabelCode();
+            code += "]\n";
         }
-        code += "]\n";
-
-//            //int i = 0;
-//        if (traitLabels.size() > 0) {
-//            code += "ask " + plural() + "[";
-//            code += "set label (word ";
-//            code += traitLabels.get(0);
-//            for (int i = 1; i < traitLabels.size(); i++) {
-//                code += "-";
-//                code += traitLabels.get(i);
-////                if (traitLabels.size() > 1) {
-//////                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-////                    code += "\"-\"";
-////                    i--;
-////                }
-//            }
-//            code += " )] \n";
-//        }
-
-         return code;
+        return code;
     }
 
     private String setTraitLabelCode() {
@@ -358,6 +340,7 @@ public strictfp class BreedBlock
             }
             code += "\n";
 
+            // Do we need to put code for labels/trait labels here?
 
 //            if (traitLabels.size() >= 1) {
 //                code += "set label (word ";
@@ -419,6 +402,10 @@ public strictfp class BreedBlock
 
     public ArrayList<String> getTraitLabels() {
         return traitLabels;
+    }
+    public void setTraitLabels(ArrayList<String> selectedLabels) {
+        traitLabels.clear();
+        traitLabels.addAll(selectedLabels);
     }
 
     public ArrayList<String> getOwnVarNames() {

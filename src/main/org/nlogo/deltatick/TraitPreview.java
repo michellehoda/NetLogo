@@ -253,9 +253,9 @@ public class TraitPreview extends JPanel {
 //        labelPanel = new LabelPanel();
 //    }
 
-    private void updateCheckBoxes(HashMap<String, TraitState> temp) {
+    public void updateCheckBoxes(HashMap<String, TraitState> temp) {
             labelPanel.updateData(temp.keySet());
-            //labelPanel.addTraitCheckBox(string);
+
     }
 
     public String[] getVariationTypes(String traitName) {
@@ -461,12 +461,6 @@ public class TraitPreview extends JPanel {
         TableCellRenderer headerRenderer =
             table.getTableHeader().getDefaultRenderer();
 
-//        for (int i = 0; i < NUMBER_COLUMNS; i++) {
-//            column = table.getColumnModel().getColumn(i);
-//            headerWidth = 75;
-//            cellWidth = 75;
-//            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
-//        }
         table.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setPreferredWidth(VARVALUE_COLUMN_WIDTH);
         table.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setPreferredWidth(VARNAME_COLUMN_WIDTH);
         table.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setPreferredWidth(VARCHECKBOX_COLUMN_WIDTH);
@@ -551,6 +545,9 @@ public class TraitPreview extends JPanel {
     public void setSelectedTraitsMap(HashMap<String, TraitState> hashMap) {
         selectedTraitsMap.clear();
         selectedTraitsMap.putAll(hashMap);
+
+        // Add label panel checkboxes
+        labelPanel.updateData(hashMap.keySet());
     }
 }
 

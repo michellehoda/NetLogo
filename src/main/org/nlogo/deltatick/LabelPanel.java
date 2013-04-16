@@ -77,8 +77,28 @@ public class LabelPanel extends JPanel {
 
     }
 
-    public HashMap<String, JCheckBox> getCheckBoxes() {
-        return allCheckBoxes;
+//    public HashMap<String, JCheckBox> getCheckBoxes() {
+//        return allCheckBoxes;
+//    }
+
+    public ArrayList<String> getSelectedLabels() {
+        ArrayList<String> selectedLabels = new ArrayList<String>();
+        for (Map.Entry<String, JCheckBox> entry : allCheckBoxes.entrySet()) {
+            if (entry.getValue().isSelected()) {
+                selectedLabels.add(entry.getKey());
+            }
+        }
+        return selectedLabels;
+    }
+
+    // Sets the checkboxes corresponding to arraylist selectedLabels to true
+    // Assumes the checkboxes have already been populated
+    public void setSelectedLabels(ArrayList<String> selectedLabels) {
+        for (String labelName : selectedLabels) {
+            if (traitNames.contains(labelName)) {
+                allCheckBoxes.get(labelName).setSelected(true);
+            }
+        }
     }
 
 
