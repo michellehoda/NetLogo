@@ -227,7 +227,52 @@ public class DeltaTickTab
         };
 
     public void openLibrary(String  fileName) {
-        if ( count == 0 ) {
+        String currentLibraryName = new String();
+    	if ( count == 0 ) {
+          	libraryHolder = new LibraryHolder();
+     		libraryHolder.makeNewTab();
+           	new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
+            
+        	if(buildPanel.getBgInfo().getLibrary() != null){
+        		libraryPanel.add(libraryHolder);
+        		currentLibraryName = buildPanel.getBgInfo().getLibrary(); 
+        		libraryHolder.setTabName(currentLibraryName);
+        		
+        		System.out.println(buildPanel.getBgInfo().getLibrary());
+
+            
+        		addPlot.setEnabled(true);
+        		addHisto.setEnabled(true);
+        		addBreed.setEnabled(true);
+        	    buildPanel.removeRect();
+                
+        	    if (buildPanel.getMyBreeds().size() == 0) {
+                    buildPanel.addRect("Click Add species to start building your model!");
+                    buildPanel.repaint();
+                    buildPanel.validate();
+                }
+                
+        		deltaTickTab.contentPanel.validate();
+        		count ++;
+        	}
+        	else{
+        		libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
+        	}
+        }
+         else if (count > 0 ) {
+            libraryHolder.makeNewTab();
+            new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
+            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+            
+            if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
+            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
+            }
+     
+            currentLibraryName = buildPanel.getBgInfo().getLibrary();
+            deltaTickTab.contentPanel.validate();
+         }
+    	//TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
+    	/*if ( count == 0 ) {
             libraryHolder = new LibraryHolder();
             libraryPanel.add(libraryHolder);
             libraryHolder.makeNewTab();
@@ -252,7 +297,7 @@ public class DeltaTickTab
             libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, null );
             libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
             deltaTickTab.contentPanel.validate();
-        }
+        }*/
     }
 
 

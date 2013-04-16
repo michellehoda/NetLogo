@@ -97,6 +97,12 @@ public class LibraryHolder extends JPanel {
             } // if
         } // for
     }
+    
+    public void removeTab(int i){
+    	tabbedPane.removeTabAt(i);
+    	
+    	return;
+    }
 
     public void addOperatortoTab( OperatorBlock oBlock ) {
         panel.add(oBlock);
@@ -158,6 +164,10 @@ public class LibraryHolder extends JPanel {
 
     public ArrayList<ConditionBlock> getConditionBlocksList() {
         return conditionBlocksList;
+    }
+    
+    public int getCountTabs(){
+    	return countTabs;
     }
 
 }

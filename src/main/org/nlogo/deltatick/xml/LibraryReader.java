@@ -25,25 +25,35 @@ public class LibraryReader {
     String fileName;
 
     CodeBlock block;
+    JOptionPane illegalFileType;
 
     ArrayList<Node> newVariationsList = new ArrayList<Node>();
 
     public LibraryReader(Frame frame, DeltaTickTab deltaTickTab, String libraryFileName) {
-        this.deltaTickTab = deltaTickTab;
-
+        fileName = new String();
+    	this.deltaTickTab = deltaTickTab;
+    	illegalFileType = new JOptionPane();
+    	
         // clear out any existing blocks
        // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
         File file = null;
-        if (libraryFileName == null) {
+        //if (libraryFileName == null) {
+        System.out.println(fileName);
+        while (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")) {
             fileLoader = new FileDialog(frame);
             fileLoader.setVisible(true);
             file = new File(fileLoader.getDirectory() + fileLoader.getFile());
             fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
+            
+            if (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")){
+            	JOptionPane.showMessageDialog(deltaTickTab, "Oops! Please select a .xml file", "OOPS!", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        else {
-            fileName = new String(libraryFileName);
-            file = new File(libraryFileName);
+        
+        if(fileName.equals("nullnull")){
+        	return;
         }
+  
         //DocumentBuilder converts XML file into Document -A. (sept 13)
         try {
             DocumentBuilder builder =

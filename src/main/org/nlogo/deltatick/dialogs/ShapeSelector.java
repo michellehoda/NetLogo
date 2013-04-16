@@ -9,6 +9,7 @@ import org.nlogo.shape.editor.DrawableList;
 import org.nlogo.shape.editor.ImportDialog;
 import org.nlogo.shape.editor.ManagerDialog;
 import org.nlogo.shape.editor.ShapeCellRenderer;
+import org.nlogo.window.ColorDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,18 +31,27 @@ public class ShapeSelector
     //final ManagerDialog manager ;
     final DrawableList list;
     ShapeSelector myself = this;
-    ColorButton colorButton;
+    ColorDialog colorSelector;
     BreedBlock shapeParser;
-
+    private javax.swing.JButton importButton;
+    private javax.swing.JButton okayButton;
+    private javax.swing.JButton cancelButton;
+    private int prevIcon;
+    private Color currentColor;
+    
     public ShapeSelector(java.awt.Frame frame,
                          String[] shapes,
-                         BreedBlock shapeParser) {
+                         BreedBlock shapeParser,
+                         int curIconIndex,
+                         Color curColor) {
         // The Java 1.1 version of Swing doesn't allow us to pass a JDialog as the first arg to
         // the JDialog constructor, hence the necessity of passing in the frame instead - ST 3/24/02
         super(frame, "Change shape for " + shapeParser.getName(), true);
         //this.manager = manager;
         this.shapeParser = shapeParser;
-
+        prevIcon = curIconIndex;
+        currentColor = curColor;
+        
         List<Shape> importedShapes = shapeParser.parseShapes(shapes, null);
         if (importedShapes == null) {
             list = null;
@@ -62,32 +72,32 @@ public class ShapeSelector
             list.setCellRenderer(new ShapeCellRenderer(list));
             list.update();
         }
-        colorButton = new ColorButton(frame, shapeParser);
-        colorButton.setVisible(false);
+        colorSelector = new ColorDialog(frame, true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 
 
          //TODO: Change layout so it looks better (feb 22, 2013)
         // Create the buttons
-        javax.swing.JButton importButton =
-                new javax.swing.JButton("Use this shape");
+        importButton = new javax.swing.JButton("Use this shape");
         importButton.addActionListener
                 (new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
-                        //myself.setVisible(false);
-                        colorButton.setVisible(true);
-                        getRootPane().setDefaultButton(colorButton);
+                        colorSelector.showDialog();
+                        setColorName(colorSelector.getSelectedColorString());
                     }
                 });
 
+        importButton.setVisible(false);
         javax.swing.Action cancelAction =
                 new javax.swing.AbstractAction("Cancel") {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
-                        dispose();
+                        list.setSelectedIndex(prevIcon);
+                        colorSelector.setSelectedColor(currentColor);
+                    	dispose();
                     }
                 };
-        javax.swing.JButton cancelButton = new javax.swing.JButton(cancelAction);
+        cancelButton = new javax.swing.JButton(cancelAction);
 
         javax.swing.Action okayAction =
                 new javax.swing.AbstractAction("Okay") {
@@ -95,7 +105,7 @@ public class ShapeSelector
                         dispose();
                     }
                 };
-        javax.swing.JButton okayButton = new javax.swing.JButton(okayAction);
+        okayButton = new javax.swing.JButton(okayAction);
 
         org.nlogo.swing.Utils.addEscKeyAction
                 (this, cancelAction);
@@ -105,14 +115,18 @@ public class ShapeSelector
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (e.getClickCount() > 1) {
-                    myself.setVisible(false);
+                    colorSelector.showDialog();
+                    setColorName(colorSelector.getSelectedColorString());
+                }
+                if (e.getClickCount() == 1){
+                	importButton.setVisible(true);
                 }
             }
         });
 
         // Setup the panel
         javax.swing.JPanel panel = new org.nlogo.swing.ButtonPanel
-                (new javax.swing.JButton[]{importButton, colorButton, okayButton, cancelButton});
+                (new javax.swing.JButton[]{importButton, okayButton, cancelButton});
 
 
         // Create the scroll pane where the list will be displayed
@@ -176,11 +190,11 @@ public class ShapeSelector
     }
 
     public Color getSelectedColor() {
-        return colorButton.getSelectedColor();
+        return colorSelector.getSelectedColor();
     }
 
     public String getSelectedColorName() {
-        return colorButton.getSelectedColorName();
+        return colorSelector.getSelectedColor().toString();
     }
 
 
