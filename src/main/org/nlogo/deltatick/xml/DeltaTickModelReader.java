@@ -1,6 +1,6 @@
 package org.nlogo.deltatick.xml;
 
-import com.sun.tools.javac.tree.Pretty;
+//import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.*;
 import org.nlogo.deltatick.dnd.AgentInput;
