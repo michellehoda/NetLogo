@@ -48,8 +48,18 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with Serializa
   }
 
   //added by Aditi to remove a pen from a plot in DeltaTick (Jan 19, 2013)
-  def removePen(p:PlotPen) {
+  def removePen(penName: String) {
     //pens = pens :- p
+    // Trying to see if a pen can be removed (Aditi Apr 10, 2013). Works. See QuantityBlock.die()
+    _pens = _pens.filterNot(_.name.toLowerCase==penName.toLowerCase)
+  }
+
+  // Aditi Apr 10, 2013. Trying to remove all pens (including default one that gets created with the plot)
+  // This works. See DeltaTickTab.populatePlots()
+  // For every preexisting plot, all pens are removed using this function and recreated using quantitiy blocks
+  // This may actually be unnecessary if the removePen() method is used
+  def removeAllPens() {
+    _pens = List[PlotPen]()
   }
 
   private var _currentPen: Option[PlotPen] = None

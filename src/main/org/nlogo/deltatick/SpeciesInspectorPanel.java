@@ -90,6 +90,7 @@ public class SpeciesInspectorPanel extends JPanel {
                 .addComponent(bottomPanel)
         );
         validate();
+        myFrame.pack();
     }
 
     public void setupTopPanel() {
@@ -151,25 +152,27 @@ public class SpeciesInspectorPanel extends JPanel {
 
     public void setupMidPanel() {
         midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
-        midPanel.setPreferredSize(new Dimension(400, 200));
 
         TitledBorder titleMidPanel;
         titleMidPanel = BorderFactory.createTitledBorder("Preview Traits");
         midPanel.setBorder(titleMidPanel);
+
         labelPanel = new LabelPanel();
         TitledBorder titleLabelPanel;
         titleLabelPanel = BorderFactory.createTitledBorder("Set Labels");
         labelPanel.setBorder(titleLabelPanel);
+        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
-        midPanel.add(traitPreview);
         traitPreview.setTraits(myParent.getTraits());
         traitPreview.setTraitsListListener(new TraitListSelectionHandler());
         traitPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Add to midPanel
+        midPanel.add(traitPreview);
         midPanel.add(labelPanel);
-        labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-
+        midPanel.setPreferredSize(new Dimension(traitPreview.getTotalWidth(), traitPreview.getTotalHeight()));
         midPanel.validate();
     }
 

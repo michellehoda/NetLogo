@@ -18,7 +18,7 @@ public strictfp class BehaviorBlock
     boolean isTrait;
     boolean isMutate;
     TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
-    CodeBlock container = null;
+    //CodeBlock container = null;
     BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
 
@@ -86,22 +86,28 @@ public strictfp class BehaviorBlock
               passBack += "\n" + code + "\n";
               if (isMutate == true) {
                   if (myBreedBlock != null) {
-                      for (TraitBlockNew traitBlock :  myBreedBlock.getMyTraitBlocks()) {
-                          String traitName = traitBlock.getTraitName();
-                          //TODO: this is likely to throw a bug if reproduce is in condition block (April 1, 2013)
-                          //passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
-                          //passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
-                          passBack += "ifelse random 2 = 0 \n";
-                          passBack += "[set " + traitName + " (" + traitName + " - " + this.getMyBreedBlock().plural() + "-" +
-                                                        traitBlock.getTraitName() + "-mutation)]\n";
-                          passBack += "[set " + traitName + " (" + traitName + " + " + this.getMyBreedBlock().plural() + "-" +
-                                                        traitBlock.getTraitName() + "-mutation)]";
-                          passBack += "\n]]\n";
+                      if (myBreedBlock.getMyTraitBlocks().size() > 0) {
+                          passBack += "mutate";
                       }
-                      //If no trait or mutate code is being used, close brackets for reproduce block
-                      if (myBreedBlock.getMyTraitBlocks().size() == 0) {
-                          passBack += "]]\n";
-                      }
+//                      for (TraitBlockNew traitBlock :  myBreedBlock.getMyTraitBlocks()) {
+//
+//                          String traitName = traitBlock.getTraitName();
+//                          //TODO: this is likely to throw a bug if reproduce is in condition block (April 1, 2013)
+//                          //passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
+//                          //passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
+//                          passBack += "ifelse random 2 = 0 \n";
+//                          passBack += "[set " + traitName + " (" + traitName + " - random-float " + this.getMyBreedBlock().plural() + "-" +
+//                                                        traitBlock.getTraitName() + "-mutation)]\n";
+//                          passBack += "[set " + traitName + " (" + traitName + " + random-float " + this.getMyBreedBlock().plural() + "-" +
+//                                                        traitBlock.getTraitName() + "-mutation)]";
+//
+//                      }
+                      passBack += "\n]"; //corresponds to hatch
+                      passBack += "\n]\n"; // corresponds to if-chance block
+
+//                      if (myBreedBlock.getMyTraitBlocks().size() == 0) {
+//                          passBack += "]]\n";
+//                      }
                   }
               }
           }
@@ -110,7 +116,7 @@ public strictfp class BehaviorBlock
                   passBack += "set energy energy " + inputName.getText() + "\n";
               }
           }
-          passBack += " end\n\n";
+          passBack += "end\n\n";
 
           return passBack;
       }
@@ -219,6 +225,15 @@ public strictfp class BehaviorBlock
 
     public void setTrait(TraitBlockNew traitBlockNew) {
         tBlockNew = traitBlockNew;
+        isTrait = true;
+    }
+
+    public String getTrait() {
+        String retVal = "";
+        if (isTrait) {
+            retVal = new String(tBlockNew.getTraitName());
+        }
+        return retVal;
     }
 
     // check if I'm a reproduce block -(March 25, 2013)
