@@ -147,10 +147,11 @@ public class TraitPreview extends JPanel {
             // Calculate and update percentages
             traitDistribution.updatePercentages();
 
-            updatePieChart();
-
             // Percentages may have changed, update selectedTraitsMap
             updateSelectedTraitsMap(traitInfoTable.getModel());
+
+            // Update pie chart
+            updatePieChart();
 
         } // mouseDragged
 
@@ -209,6 +210,7 @@ public class TraitPreview extends JPanel {
         for (int row = 0; row < model.getRowCount(); row++) {
             if ((Boolean) model.getValueAt(row, VARCHECKBOX_COLUMN_INDEX) == true) {
                 selectedVariations.add((String) model.getValueAt(row, VARNAME_COLUMN_INDEX));
+                //selectedVariations.add((String) model.getValueAt(row, VARVALUE_COLUMN_INDEX));
             }
         }
         traitDistriPanel.remove(traitDistribution);
@@ -232,7 +234,17 @@ public class TraitPreview extends JPanel {
 
     // Updates the pie chart
     private void updatePieChart() {
-        traitDisplay.updateChart(selectedTraitName, traitDistribution.getSelectedVariationsPercent());
+        // Create a temp hash map for value and percent
+        HashMap<String, String> tmpHashMap = new HashMap<String, String>();
+        // Create a hashmap of values and percent
+        for (Map.Entry<String, String> entry: traitDistribution.getSelectedVariationsPercent().entrySet()) {
+            if (selectedTraitsMap.get(selectedTraitName).getVariationHashMap().containsKey(entry.getKey())) {
+                tmpHashMap.put(selectedTraitsMap.get(selectedTraitName).getVariationHashMap().get(entry.getKey()).value, entry.getValue());
+            }
+        }
+        //traitDisplay.updateChart(selectedTraitName, traitDistribution.getSelectedVariationsPercent());
+        // Pass values+percent hashmap to charts
+        traitDisplay.updateChart(selectedTraitName, tmpHashMap);
         traitDisplay.revalidate();
     }
 
@@ -242,7 +254,7 @@ public class TraitPreview extends JPanel {
 //    }
 
     private void updateCheckBoxes(HashMap<String, TraitState> temp) {
-            labelPanel.updateData(temp);
+            labelPanel.updateData(temp.keySet());
             //labelPanel.addTraitCheckBox(string);
     }
 
@@ -427,13 +439,14 @@ public class TraitPreview extends JPanel {
         // Hence no need to read percentages from selectedTraitsMap. Set 2nd parameter to false
         updateTraitDistriPanel(model, false);
 
-        // Update chart to reflect percentages
-        updatePieChart();
-
         // Some variation selected/unselected
         // Update the hash map
         // In TableModelListener, map can ONLY be updated after updateTraitDistriPanel()
         updateSelectedTraitsMap(model);
+
+        // Update chart to reflect percentages
+        // This must be called *AFTER* updateSelectedTraitsMap because it reads variation values from the hashmap
+        updatePieChart();
 
         updateCheckBoxes(selectedTraitsMap);
 
@@ -521,7 +534,7 @@ public class TraitPreview extends JPanel {
     }
 
     public int getTotalWidth() {
-        return (TRAITPREVIEW_TOTAL_WIDTH + labelPanel.getPreferredSize().width + 50);
+        return (TRAITPREVIEW_TOTAL_WIDTH + 50);
     }
     public int getTotalHeight() {
         return (TRAITPREVIEW_TOTAL_HEIGHT + labelPanel.getPreferredSize().height + 50);

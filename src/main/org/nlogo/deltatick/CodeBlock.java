@@ -1,7 +1,7 @@
 package org.nlogo.deltatick;
 
 
-import com.sun.tools.javac.tree.Pretty;
+//import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.deltatick.dnd.*;
 
 //swing is for GUI components -A. (sept 10)

@@ -295,21 +295,45 @@ public strictfp class BreedBlock
 
     public String setupTraitLabels() {
         String code = "";
-        //int i = 0;
-        if (traitLabels.size() >= 1) {
+        if (traitLabels.size() > 0) {
             code += "ask " + plural() + "[";
-            code += "set label (word ";
-            for (int i = 0; i < traitLabels.size(); i++) {
-                code += traitLabels.get(i);
-                if (traitLabels.size() > 1) {
-//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-                    code += "\"-\"";
-                    i--;
-                }
-            }
-            code += " )] \n";
+            code += setTraitLabelCode();
         }
+        code += "]\n";
+
+//            //int i = 0;
+//        if (traitLabels.size() > 0) {
+//            code += "ask " + plural() + "[";
+//            code += "set label (word ";
+//            code += traitLabels.get(0);
+//            for (int i = 1; i < traitLabels.size(); i++) {
+//                code += "-";
+//                code += traitLabels.get(i);
+////                if (traitLabels.size() > 1) {
+//////                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+////                    code += "\"-\"";
+////                    i--;
+////                }
+//            }
+//            code += " )] \n";
+//        }
+
          return code;
+    }
+
+    private String setTraitLabelCode() {
+        String code = "";
+        // Generate code if there is atleast one label
+        if (traitLabels.size() > 0) {
+            code += "set label (word ";
+            code += traitLabels.get(0);
+            for (int i = 1; i < traitLabels.size(); i++) {
+                code += " \"-\" ";
+                code += traitLabels.get(i);
+            }
+            code += ")\n";
+        }
+        return code;
     }
 
     // moves Update Code from XML file to procedures tab - A. (feb 14., 2012)
@@ -333,19 +357,21 @@ public strictfp class BreedBlock
                 }
             }
             code += "\n";
-            if (traitLabels.size() >= 1) {
-            code += "set label (word ";
-            for (int i = 0; i < traitLabels.size(); i++) {
-                code += traitLabels.get(i);
-                if (traitLabels.size() > 1) {
-//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-                    code += "\"-\"";
-                    i--;
-                }
-            }
-            code += " ) \n";
-        }
-        code += "]\n";
+
+
+//            if (traitLabels.size() >= 1) {
+//                code += "set label (word ";
+//                for (int i = 0; i < traitLabels.size(); i++) {
+//                    code += traitLabels.get(i);
+//                    if (traitLabels.size() > 1) {
+////                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+//                        code += "\"-\"";
+//                        i--;
+//                    }
+//                }
+//                code += " ) \n";
+//            }
+            code += "]\n";
         }
         return code;
     }
@@ -395,6 +421,9 @@ public strictfp class BreedBlock
         return traitLabels;
     }
 
+    public ArrayList<String> getOwnVarNames() {
+        return breed.getOwnVarsName();
+    }
 
     public Object getTransferData(DataFlavor dataFlavor)
             throws UnsupportedFlavorException {

@@ -25,7 +25,7 @@ public class Breed {
     String updateCommands;
     int id;
     LinkedList<OwnVar> ownVars = new LinkedList<OwnVar>();
-    LinkedList<String> ownVarNames = new LinkedList<String>();
+    ArrayList<String> ownVarNames = new ArrayList<String>();
     ArrayList<Trait> traits = new ArrayList<Trait>();
 
     public Breed(Node breedNode) {
@@ -47,7 +47,9 @@ public class Breed {
         NodeList setupNodes = breedNode.getChildNodes();
         for (int i = 0; i < setupNodes.getLength(); i++) {
             if (setupNodes.item(i).getNodeName() == "ownVar") {
-                ownVars.add(new OwnVar(setupNodes.item(i)));
+                OwnVar ownVar = new OwnVar(setupNodes.item(i));
+                ownVars.add(ownVar);
+                ownVarNames.add(ownVar.name);
             }
 
             if (setupNodes.item(i).getNodeName() == "setupCode") {
@@ -97,10 +99,7 @@ public class Breed {
         return ownVars;
     }
 
-    public LinkedList<String> getOwnVarsName() {
-        for (OwnVar ownVar : ownVars) {
-            ownVarNames.add(ownVar.name);
-        }
+    public ArrayList<String> getOwnVarsName() {
         return ownVarNames;
     }
 
