@@ -15,6 +15,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -296,6 +297,7 @@ public class TraitPreview extends JPanel {
         jScrollPane1.setMaximumSize(new Dimension(TRAIT_SCROLLPANE_WIDTH, TRAIT_SCROLLPANE_HEIGHT));
 
         traitInfoTable = new JTable(new TraitTableModel());
+
         traitDistriPanel = new JPanel();
         traitDistriPanel.setLayout(new BoxLayout(traitDistriPanel, BoxLayout.Y_AXIS));
         traitDistriPanel.setPreferredSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
@@ -392,6 +394,12 @@ public class TraitPreview extends JPanel {
             traitTableModel.addTableModelListener(tableModelListener);
             traitInfoTable.setModel(traitTableModel);
             traitInfoTable.validate();
+
+            // Pre-sort the table
+            traitInfoTable.setAutoCreateRowSorter(true);
+            RowSorter sorter = traitInfoTable.getRowSorter();
+            sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
+            // Presort done
 
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
             updateTraitDistriPanel(traitInfoTable.getModel(), true);
