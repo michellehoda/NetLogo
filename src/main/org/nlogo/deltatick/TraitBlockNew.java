@@ -45,7 +45,7 @@ public class TraitBlockNew
         super (traitState.getNameTrait(), ColorSchemer.getColor(4));
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
-                traitBlockFlavor,
+                CodeBlock.traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
         //this.breedName = breedBlock.plural();
         this.traitState = new TraitState(traitState);

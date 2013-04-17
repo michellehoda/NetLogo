@@ -282,7 +282,7 @@ public abstract class CodeBlock
     public static final DataFlavor envtBlockFlavor =
             new DataFlavor(EnvtBlock.class, "Envt Block");
     public static final DataFlavor traitBlockFlavor =
-            new DataFlavor(TraitBlock.class, "Trait Block");
+            new DataFlavor(TraitBlockNew.class, "Trait Block");
 
     public static final DataFlavor getDataFlavorForThisClass(Class myClass) {
         if (myClass == BreedBlock.class) {

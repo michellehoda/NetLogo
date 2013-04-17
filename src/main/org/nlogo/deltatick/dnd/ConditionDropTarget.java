@@ -28,6 +28,7 @@ public class ConditionDropTarget
                         ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
                     }
                 }
+                new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
             if (o instanceof ConditionBlock) {

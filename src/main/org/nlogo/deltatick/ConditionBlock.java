@@ -22,7 +22,7 @@ public strictfp class ConditionBlock
         super(name, ColorSchemer.getColor(1));
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
-                conditionBlockFlavor,
+                CodeBlock.conditionBlockFlavor,
                 CodeBlock.codeBlockFlavor,
                 CodeBlock.patchBlockFlavor,
                 CodeBlock.envtBlockFlavor
