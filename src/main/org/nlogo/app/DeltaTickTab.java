@@ -231,27 +231,28 @@ public class DeltaTickTab
     	if ( count == 0 ) {
           	libraryHolder = new LibraryHolder();
      		libraryHolder.makeNewTab();
-           	new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
-            
+            // Aditi: The library reader reference MUST be saved (Apr 16, 2013)
+           	this.libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
+
         	if(buildPanel.getBgInfo().getLibrary() != null){
         		libraryPanel.add(libraryHolder);
-        		currentLibraryName = buildPanel.getBgInfo().getLibrary(); 
+        		currentLibraryName = buildPanel.getBgInfo().getLibrary();
         		libraryHolder.setTabName(currentLibraryName);
-        		
+
         		System.out.println(buildPanel.getBgInfo().getLibrary());
 
-            
+
         		addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
         	    buildPanel.removeRect();
-                
+
         	    if (buildPanel.getMyBreeds().size() == 0) {
                     buildPanel.addRect("Click Add species to start building your model!");
                     buildPanel.repaint();
                     buildPanel.validate();
                 }
-                
+
         		deltaTickTab.contentPanel.validate();
         		count ++;
         	}
@@ -261,13 +262,14 @@ public class DeltaTickTab
         }
          else if (count > 0 ) {
             libraryHolder.makeNewTab();
-            new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
+            // Aditi: Again, library reader MUST be saved (Apr 16, 2013)
+            this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
             libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-            
+
             if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
             	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
             }
-     
+
             currentLibraryName = buildPanel.getBgInfo().getLibrary();
             deltaTickTab.contentPanel.validate();
          }
@@ -495,17 +497,34 @@ public class DeltaTickTab
             }
         };
 
+    public PlotBlock makePlotBlock(boolean isHisto) {
+        PlotBlock newPlotBlock = new PlotBlock(isHisto);
+        buildPanel.addPlot( newPlotBlock );
+        newPlotBlock.getParent().setComponentZOrder(newPlotBlock, 0 );
+        if (isHisto) {
+            new HistoDropTarget(newPlotBlock);
+        }
+        else {
+            new PlotDropTarget(newPlotBlock);
+        }
+        contentPanel.validate();
+        return newPlotBlock;
+    }
 
     private final javax.swing.Action addPlotAction =
-		new javax.swing.AbstractAction( "Add Line Graph" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                PlotBlock newPlot = new PlotBlock(false);
-                buildPanel.addPlot( newPlot );
-                newPlot.getParent().setComponentZOrder(newPlot, 0 );
-                new PlotDropTarget(newPlot);
-                contentPanel.validate();
-        }
-    };
+            new javax.swing.AbstractAction( "Add Line Graph" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                    // Line graph, so parameter is false
+                    makePlotBlock(false);
+                }
+            };
+    private final javax.swing.Action addHistoAction =
+            new javax.swing.AbstractAction( "Add Histogram" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                    // histogram, so parameter is true
+                    makePlotBlock(true);
+                }
+            };
 
     private final javax.swing.Action clearAction =
 		new javax.swing.AbstractAction( "Clear" ) {
@@ -539,16 +558,7 @@ public class DeltaTickTab
             }
         };
 
-    private final javax.swing.Action addHistoAction =
-		new javax.swing.AbstractAction( "Add Histogram" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                PlotBlock hBlock = new PlotBlock(true);
-                buildPanel.addPlot( hBlock );
-                hBlock.getParent().setComponentZOrder(hBlock, 0 );
-                new HistoDropTarget(hBlock);
-                contentPanel.validate();
-        }
-    };
+
 
     private final Action toBuildBlock =
             new javax.swing.AbstractAction( "Build operator block" ) {

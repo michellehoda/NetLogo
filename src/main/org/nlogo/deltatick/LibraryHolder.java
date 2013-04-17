@@ -7,8 +7,10 @@ import javax.swing.JComponent;
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Condition;
 
 import javax.swing.event.ChangeEvent;
@@ -45,6 +47,8 @@ public class LibraryHolder extends JPanel {
     List<OperatorBlock> operatorBlocksList = new LinkedList<OperatorBlock>();
     ArrayList<BehaviorBlock> behaviorBlocksList = new ArrayList<BehaviorBlock>();
     ArrayList<ConditionBlock> conditionBlocksList = new ArrayList<ConditionBlock>();
+    //ArrayList<QuantityBlock> quantityBlocksList = new ArrayList<QuantityBlock>();
+    Map<String, QuantityBlock> quantityBlocksMap = new HashMap<String, QuantityBlock>();
     ArrayList<String> variations;
 
 
@@ -83,7 +87,7 @@ public class LibraryHolder extends JPanel {
             panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
         }
         panel.add(block);
-        tabbedPane.addTab(tabName , panel);
+        tabbedPane.addTab(tabName, panel);
         traitsNew.add(block);
     }
 
@@ -97,10 +101,10 @@ public class LibraryHolder extends JPanel {
             } // if
         } // for
     }
-    
+
     public void removeTab(int i){
     	tabbedPane.removeTabAt(i);
-    	
+
     	return;
     }
 
@@ -153,9 +157,16 @@ public class LibraryHolder extends JPanel {
     public void addToBehaviorBlocksList(BehaviorBlock behBlock) {
         behaviorBlocksList.add(behBlock);
     }
-
     public ArrayList<BehaviorBlock> getBehaviorBlocksList() {
         return behaviorBlocksList;
+    }
+    public BehaviorBlock getBehaviorBlock(String targetBlockName) {
+        for (BehaviorBlock behaviorBlock : behaviorBlocksList) {
+            if (behaviorBlock.getName().equalsIgnoreCase(targetBlockName)) {
+                return behaviorBlock;
+            }
+        }
+        return null;
     }
 
     public void addToConditionBlocksList(ConditionBlock conditionBlock) {
@@ -165,7 +176,14 @@ public class LibraryHolder extends JPanel {
     public ArrayList<ConditionBlock> getConditionBlocksList() {
         return conditionBlocksList;
     }
-    
+
+    public void addToQuantityBlocksMap(QuantityBlock quantityBlock) {
+        quantityBlocksMap.put(quantityBlock.getName(), quantityBlock);
+    }
+    public Map<String, QuantityBlock> getQuantityBlocksMap() {
+        return quantityBlocksMap;
+    }
+
     public int getCountTabs(){
     	return countTabs;
     }

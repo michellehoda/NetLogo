@@ -83,6 +83,7 @@ public abstract class CodeBlock
     public CodeBlock(String name, Color color) {
 
         removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        removeButtonPanel.setBackground(color);
         removeButtonPanel.add(removeButton);
         removeButton.setVisible(false);
 

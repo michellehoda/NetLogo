@@ -154,9 +154,9 @@ public class DeltaTickModelReader {
                 deltaTickTab.openLibrary(path);
             }
 
-            NodeList breedBlocks = model.getElementsByTagName("breedBlock");
-            for (int i = 0; i < breedBlocks.getLength(); i++) {
-                Node breedBlock = breedBlocks.item(i);
+            NodeList breedBlockNodes = model.getElementsByTagName("breedBlock");
+            for (int i = 0; i < breedBlockNodes.getLength(); i++) {
+                Node breedBlock = breedBlockNodes.item(i);
                 String plural = breedBlock.getAttributes().getNamedItem("plural").getTextContent();
                 String number = breedBlock.getAttributes().getNamedItem("number").getTextContent();
                 String maxAge = new String();
@@ -273,6 +273,59 @@ public class DeltaTickModelReader {
                 // Set the checkboxes in speciesInspectorPanel.labelPanel to true
                 speciesInspectorPanel.getTraitPreview().getLabelPanel().setSelectedLabels(selectedLabels);
             }
+
+            // Now process Plot Blocks
+            NodeList plotBlockNodeList = model.getElementsByTagName("plotBlock");
+            for (int i = 0; i < plotBlockNodeList.getLength(); i++) {
+                Node plotBlockNode = plotBlockNodeList.item(i);
+                String plotName = plotBlockNode.getAttributes().getNamedItem("name").getTextContent();
+                boolean isHisto = plotBlockNode.getAttributes().getNamedItem("isHisto").getTextContent().equalsIgnoreCase("true");
+
+                // Make the plot block
+                PlotBlock plotBlock = deltaTickTab.makePlotBlock(isHisto);
+                plotBlock.setName(plotName);
+
+                // Iterate over Quantity Blocks
+                NodeList plotChildNodes = plotBlockNode.getChildNodes();
+                for (int j = 0; j < plotChildNodes.getLength(); j++) {
+                    if (plotChildNodes.item(j).getNodeName() == "quantityBlock") {
+                        Node quantityBlockNode = plotChildNodes.item(j);
+                        // Read name of the quantity block
+                        String quantityBlockName = quantityBlockNode.getAttributes().getNamedItem("name").getTextContent();
+                        QuantityBlock qBlockFromLib = deltaTickTab.getLibraryHolder().getQuantityBlocksMap().get(quantityBlockName);
+                        // Create copy of the quantity block
+                        Object o = DeepCopyStream.deepClone(qBlockFromLib.getTransferData(CodeBlock.quantityBlockFlavor));
+                        QuantityBlock quantityBlock = (QuantityBlock) o;
+
+                        // "Drop" this new quantity block in the plot block
+                        // From DropTarget
+                        plotBlock.addBlock(quantityBlock);
+                        new PlantedCodeBlockDragSource(quantityBlock);
+                        plotBlock.doLayout();
+                        plotBlock.validate();
+                        plotBlock.repaint();
+                        plotBlock.enableInputs();
+
+                        // Now iterate over inputs of quantity blocks and set the values accordingly
+                        NodeList quantityBlockChildNodes = quantityBlockNode.getChildNodes();
+                        for (int k = 0; k < quantityBlockChildNodes.getLength(); k++) {
+                            if (quantityBlockChildNodes.item(k).getNodeName() == "input") {
+                                Node inputNode = quantityBlockChildNodes.item(k);
+                                // Read the input name and value from XML
+                                String inputName = inputNode.getAttributes().getNamedItem("name").getTextContent();
+                                String inputValue = inputNode.getAttributes().getNamedItem("default").getTextContent();
+
+                                // Set the corresponding value in the quantity block
+                                quantityBlock.getInput(inputName).setText(inputValue);
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            //// Plot block processing complete
+
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -348,12 +401,46 @@ public class DeltaTickModelReader {
                     }
                 }
             }
+            // Processing of breed blocks done
+
+            // Now process and save plot blocks
+            for (PlotBlock plotBlock : deltaTickTab.getBuildPanel().getMyPlots()) {
+                // Create the plot block element
+                Element plotBlockElement = doc.createElement("plotBlock");
+                // Set its attributes
+                plotBlockElement.setAttribute("name", plotBlock.getName());
+                plotBlockElement.setAttribute("isHisto", plotBlock.isHistogram()?"true":"false");
+                // Append to root element (<model>)
+                rootElement.appendChild(plotBlockElement);
+
+                // Iterate over quantity blocks
+                for (QuantityBlock quantityBlock : plotBlock.getMyBlocks()) {
+                    // Create element
+                    Element quantityBlockElement = doc.createElement("quantityBlock");
+                    // Set Attributes
+                    quantityBlockElement.setAttribute("name", quantityBlock.getName());
+                    // Append to plotblock
+                    plotBlockElement.appendChild(quantityBlockElement);
+
+                    // Process inputs of the quantity block
+                    for (Map.Entry<String, PrettyInput> entry : quantityBlock.getInputs().entrySet()) {
+                        Element inputElement = doc.createElement("input");
+                        inputElement.setAttribute("name", entry.getKey());
+                        inputElement.setAttribute("default", entry.getValue().getText());
+                        quantityBlockElement.appendChild(inputElement);
+                    }
+                }
+            }
+            // Processing of plot blocks done
 
 
 
 
             //// Convert DOM to XML ////
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            // Produce indented output XML
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
             StreamResult result = null;
 
