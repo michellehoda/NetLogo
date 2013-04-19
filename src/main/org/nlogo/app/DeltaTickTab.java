@@ -457,8 +457,7 @@ public class DeltaTickTab
     }
 
     public void makeTraitBlock(BreedBlock bBlock, TraitState traitState) {
-        TraitBlockNew traitBlock;
-        traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+        TraitBlockNew traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
         traitBlock.setMyParent(bBlock);
 
         speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
@@ -646,7 +645,6 @@ public class DeltaTickTab
 
     public void openModel(File modelFile) {
         deltaTickModelParser.openModel(modelFile);
-        //DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this , file);
     }
 
     public void populateProcedures() {
@@ -711,9 +709,11 @@ public class DeltaTickTab
 
 
     public void populateMutationSlider() {
+        System.out.println("populateMutationSlider()");
         boolean putNoteWidget = false;
         interfaceSliderCount = 0;
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            System.out.println("Breedblock: " + bBlock.getName());
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
@@ -721,7 +721,7 @@ public class DeltaTickTab
                     WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
                     sliderWidget.name_$eq(sliderName);
-                    sliderWidget.validate();
+                    //sliderWidget.validate();
                     sliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
                 }
@@ -737,9 +737,10 @@ public class DeltaTickTab
             String note = "Chance of mutation??";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
-            noteWidget.validate();
+            //noteWidget.validate();
             noteWidgets.put("MutationNote", widgetw);
         }
+        System.out.println("interfaceSliderCount = " + interfaceSliderCount);
     }
 
     public void removeMutationSlider() {
