@@ -2,8 +2,10 @@ package org.nlogo.deltatick;
 
 // need to have some kind of pens
 import org.nlogo.deltatick.dnd.RemoveButton;
+
 import org.nlogo.window.Widget;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.dnd.MaxLengthTextDocument;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,11 +28,16 @@ public strictfp class PlotBlock
     JTextField plotNameField;
     org.nlogo.plot.Plot netLogoPlot;
     boolean isHisto;
+    MaxLengthTextDocument maxLength;
 
     public PlotBlock() {
         super("plot", ColorSchemer.getColor(3));
+        System.out.println("PlotBlock constructor firing!!!");
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.isHisto = false;
+        maxLength = new MaxLengthTextDocument();
+        maxLength.setMaxChars(10);
+        plotNameField.setDocument(maxLength);
 
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -128,7 +135,11 @@ public strictfp class PlotBlock
 
 
     public void makeLabel() {
+    	System.out.println("Plot make label firing!!!");
+    	maxLength = new MaxLengthTextDocument();
+    	maxLength.setMaxChars(10);
         plotNameField = new PrettyInput(this);
+        plotNameField.setDocument(maxLength);
         ////label.add(removeButton);
         this.showRemoveButton();
         label.add(plotNameField);

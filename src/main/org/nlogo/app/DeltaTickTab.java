@@ -260,8 +260,9 @@ public class DeltaTickTab
         	}
         }
          else if (count > 0 ) {
-            libraryHolder.makeNewTab();
             new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
+            
+            libraryHolder.makeNewTab();
             libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
             
             if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){

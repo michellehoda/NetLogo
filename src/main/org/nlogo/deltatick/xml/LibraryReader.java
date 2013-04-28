@@ -22,7 +22,7 @@ public class LibraryReader {
     //FileDialog class displays a dialog window from which the user can select a file. -A. (sept 13)
     FileDialog fileLoader;
     DeltaTickTab deltaTickTab;
-    String fileName;
+    public String fileName;
 
     CodeBlock block;
     JOptionPane illegalFileType;
