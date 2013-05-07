@@ -97,11 +97,13 @@ public strictfp class TraitBlock
         //newLabel();
         this.revalidate();
 
+        System.out.println("Making a traitBlock! (copy constructor)");
 
     }
 
     public TraitBlock (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
         super (traitState.getNameTrait(), Color.lightGray);
+        System.out.println("Making a traitBlock! (regular constructor)");
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,
@@ -133,6 +135,7 @@ public strictfp class TraitBlock
     //not being used any more -March 5, 2013
     public TraitBlock (BreedBlock breedBlock, Trait trait, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues) {
         super(trait.getNameTrait(), Color.lightGray);
+        System.out.println("Making a traitBlock! (deprecated constructor)");
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,

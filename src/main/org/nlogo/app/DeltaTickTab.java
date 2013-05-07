@@ -69,6 +69,7 @@ public class DeltaTickTab
     JButton addTrackSpecies;
     JButton saveModelButton;
     JButton openModelButton;
+    JButton addClear;
     PopupMenu popup;
 
     //JButton addEnvt;
@@ -244,6 +245,7 @@ public class DeltaTickTab
         		addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
+        		addClear.setEnabled(true);
         	    buildPanel.removeRect();
                 
         	    if (buildPanel.getMyBreeds().size() == 0) {
@@ -896,7 +898,9 @@ public class DeltaTickTab
                 //buildBlock = new JButton( toBuildBlock );
                 //this.add( buildBlock );
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
-                this.add( new JButton( clearAction ) ) ;
+                addClear = new JButton(clearAction);
+                addClear.setEnabled(false);
+                this.add(addClear);
                 //this.add( new JButton( procedureAction ) ) ;
             }
         } ;
