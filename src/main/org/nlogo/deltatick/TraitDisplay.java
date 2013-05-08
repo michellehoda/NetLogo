@@ -150,10 +150,10 @@ public class TraitDisplay extends JPanel {
             COLORS.add(new Color(0x66, 0xFF, 0xFF)); // CYAN
             COLORS.add(new Color(0x00, 0x66, 0x00)); // DARK GREEN
             COLORS.add(new Color(0xFF, 0x66, 0xFF)); // PINK
-            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
-            COLORS.add(new Color(0x66, 0x66, 0x00)); // OLIVE
             COLORS.add(new Color(0x00, 0x00, 0xFF)); // BLUE
+            COLORS.add(new Color(0x66, 0x66, 0x00)); // OLIVE
             COLORS.add(new Color(0xFF, 0x66, 0x00)); // ORANGE
+            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
 
             resetIndex = defaultIndex % COLORS.size();
             paintIndex = resetIndex;

@@ -120,6 +120,7 @@ public class Barchart extends JPanel {
         renderer.setMaximumBarWidth(0.05); // 25% of total width
         renderer.setShadowVisible(false);
         renderer.setBarPainter(new StandardBarPainter());
+        renderer.setItemMargin(0.0);
 
         int i = 0;
         paintSupplier.reset();
