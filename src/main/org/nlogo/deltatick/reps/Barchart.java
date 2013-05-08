@@ -25,6 +25,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 //import org.jCharts.axisChart.AxisChart;
 //import org.jCharts.axisChart.customRenderers.axisValue.renderers.*;
 //import org.jCharts.chartData.*;
@@ -47,7 +48,7 @@ public class Barchart extends JPanel {
     ChartPanel chartPanel;
     JFreeChart chart;
     DefaultCategoryDataset dataset;
-    HashMap<String, Double> selectedVariationsPerc;
+    TreeMap<String, Double> selectedVariationsPerc;
     TraitDisplay.PaintSupplier paintSupplier;
 
     public static final int BARCHART_WIDTH = 250;
@@ -63,7 +64,7 @@ public class Barchart extends JPanel {
         trait = traitName;
         this.paintSupplier = paintSupplier;
         dataset = new DefaultCategoryDataset();
-        selectedVariationsPerc = new HashMap<String, Double>();
+        selectedVariationsPerc = new TreeMap<String, Double>();
         dataset = (DefaultCategoryDataset) createDataset();
         chart = createChart(dataset);
 
@@ -116,7 +117,7 @@ public class Barchart extends JPanel {
         // disable bar outlines...
         final BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-        renderer.setMaximumBarWidth(0.25); // 25% of total width
+        renderer.setMaximumBarWidth(0.05); // 25% of total width
         renderer.setShadowVisible(false);
         renderer.setBarPainter(new StandardBarPainter());
 
