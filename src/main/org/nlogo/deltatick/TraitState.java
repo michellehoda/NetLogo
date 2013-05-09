@@ -17,11 +17,15 @@ import java.util.Map;
  */
 public class TraitState extends Trait {
 
-    public HashMap<String, String> selectedVariationsPercent;
+    public HashMap<String, String> selectedVariationsPercent = new HashMap<String, String>();
 
     public TraitState(TraitState ts) {
         super(ts);
-        selectedVariationsPercent = new HashMap<String, String>(ts.selectedVariationsPercent);
+        this.selectedVariationsPercent.clear();
+        for (Map.Entry <String, String> entry : ts.selectedVariationsPercent.entrySet()) {
+            this.selectedVariationsPercent.put(entry.getKey(), new String(entry.getValue()));
+        }
+        //selectedVariationsPercent = new HashMap<String, String>(ts.selectedVariationsPercent);
     }
 
     public TraitState(Trait t, HashMap<String, String> hm) {
@@ -36,7 +40,10 @@ public class TraitState extends Trait {
             //this.getVariationHashMap().get(entry.getKey()).percent = (int) Double.parseDouble(hm.get(entry.getKey()));
         }
 
-        selectedVariationsPercent = new HashMap<String, String>(hm);
+        for (Map.Entry <String, String> entry : hm.entrySet()) {
+            this.selectedVariationsPercent.put(entry.getKey(), new String(entry.getValue()));
+        }
+        //selectedVariationsPercent = new HashMap<String, String>(hm);
     }
 
 

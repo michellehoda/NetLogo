@@ -397,9 +397,14 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            // Copy from orig traitstate map to traitstate map
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+
             speciesInspectorPanel.updateText();
-            speciesInspectorPanel.getMyFrame().setVisible(true);
             speciesInspectorPanel.updateTraitDisplay();
+            speciesInspectorPanel.getMyFrame().pack();
+            speciesInspectorPanel.getMyFrame().validate();
+            speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
 
@@ -413,6 +418,9 @@ public class DeltaTickTab
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+
+            // Save origSelectedTraitsMap
+            speciesInspectorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
 
             myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
             myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
@@ -483,7 +491,9 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
-                    speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+            speciesInspectorPanel.updateTraitDisplay();
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }

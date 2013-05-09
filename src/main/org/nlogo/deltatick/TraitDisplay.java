@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,7 +66,6 @@ public class TraitDisplay extends JPanel {
              (chartsPanelMap.containsKey(traitName))) {
             // Remove corresponding panel
             this.remove(chartsPanelMap.get(traitName));
-
             chartsPanelMap.remove(traitName);
         }
 
@@ -73,6 +73,16 @@ public class TraitDisplay extends JPanel {
         this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT*chartsPanelMap.size()));
         //myFrame.pack();
 
+    }
+
+    public void updateCharts(Set<String> traitNames) {
+        for (String traitName : chartsPanelMap.keySet()) {
+            if (! traitNames.contains(traitName)) {
+                this.remove(chartsPanelMap.get(traitName));
+                chartsPanelMap.remove(traitName);
+            }
+        }
+        this.validate();
     }
 
     private class ChartsPanel extends JPanel {

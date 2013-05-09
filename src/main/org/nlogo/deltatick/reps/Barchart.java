@@ -117,10 +117,15 @@ public class Barchart extends JPanel {
         // disable bar outlines...
         final BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
-        renderer.setMaximumBarWidth(0.05); // 25% of total width
+        renderer.setMaximumBarWidth(0.25); // 25% of total width
         renderer.setShadowVisible(false);
         renderer.setBarPainter(new StandardBarPainter());
-        renderer.setItemMargin(0.0);
+        if( dataset.getColumnCount() > 2) {
+            renderer.setItemMargin(-2);
+        }
+        else {
+            renderer.setItemMargin(-1);
+        }
 
         int i = 0;
         paintSupplier.reset();

@@ -1,24 +1,16 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.deltatick.dialogs.TraitSelector;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -170,6 +162,7 @@ public class SpeciesInspectorPanel extends JPanel {
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
         traitPreview.setTraits(myParent.getTraits());
         traitPreview.setTraitsListListener(new TraitListSelectionHandler());
+        traitPreview.setTraitTableModelListener(new TraitTableModelListener());
         traitPreview.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Add to midPanel
@@ -252,16 +245,17 @@ public class SpeciesInspectorPanel extends JPanel {
 
     // Implements listener when a trait is clicked on
     class TraitListSelectionHandler implements ListSelectionListener {
+        // TraitTableModelListener traitTableModelListener = new TraitTableModelListener();
         public void valueChanged(ListSelectionEvent e) {
             //sidePanel.setVisible(true);
-            traitPreview.updateTraitSelection(e, new traitTableModelListener());
+            traitPreview.updateTraitSelection(e);
             myFrame.pack();
 
         } // valueChanged
     } // TraitListSelectionHandler
 
     // Implements listener when the variation table is modified
-    class traitTableModelListener implements TableModelListener {
+    class TraitTableModelListener implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
             if (e.getColumn() == 2) {
                 traitPreview.updateVariationSelection(e);
