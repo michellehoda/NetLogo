@@ -91,6 +91,10 @@ public class DeltaTickTab
     HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
 
+    // HasMap to store Mutation slider values
+    private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
+    HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
+
     //InterfaceTab it;
     ProceduresTab pt;
     GUIWorkspace workspace;
@@ -727,11 +731,18 @@ public class DeltaTickTab
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
-                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
+                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+
+                    // Set value from previous instance or default
+                    double value = (mutationSliderValues.containsKey(sliderName)) ? mutationSliderValues.get(sliderName) : MUTATION_SLIDER_DEFAULT_VALUE;
+                    sliderWidget.valueSetter(value);
+
+                    // Set name
                     sliderWidget.name_$eq(sliderName);
-                    //sliderWidget.validate();
+
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+
                     sliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
                 }
@@ -740,6 +751,9 @@ public class DeltaTickTab
 
             revalidate();
         }
+        // Clear the sliderValuesHashMap
+        mutationSliderValues.clear();
+
         //make a note only once (March 29, 2013)
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
@@ -757,7 +771,11 @@ public class DeltaTickTab
         for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
-            //sliderWidgets.remove(w);
+
+            // Record the value of the slider
+            mutationSliderValues.put(p, ((SliderWidget) w.widget()).value() );
+
+            // Remove the widget from interface panel
             interfacePanel.removeWidget(w);
         }
         sliderWidgets.clear();
