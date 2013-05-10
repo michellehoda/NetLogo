@@ -75,17 +75,24 @@ public class TraitDisplay extends JPanel {
 
     }
 
-    public void updateCharts(Set<String> traitNames) {
+    public void updateCharts(HashMap<String, TraitState> traitsMap) {
         for (String traitName : chartsPanelMap.keySet()) {
-            if (! traitNames.contains(traitName)) {
+            if (! traitsMap.keySet().contains(traitName)) {
                 this.remove(chartsPanelMap.get(traitName));
                 chartsPanelMap.remove(traitName);
             }
+            else {
+                // Update the chart
+                updateChart(traitName, traitsMap.get(traitName).getValuesPercentList());
+            }
         }
         this.validate();
+        this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT*chartsPanelMap.size()));
     }
 
     private class ChartsPanel extends JPanel {
+
+        private static final int DEFAULT_PAINT_INDEX_INCREMENT = 3;
 
         HashMap<String, Piechart> selectedTraitPieChart = new HashMap<String, Piechart>();
         HashMap<String, Barchart> selectedTraitBarChart = new HashMap<String, Barchart>();
@@ -114,7 +121,7 @@ public class TraitDisplay extends JPanel {
             this.validate();
 
             this.setVisible(true);
-            defaultPaintIndex += 3;
+            defaultPaintIndex += DEFAULT_PAINT_INDEX_INCREMENT;
 
         }
 

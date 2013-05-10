@@ -71,11 +71,11 @@ public class TraitPreview extends JPanel {
 
     public static final int TRAIT_TEXT_HEIGHT = 20;
     public static final int TRAIT_SCROLLPANE_WIDTH = 150;
-    public static final int TRAIT_SCROLLPANE_HEIGHT = 100;
+    public static final int TRAIT_SCROLLPANE_HEIGHT = 125;
     public static final int TRAIT_TABLE_WIDTH = VARVALUE_COLUMN_WIDTH+VARNAME_COLUMN_WIDTH+VARCHECKBOX_COLUMN_WIDTH;
     public static final int TRAIT_TABLE_HEIGHT = TRAIT_SCROLLPANE_HEIGHT;
     public static final int TRAIT_DISTRIPANEL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
-    public static final int TRAIT_DISTRIPANEL_HEIGHT = 30;
+    public static final int TRAIT_DISTRIPANEL_HEIGHT = 50;
 
     // TOTAL HEIGHT AND WIDTH OF TRAITPREVIEW
     public static final int TRAITPREVIEW_TOTAL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
@@ -330,6 +330,7 @@ public class TraitPreview extends JPanel {
 
         traitInfoTable.setPreferredScrollableViewportSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
         traitInfoTable.setPreferredSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
+        traitInfoTable.setMinimumSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
         traitInfoTable.validate();
         JTableHeader header = traitInfoTable.getTableHeader();
         initColumnSizes(traitInfoTable);
@@ -619,14 +620,23 @@ public class TraitPreview extends JPanel {
     // Loads the origSelectedTraitsMap
     // This function must be called when the user clicks on the on the inspect species button
     public void loadOrigSelectedTraitsMap() {
+        // Copy existing traits to selectedTraitsMap
         setSelectedTraitsMap(origSelectedTraitsMap);
+
+        // Clear the table
         ((TraitTableModel)traitInfoTable.getModel()).reset();
+
+        // Make sure only checkboxes corresponding to existing traits are present
         updateCheckBoxes(origSelectedTraitsMap);
+
+        // Make sure no trait is selected
         myTraitsList.clearSelection();
-        updateCharts();
-    }
-    private void updateCharts() {
-        traitDisplay.updateCharts(selectedTraitsMap.keySet());
+
+        // Display charts for only the existing traits
+        traitDisplay.updateCharts(selectedTraitsMap);
+
+        traitDistriPanel.remove(traitDistribution);
+        traitDistriPanel.validate();
     }
 
 }

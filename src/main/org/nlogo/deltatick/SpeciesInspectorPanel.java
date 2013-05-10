@@ -89,7 +89,7 @@ public class SpeciesInspectorPanel extends JPanel {
 
     public void setupTopPanel() {
         //topPanel.setBackground(ColorSchemer.getColor(3));
-        midPanel.setBackground(ColorSchemer.getColor(3));
+        ////midPanel.setBackground(ColorSchemer.getColor(3));
         //sidePanel.setBackground(ColorSchemer.getColor(3));
         //bottomPanel.setBackground(ColorSchemer.getColor(3));
         TitledBorder titleTopPanel;
