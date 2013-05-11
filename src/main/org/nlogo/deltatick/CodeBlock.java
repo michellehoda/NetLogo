@@ -83,6 +83,7 @@ public abstract class CodeBlock
     public CodeBlock(String name, Color color) {
 
         removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        removeButtonPanel.setBackground(color);
         removeButtonPanel.add(removeButton);
         removeButton.setVisible(false);
 
@@ -281,7 +282,7 @@ public abstract class CodeBlock
     public static final DataFlavor envtBlockFlavor =
             new DataFlavor(EnvtBlock.class, "Envt Block");
     public static final DataFlavor traitBlockFlavor =
-            new DataFlavor(TraitBlock.class, "Trait Block");
+            new DataFlavor(TraitBlockNew.class, "Trait Block");
 
     public static final DataFlavor getDataFlavorForThisClass(Class myClass) {
         if (myClass == BreedBlock.class) {

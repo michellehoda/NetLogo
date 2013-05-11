@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,7 +49,10 @@ public class TraitPreview extends JPanel {
     private JList myVariationsList;
     //to store breed and corresponding trait
     ListSelectionModel listSelectionModel;
+
     JTable traitInfoTable;
+    TraitTableModel traitTableModel;
+
     TraitDistribution traitDistribution;
 
     ArrayList<Trait> traitsList = new ArrayList<Trait>();
@@ -67,20 +71,24 @@ public class TraitPreview extends JPanel {
 
     public static final int TRAIT_TEXT_HEIGHT = 20;
     public static final int TRAIT_SCROLLPANE_WIDTH = 150;
-    public static final int TRAIT_SCROLLPANE_HEIGHT = 100;
+    public static final int TRAIT_SCROLLPANE_HEIGHT = 125;
     public static final int TRAIT_TABLE_WIDTH = VARVALUE_COLUMN_WIDTH+VARNAME_COLUMN_WIDTH+VARCHECKBOX_COLUMN_WIDTH;
     public static final int TRAIT_TABLE_HEIGHT = TRAIT_SCROLLPANE_HEIGHT;
     public static final int TRAIT_DISTRIPANEL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
-    public static final int TRAIT_DISTRIPANEL_HEIGHT = 30;
+    public static final int TRAIT_DISTRIPANEL_HEIGHT = 50;
 
     // TOTAL HEIGHT AND WIDTH OF TRAITPREVIEW
     public static final int TRAITPREVIEW_TOTAL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
     public static final int TRAITPREVIEW_TOTAL_HEIGHT = TRAIT_TEXT_HEIGHT+TRAIT_TABLE_HEIGHT+TRAIT_DISTRIPANEL_HEIGHT;
 
-    // Holds final selected traits (and variations) as selected by the user
+    // Holds selected traits (and variations) as selected by the user
     // This should be used to instantiate the trait block
     HashMap<String, TraitState> selectedTraitsMap = new HashMap<String, TraitState>();
-    //ArrayList<Trait> selectedTraitsList = new ArrayList<Trait>();
+    // This maps holds the traits and variations before any modifications are made
+    // in the species inspector panel. Basically, this is the state to revert to
+    // in case the user clicks cancel.
+    HashMap<String, TraitState> origSelectedTraitsMap = new HashMap<String, TraitState>();
+
 
 
     public TraitPreview(String breed, TraitDisplay traitDisplay, LabelPanel labelPanel, JFrame myFrame) {
@@ -137,6 +145,9 @@ public class TraitPreview extends JPanel {
         listSelectionModel.addListSelectionListener(listSelectionListener);
     }
 
+    public void setTraitTableModelListener(TableModelListener tableModelListener) {
+        traitInfoTable.getModel().addTableModelListener(tableModelListener);
+    }
 
     // MOUSE LISTENER TO DETECT CHANGES TO traitDistribution
     class traitDistriMouseMotionListener implements MouseMotionListener {
@@ -297,6 +308,11 @@ public class TraitPreview extends JPanel {
         jScrollPane1.setMaximumSize(new Dimension(TRAIT_SCROLLPANE_WIDTH, TRAIT_SCROLLPANE_HEIGHT));
 
         traitInfoTable = new JTable(new TraitTableModel());
+        traitTableModel = new TraitTableModel();
+        traitInfoTable.setModel(traitTableModel);
+        // Pre-sort the table
+        // Presort done
+
 
         traitDistriPanel = new JPanel();
         traitDistriPanel.setLayout(new BoxLayout(traitDistriPanel, BoxLayout.Y_AXIS));
@@ -314,6 +330,7 @@ public class TraitPreview extends JPanel {
 
         traitInfoTable.setPreferredScrollableViewportSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
         traitInfoTable.setPreferredSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
+        traitInfoTable.setMinimumSize(new Dimension(TRAIT_TABLE_WIDTH, TRAIT_TABLE_HEIGHT));
         traitInfoTable.validate();
         JTableHeader header = traitInfoTable.getTableHeader();
         initColumnSizes(traitInfoTable);
@@ -351,10 +368,10 @@ public class TraitPreview extends JPanel {
     }
 
     // This function is called by the handler when a trait is clicked on (in the trait selection list)
-    public void updateTraitSelection(ListSelectionEvent e, TableModelListener tableModelListener) {
+    public void updateTraitSelection(ListSelectionEvent e) {
 
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-        myVariationsList = new JList();
+        //myVariationsList = new JList();
         if (lsm.isSelectionEmpty()) {
             System.out.println("No trait selected");
         }
@@ -362,6 +379,7 @@ public class TraitPreview extends JPanel {
 
             // gen data[][] based on selected trait
             ArrayList<Object[]> tempTableData = new ArrayList<Object[]>();
+            Vector< Vector<Object> > tmpTableData = new Vector< Vector<Object> >();
             for (Trait trait : traitsList) {
                 if (trait.getNameTrait().equalsIgnoreCase(getSelectedTraitName())) {
                     selectedTrait = trait;
@@ -369,6 +387,7 @@ public class TraitPreview extends JPanel {
                         String key = entry.getKey();
                         Variation var = entry.getValue();
                         Object[] row = new Object[NUMBER_COLUMNS];
+                        Vector<Object> rrow = new Vector<Object>(NUMBER_COLUMNS);
 
                         boolean varSelected = false;
                         String value = new String (var.value);
@@ -384,15 +403,17 @@ public class TraitPreview extends JPanel {
                         row[1] = new String(key);
                         row[2] = new Boolean(varSelected);
                         tempTableData.add(row);
+                        rrow.add(0, new String(value));
+                        rrow.add(1, new String(key));
+                        rrow.add(2, new Boolean(varSelected));
+                        tmpTableData.add(rrow);
                     } // for map
                 } // trait match
             } // for trait
 
-                // make table model & send data to tablemodel
-            TraitTableModel traitTableModel = new TraitTableModel();
-            traitTableModel.setTraitData(tempTableData);
-            traitTableModel.addTableModelListener(tableModelListener);
-            traitInfoTable.setModel(traitTableModel);
+            // Send data to tablemodel
+            //((TraitTableModel) traitInfoTable.getModel()).setTraitData(tempTableData);
+            ((TraitTableModel) traitInfoTable.getModel()).setTraitData(tmpTableData);
             traitInfoTable.validate();
 
             // Pre-sort the table
@@ -406,16 +427,6 @@ public class TraitPreview extends JPanel {
 
             updatePieChart();
 
-
-            final String[] variationStrings = getVariationTypes(getSelectedTraitName()) ;
-            myVariationsList.setModel(new javax.swing.AbstractListModel() {
-                public int getSize() {
-                    return variationStrings.length;
-                }
-                public Object getElementAt(int i) {
-                    return variationStrings[i];
-                }
-            });
         } // else
     }
 
@@ -475,11 +486,17 @@ public class TraitPreview extends JPanel {
     }
 
 
-    class TraitTableModel extends AbstractTableModel {
+    //class TraitTableModel extends AbstractTableModel {
+    class TraitTableModel extends DefaultTableModel {
         private String[] columnNames = {"Value", "Description", "Add variation?"};
         //, "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
+
+        TraitTableModel() {
+            setColumnIdentifiers(columnNames);
+            reset();
+        }
 
         public void setTraitData(ArrayList<Object[]> source) {
             // Clear previous data
@@ -494,6 +511,22 @@ public class TraitPreview extends JPanel {
             } // for i
         }
 
+        public void setTraitData(Vector< Vector<Object> > source) {
+            dataVector.clear();
+            for (int i = 0; i < source.size(); ++i) {
+                Vector<Object> tVector = new Vector<Object>();
+                for (int j = 0; j < source.get(i).size(); ++j) {
+                    tVector.add(source.get(i).get(j));
+                }
+                dataVector.add(tVector);
+            }
+        }
+
+        public void reset() {
+            //dataVector.clear();
+            setRowCount(0);
+        }
+
         public boolean isCellEditable(int rowIndex, int columnIndex){
             if (columnIndex == VARCHECKBOX_COLUMN_INDEX) {
                 return true;
@@ -504,7 +537,8 @@ public class TraitPreview extends JPanel {
         }
 
         public void setValueAt(Object value, int row, int col) {
-            tableData.get(row)[col] = value;
+            //tableData.get(row)[col] = value;
+            ((Vector<Object>) dataVector.get(row)).set(col, value);
             fireTableCellUpdated(row, col);
         }
         /*
@@ -515,7 +549,13 @@ public class TraitPreview extends JPanel {
          */
 
        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+           switch (c) {
+               case 0: { return String.class; }
+               case 1: { return String.class; }
+               case 2: { return Boolean.class; }
+               default: { return null; }
+           }
+            //return getValueAt(0, c).getClass();
         }
 
        public int getColumnCount() {
@@ -523,7 +563,8 @@ public class TraitPreview extends JPanel {
        }
 
        public int getRowCount() {
-            return tableData.size();
+           //return tableData.size();
+           return dataVector.size();
        }
 
        public String getColumnName(int col) {
@@ -531,7 +572,8 @@ public class TraitPreview extends JPanel {
        }
 
        public Object getValueAt(int row, int col) {
-            return tableData.get(row)[col];
+           //return tableData.get(row)[col];
+           return ((Vector<Object>) dataVector.get(row)).get(col);
        }
     }
 
@@ -549,14 +591,54 @@ public class TraitPreview extends JPanel {
     public HashMap<String, TraitState> getTraitStateMap() {
         return selectedTraitsMap;
     }
+    public HashMap<String, TraitState> getOrigTraitStateMap() {
+        return origSelectedTraitsMap;
+    }
 
     public void setSelectedTraitsMap(HashMap<String, TraitState> hashMap) {
         selectedTraitsMap.clear();
-        selectedTraitsMap.putAll(hashMap);
+        // Does putAll perform deep copy?
+        //selectedTraitsMap.putAll(hashMap);
+
+        // Must perform deep copy
+        for (Map.Entry<String, TraitState> entry : hashMap.entrySet()) {
+            selectedTraitsMap.put(entry.getKey(), new TraitState(entry.getValue()));
+        }
 
         // Add label panel checkboxes
         labelPanel.updateData(hashMap.keySet());
     }
+
+    // Copies selectedTraitsMap to origSelectedTraitsMap (for fututre use)
+    // This function must be called when the user presses okay
+    public void saveOrigSelectedTraitsMap() {
+        origSelectedTraitsMap.clear();
+        for (Map.Entry<String, TraitState> entry : selectedTraitsMap.entrySet()) {
+            origSelectedTraitsMap.put(entry.getKey(), new TraitState(entry.getValue()));
+        }
+    }
+    // Loads the origSelectedTraitsMap
+    // This function must be called when the user clicks on the on the inspect species button
+    public void loadOrigSelectedTraitsMap() {
+        // Copy existing traits to selectedTraitsMap
+        setSelectedTraitsMap(origSelectedTraitsMap);
+
+        // Clear the table
+        ((TraitTableModel)traitInfoTable.getModel()).reset();
+
+        // Make sure only checkboxes corresponding to existing traits are present
+        updateCheckBoxes(origSelectedTraitsMap);
+
+        // Make sure no trait is selected
+        myTraitsList.clearSelection();
+
+        // Display charts for only the existing traits
+        traitDisplay.updateCharts(selectedTraitsMap);
+
+        traitDistriPanel.remove(traitDistribution);
+        traitDistriPanel.validate();
+    }
+
 }
 
 

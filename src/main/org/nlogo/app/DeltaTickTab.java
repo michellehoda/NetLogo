@@ -91,6 +91,10 @@ public class DeltaTickTab
     HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
 
+    // HasMap to store Mutation slider values
+    private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
+    HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
+
     //InterfaceTab it;
     ProceduresTab pt;
     GUIWorkspace workspace;
@@ -231,27 +235,28 @@ public class DeltaTickTab
     	if ( count == 0 ) {
           	libraryHolder = new LibraryHolder();
      		libraryHolder.makeNewTab();
-           	new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
-            
+            // Aditi: The library reader reference MUST be saved (Apr 16, 2013)
+           	this.libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
+
         	if(buildPanel.getBgInfo().getLibrary() != null){
         		libraryPanel.add(libraryHolder);
-        		currentLibraryName = buildPanel.getBgInfo().getLibrary(); 
+        		currentLibraryName = buildPanel.getBgInfo().getLibrary();
         		libraryHolder.setTabName(currentLibraryName);
-        		
+
         		System.out.println(buildPanel.getBgInfo().getLibrary());
 
-            
+
         		addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
         	    buildPanel.removeRect();
-                
+
         	    if (buildPanel.getMyBreeds().size() == 0) {
                     buildPanel.addRect("Click Add species to start building your model!");
                     buildPanel.repaint();
                     buildPanel.validate();
                 }
-                
+
         		deltaTickTab.contentPanel.validate();
         		count ++;
         	}
@@ -261,13 +266,14 @@ public class DeltaTickTab
         }
          else if (count > 0 ) {
             libraryHolder.makeNewTab();
-            new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
+            // Aditi: Again, library reader MUST be saved (Apr 16, 2013)
+            this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
             libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-            
+
             if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
             	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
             }
-     
+
             currentLibraryName = buildPanel.getBgInfo().getLibrary();
             deltaTickTab.contentPanel.validate();
          }
@@ -395,9 +401,14 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            // Copy from orig traitstate map to traitstate map
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+
             speciesInspectorPanel.updateText();
-            speciesInspectorPanel.getMyFrame().setVisible(true);
             speciesInspectorPanel.updateTraitDisplay();
+            speciesInspectorPanel.getMyFrame().pack();
+            speciesInspectorPanel.getMyFrame().validate();
+            speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
 
@@ -411,6 +422,9 @@ public class DeltaTickTab
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+
+            // Save origSelectedTraitsMap
+            speciesInspectorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
 
             myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
             myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
@@ -455,8 +469,7 @@ public class DeltaTickTab
     }
 
     public void makeTraitBlock(BreedBlock bBlock, TraitState traitState) {
-        TraitBlockNew traitBlock;
-        traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
+        TraitBlockNew traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
         traitBlock.setMyParent(bBlock);
 
         speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
@@ -482,7 +495,9 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
-                    speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+            speciesInspectorPanel.updateTraitDisplay();
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
@@ -495,17 +510,34 @@ public class DeltaTickTab
             }
         };
 
+    public PlotBlock makePlotBlock(boolean isHisto) {
+        PlotBlock newPlotBlock = new PlotBlock(isHisto);
+        buildPanel.addPlot( newPlotBlock );
+        newPlotBlock.getParent().setComponentZOrder(newPlotBlock, 0 );
+        if (isHisto) {
+            new HistoDropTarget(newPlotBlock);
+        }
+        else {
+            new PlotDropTarget(newPlotBlock);
+        }
+        contentPanel.validate();
+        return newPlotBlock;
+    }
 
     private final javax.swing.Action addPlotAction =
-		new javax.swing.AbstractAction( "Add Line Graph" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                PlotBlock newPlot = new PlotBlock(false);
-                buildPanel.addPlot( newPlot );
-                newPlot.getParent().setComponentZOrder(newPlot, 0 );
-                new PlotDropTarget(newPlot);
-                contentPanel.validate();
-        }
-    };
+            new javax.swing.AbstractAction( "Add Line Graph" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                    // Line graph, so parameter is false
+                    makePlotBlock(false);
+                }
+            };
+    private final javax.swing.Action addHistoAction =
+            new javax.swing.AbstractAction( "Add Histogram" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                    // histogram, so parameter is true
+                    makePlotBlock(true);
+                }
+            };
 
     private final javax.swing.Action clearAction =
 		new javax.swing.AbstractAction( "Clear" ) {
@@ -539,16 +571,7 @@ public class DeltaTickTab
             }
         };
 
-    private final javax.swing.Action addHistoAction =
-		new javax.swing.AbstractAction( "Add Histogram" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                PlotBlock hBlock = new PlotBlock(true);
-                buildPanel.addPlot( hBlock );
-                hBlock.getParent().setComponentZOrder(hBlock, 0 );
-                new HistoDropTarget(hBlock);
-                contentPanel.validate();
-        }
-    };
+
 
     private final Action toBuildBlock =
             new javax.swing.AbstractAction( "Build operator block" ) {
@@ -636,7 +659,6 @@ public class DeltaTickTab
 
     public void openModel(File modelFile) {
         deltaTickModelParser.openModel(modelFile);
-        //DeltaTickModelReader modelReader = new DeltaTickModelReader( workspace.getFrame(), this , file);
     }
 
     public void populateProcedures() {
@@ -701,17 +723,26 @@ public class DeltaTickTab
 
 
     public void populateMutationSlider() {
+        System.out.println("populateMutationSlider()");
         boolean putNoteWidget = false;
         interfaceSliderCount = 0;
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            System.out.println("Breedblock: " + bBlock.getName());
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
-                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
+                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+
+                    // Set value from previous instance or default
+                    double value = (mutationSliderValues.containsKey(sliderName)) ? mutationSliderValues.get(sliderName) : MUTATION_SLIDER_DEFAULT_VALUE;
+                    sliderWidget.valueSetter(value);
+
+                    // Set name
                     sliderWidget.name_$eq(sliderName);
-                    sliderWidget.validate();
+
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+
                     sliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
                 }
@@ -720,6 +751,9 @@ public class DeltaTickTab
 
             revalidate();
         }
+        // Clear the sliderValuesHashMap
+        mutationSliderValues.clear();
+
         //make a note only once (March 29, 2013)
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
@@ -727,16 +761,21 @@ public class DeltaTickTab
             String note = "Chance of mutation??";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
-            noteWidget.validate();
+            //noteWidget.validate();
             noteWidgets.put("MutationNote", widgetw);
         }
+        System.out.println("interfaceSliderCount = " + interfaceSliderCount);
     }
 
     public void removeMutationSlider() {
         for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
-            //sliderWidgets.remove(w);
+
+            // Record the value of the slider
+            mutationSliderValues.put(p, ((SliderWidget) w.widget()).value() );
+
+            // Remove the widget from interface panel
             interfacePanel.removeWidget(w);
         }
         sliderWidgets.clear();

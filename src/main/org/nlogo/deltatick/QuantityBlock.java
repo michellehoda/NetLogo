@@ -137,15 +137,15 @@ public strictfp class QuantityBlock
             if (((PlotBlock) parent).isHisto == true) {
                 passBack += "set-plot-pen-mode 1 \n";
                 for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("breed-type")) {
-                    population = entry.getValue().getText().toString();
+                    if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                        population = entry.getValue().getText().toString();
+                    }
+                    if (entry.getKey().equalsIgnoreCase("trait")) {
+                        variable = entry.getValue().getText().toString();
+                    }
                 }
-                if (entry.getKey().equalsIgnoreCase("trait")) {
-                    variable = entry.getValue().getText().toString();
-                }
-            }
-            passBack += "histogram [ " + variable + " ] of " + population ;
-            passBack += "\n";
+                passBack += "histogram [ " + variable + " ] of " + population ;
+                passBack += "\n";
             }
 
             else {
@@ -155,7 +155,7 @@ public strictfp class QuantityBlock
                 }
             }
 
-        passBack += "\n";
+            passBack += "\n";
         }
         penUpdateCode = passBack;
         return passBack;
