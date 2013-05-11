@@ -7,7 +7,6 @@
         <option name="compilerLibraryName" value="all" />
         <option name="compilerOptions" value="-unchecked -Xfatal-warnings -encoding us-ascii -Xcheckinit -deprecation" />
         <option name="fsc" value="true" />
-        <option name="languageLevel" value="Scala 2.9" />
       </configuration>
     </facet>
   </component>

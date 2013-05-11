@@ -344,20 +344,20 @@ public strictfp class BreedBlock
             }
             code += "\n";
 
-            // Do we need to put code for labels/trait labels here?
+           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)
 
-//            if (traitLabels.size() >= 1) {
-//                code += "set label (word ";
-//                for (int i = 0; i < traitLabels.size(); i++) {
-//                    code += traitLabels.get(i);
-//                    if (traitLabels.size() > 1) {
-////                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-//                        code += "\"-\"";
-//                        i--;
-//                    }
-//                }
-//                code += " ) \n";
-//            }
+            if (traitLabels.size() >= 1) {
+                code += "set label (word ";
+                for (int i = 0; i < traitLabels.size(); i++) {
+                    code += traitLabels.get(i);
+                    if (traitLabels.size() > 1) {
+//               if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+                        code += "\"-\"";
+                        i--;
+                    }
+                }
+                code += " ) \n";
+            }
             code += "]\n";
         }
         return code;
