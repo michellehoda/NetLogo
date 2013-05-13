@@ -77,6 +77,10 @@ public strictfp class PlotBlock
         return netLogoPlot;
     }
 
+    public void removePen(String penName) {
+        netLogoPlot.removePen(penName);
+    }
+
     /*
     public java.awt.Dimension getMinimumSize() {
         return new java.awt.Dimension( 250 , 200 );

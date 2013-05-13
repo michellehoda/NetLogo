@@ -302,7 +302,7 @@ public class DeltaTickModelReader {
 
                 // Make the plot block
                 PlotBlock plotBlock = deltaTickTab.makePlotBlock(isHisto);
-                plotBlock.setName(plotName);
+                plotBlock.setPlotName(plotName);
 
                 // Iterate over Quantity Blocks
                 NodeList plotChildNodes = plotBlockNode.getChildNodes();

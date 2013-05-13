@@ -2,7 +2,6 @@ package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
 import org.nlogo.deltatick.dnd.PrettyInput;
-import org.nlogo.hotlink.graph.Plot;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,6 +24,10 @@ public strictfp class QuantityBlock
     String trait = " ";
     String population;
     String variable;
+
+    // The pen name is stored in this string when the tab is switched May 12, 2013
+    String savedPenName = new String("");
+
     String penSetUpCode;
     String penUpdateCode;
     String penColorString;
@@ -61,7 +64,7 @@ public strictfp class QuantityBlock
         if (myParent instanceof PlotBlock) {
             if (((PlotBlock) myParent).getNetLogoPlot() != null) {
             // Remove pen
-            ((PlotBlock) myParent).getNetLogoPlot().removePen(getPenName());
+            ((PlotBlock) myParent).removePen(getPenName());
             }
         }
     }
@@ -234,6 +237,13 @@ public strictfp class QuantityBlock
             passBack += "-" + input.getText();
         }
         return passBack;
+    }
+
+    public void setSavedPenName() {
+        savedPenName = new String(getPenName());
+    }
+    public String getSavedPenName() {
+        return savedPenName;
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {

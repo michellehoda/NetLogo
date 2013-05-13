@@ -815,8 +815,21 @@ public class DeltaTickTab
 
                     ////interfacePlotCount++;
 
-                    // Clear plot pens
+                    // Clear renamed plot pens
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+//                        if (!quantBlock.getSavedPenName().equalsIgnoreCase("")) {
+//                            // Previous pen name had been saved
+//                            if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
+//                                // Name has changed
+//                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
+//                                plotBlock.removePen(quantBlock.getSavedPenName());
+//                            }
+//                        }
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
+                    // Create new pens
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         if (newPlot.getPen(quantBlock.getPenName()).toString().equals("None")) {
                             // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
@@ -831,6 +844,19 @@ public class DeltaTickTab
                     WidgetWrapper ww = plotWrappers.get(plotBlock.getName());
                     ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
 
+                    // Clear renamed plot pens
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        if (!quantBlock.getSavedPenName().equalsIgnoreCase("")) {
+                            // Previous pen name had been saved
+                            if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
+                                // Name has changed
+                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
+                                plotBlock.removePen(quantBlock.getSavedPenName());
+                            }
+                        }
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
                     // Make sure plot pens are up to date
                     org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getName());
