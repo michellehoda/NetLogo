@@ -413,7 +413,7 @@ public String newSaveAsXML() {
     public boolean plotExists(String name) {
         boolean check = false;
         for (PlotBlock plotBlock : this.getMyPlots()) {
-            if (plotBlock.getName().equalsIgnoreCase(name)) {
+            if (plotBlock.getPlotName().equalsIgnoreCase(name)) {
                 check = true;
             }
         }

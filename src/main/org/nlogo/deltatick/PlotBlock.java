@@ -140,13 +140,16 @@ public strictfp class PlotBlock
     }
 
 
-    public String getName() {
+    public String getPlotName() {
         return plotNameField.getText();
     }
+//    public String getName() {
+//        return plotNameField.getText();
+//    }
 
     public String unPackAsCode() {
         String passBack = "";
-        passBack += "  set-current-plot \"" + getName() + "\"\n";
+        passBack += "  set-current-plot \"" + getPlotName() + "\"\n";
 
         for (QuantityBlock quantBlock : getMyBlocks()) {
             passBack += "  " + quantBlock.unPackAsCommand();

@@ -427,7 +427,7 @@ public class DeltaTickModelReader {
                 // Create the plot block element
                 Element plotBlockElement = doc.createElement("plotBlock");
                 // Set its attributes
-                plotBlockElement.setAttribute("name", plotBlock.getName());
+                plotBlockElement.setAttribute("name", plotBlock.getPlotName());
                 plotBlockElement.setAttribute("isHisto", plotBlock.isHistogram()?"true":"false");
                 // Append to root element (<model>)
                 rootElement.appendChild(plotBlockElement);
