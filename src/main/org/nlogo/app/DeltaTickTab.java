@@ -815,16 +815,9 @@ public class DeltaTickTab
 
                     ////interfacePlotCount++;
 
-                    // Clear renamed plot pens
+                    // First time creating plot.
+                    // Save pen names
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
-//                        if (!quantBlock.getSavedPenName().equalsIgnoreCase("")) {
-//                            // Previous pen name had been saved
-//                            if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
-//                                // Name has changed
-//                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
-//                                plotBlock.removePen(quantBlock.getSavedPenName());
-//                            }
-//                        }
                         // Now save the new pen name
                         quantBlock.setSavedPenName();
                     }

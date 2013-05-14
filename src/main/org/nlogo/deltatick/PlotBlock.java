@@ -143,9 +143,6 @@ public strictfp class PlotBlock
     public String getPlotName() {
         return plotNameField.getText();
     }
-//    public String getName() {
-//        return plotNameField.getText();
-//    }
 
     public String unPackAsCode() {
         String passBack = "";
