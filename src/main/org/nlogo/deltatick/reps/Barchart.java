@@ -26,15 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-//import org.jCharts.axisChart.AxisChart;
-//import org.jCharts.axisChart.customRenderers.axisValue.renderers.*;
-//import org.jCharts.chartData.*;
-//import org.jCharts.properties.*;
-//import org.jCharts.properties.util.ChartStroke;
-//import org.jCharts.test.TestDataGenerator;
-//import org.jCharts.types.ChartType;
-
-// import java.awt.*;
 
 /**
 * Created by IntelliJ IDEA.

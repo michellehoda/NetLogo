@@ -41,6 +41,7 @@ public class TraitPreview extends JPanel {
     LabelPanel labelPanel;
     boolean isTraitSelected;
     String breed;
+    BreedBlock myBreedBlock;
 
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList myTraitsList;
@@ -91,9 +92,9 @@ public class TraitPreview extends JPanel {
 
 
 
-    public TraitPreview(String breed, TraitDisplay traitDisplay, LabelPanel labelPanel, JFrame myFrame) {
+    public TraitPreview(BreedBlock myBreedBlock, TraitDisplay traitDisplay, LabelPanel labelPanel, JFrame myFrame) {
         this.myFrame = myFrame;
-        this.breed = breed;
+        this.myBreedBlock = myBreedBlock;
         this.traitDisplay = traitDisplay;
         this.labelPanel = labelPanel;
         traitDisplay.setBackground(Color.BLACK);
@@ -231,10 +232,10 @@ public class TraitPreview extends JPanel {
             selectedTraitsMap.containsKey(selectedTraitName)) {
             //traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations);
             //TODO: do not use traitState.selectedVariationsHashMap. Instead create a temp map by iterating over traitState.variations (March 31, 2013)
-            traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
+            traitDistribution = new TraitDistribution(myBreedBlock.plural(), selectedTraitName, selectedVariations, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
         }
         else {
-            traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations);
+            traitDistribution = new TraitDistribution(myBreedBlock.plural(), selectedTraitName, selectedVariations);
         }
         traitDistribution.addMouseMotionListener(new traitDistriMouseMotionListener());
         traitDistriPanel.add(traitDistribution);
@@ -319,7 +320,7 @@ public class TraitPreview extends JPanel {
         traitDistriPanel.setPreferredSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
         traitDistriPanel.setMinimumSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
         TitledBorder titleMidPanel;
-        titleMidPanel = BorderFactory.createTitledBorder("Variations in " + breed);
+        titleMidPanel = BorderFactory.createTitledBorder("Variations in " + myBreedBlock.plural());
         traitDistriPanel.setBorder(titleMidPanel);
 
         traitDistribution = new TraitDistribution();
@@ -635,6 +636,7 @@ public class TraitPreview extends JPanel {
         // Display charts for only the existing traits
         traitDisplay.updateCharts(selectedTraitsMap);
 
+        ((TitledBorder) traitDistriPanel.getBorder()).setTitle("Variations in " + myBreedBlock.plural());
         traitDistriPanel.remove(traitDistribution);
         traitDistriPanel.validate();
     }

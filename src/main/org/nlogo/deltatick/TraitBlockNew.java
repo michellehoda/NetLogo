@@ -70,10 +70,6 @@ public class TraitBlockNew
         this.revalidate();
     }
 
-    public void setMyParent(CodeBlock block) {
-        myParent = block;
-    }
-
     public String getTraitName() {
         return traitName;
     }
@@ -154,12 +150,10 @@ public class TraitBlockNew
     }
 
     public String getBreedName() {
-        //return breedName;
         return ((BreedBlock) myParent).plural();
     }
 
     public void hideRemoveButton() {
-        //this.remove(removeButton);
         removeButton.setVisible(false);
     }
 

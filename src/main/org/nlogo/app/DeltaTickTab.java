@@ -795,28 +795,34 @@ public class DeltaTickTab
         try {
             ////for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
-                if (plotWrappers.containsKey(plotBlock.getName()) == false) {
+                if (plotWrappers.containsKey(plotBlock.getPlotName()) == false) {
                     // Plot not previously present ==> new plot must be created
 
                     ////org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
-                    org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getName());
+                    org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
 
                     ////WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
                     WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160), true, false);
 
-                    plotWidget.displayName(plotBlock.getName());
+                    plotWidget.displayName(plotBlock.getPlotName());
 
                     ////org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
-                    org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
                     plotBlock.setNetLogoPlot(newPlot);
 
                     ////plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
-                    plotWrappers.put(plotBlock.getName(), ww);
+                    plotWrappers.put(plotBlock.getPlotName(), ww);
 
                     ////interfacePlotCount++;
 
-                    // Clear plot pens
+                    // First time creating plot.
+                    // Save pen names
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
+                    // Create new pens
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         if (newPlot.getPen(quantBlock.getPenName()).toString().equals("None")) {
                             // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
@@ -828,12 +834,25 @@ public class DeltaTickTab
                 }
                 else {
                     // Plot already exists, just recalculate its position
-                    WidgetWrapper ww = plotWrappers.get(plotBlock.getName());
+                    WidgetWrapper ww = plotWrappers.get(plotBlock.getPlotName());
                     ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
 
+                    // Clear renamed plot pens
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        if (!quantBlock.getSavedPenName().equalsIgnoreCase("")) {
+                            // Previous pen name had been saved
+                            if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
+                                // Name has changed
+                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
+                                plotBlock.removePen(quantBlock.getSavedPenName());
+                            }
+                        }
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
                     // Make sure plot pens are up to date
-                    org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
                     //thisPlot.removeAllPens();
                     //TODO: Access plot editor
                     for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {

@@ -159,7 +159,7 @@ public class SpeciesInspectorPanel extends JPanel {
 
         //labelPanel.setPreferredSize(new Dimension(LabelPanel.LABELPANEL_WIDTH, LabelPanel.LABELPANEL_HEIGHT));
 
-        traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
+        traitPreview = new TraitPreview(myParent, traitDisplay, labelPanel, myFrame);
         traitPreview.setTraits(myParent.getTraits());
         traitPreview.setTraitsListListener(new TraitListSelectionHandler());
         traitPreview.setTraitTableModelListener(new TraitTableModelListener());
