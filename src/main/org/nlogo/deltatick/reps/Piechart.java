@@ -1,6 +1,6 @@
 package org.nlogo.deltatick.reps;
 
-//import net.sf.cglib.core.Local;
+
 import org.jfree.chart.*;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,8 +31,7 @@ import java.util.Map;
  */
 public class Piechart extends JPanel {
 
-
-    HashMap<String, Double> selectedVariationsPerc = new HashMap<String, Double>();
+    TreeMap<String, Double> selectedVariationsPerc;
     String trait;
     ChartPanel chartPanel;
     JFreeChart chart;
@@ -42,35 +42,12 @@ public class Piechart extends JPanel {
     public static final int PIECHART_WIDTH = 230;
     public static final int PIECHART_HEIGHT = 250;
 
-//    public Piechart() {
-//        this.dummy = new HashMap<String, String>();
-//        this.trait = new String("");
-//        dataset = (DefaultPieDataset) createDataset();
-//        chart = createChart(dataset);
-//        chartPanel = new ChartPanel(chart);
-//        chartPanel.setVisible(false);
-//        chartPanel.setPreferredSize(new Dimension(200, 200));
-//        this.setVisible(false);
-//        this.validate();
-//    }
-//
-//    public Piechart(HashMap<String, String> map, String trait) {
-//        this.dummy = map;
-//        this.trait = trait;
-//        dataset = (DefaultPieDataset) createDataset();
-//        chart = createChart(dataset);
-//        chartPanel = new ChartPanel(chart);
-//        chartPanel.setPreferredSize(new Dimension(200, 200));
-//        this.setVisible(true);
-//        this.validate();
-//    }
-
     public Piechart(String traitName, TraitDisplay.PaintSupplier paintSupplier) {
         trait = traitName;
         this.paintSupplier = paintSupplier;
         startAngle = Math.random() * 360.0;
         dataset = new DefaultPieDataset();
-        selectedVariationsPerc = new HashMap<String, Double>();
+        selectedVariationsPerc = new TreeMap<String, Double>();
         dataset = (DefaultPieDataset) createDataset();
         chart = createChart(dataset);
 
@@ -89,12 +66,6 @@ public class Piechart extends JPanel {
             dataset.setValue((String) entry.getKey(), (Double) entry.getValue());
         }
 
-//        for (Map.Entry<String, String> map : dummy.entrySet() ) {
-//            String variation = map.getKey();
-//            double perc = Double.parseDouble(map.getValue());
-//            selectedVariationsPerc.put(variation, perc);
-//            dataset.setValue(variation, perc);
-//        }
         return dataset;
     }
 
@@ -163,8 +134,6 @@ public class Piechart extends JPanel {
 //        ((PiePlot) chart.getPlot()).setDataset(dataset);
 
         chartPanel.setChart(chart);
-
-        //chartPanel.setPreferredSize(new Dimension(300, 250));
 
 
         if (varPercent.size() > 0) {

@@ -94,7 +94,8 @@ public class LibraryReader {
             for (int i = 0; i < behaviors.getLength(); i++) {
                 Node behavior = behaviors.item(i);
                 boolean b = false;
-                block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent());
+                block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent(),
+                                          behavior.getAttributes().getNamedItem("traits").getTextContent());
                 if (behavior.getAttributes().getNamedItem("mutate") != null) {
                     b = behavior.getAttributes().getNamedItem("mutate").getTextContent().equalsIgnoreCase("true");
                     if (b) {

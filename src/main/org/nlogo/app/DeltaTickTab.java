@@ -92,6 +92,10 @@ public class DeltaTickTab
     HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
 
+    // HasMap to store Mutation slider values
+    private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
+    HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
+
     //InterfaceTab it;
     ProceduresTab pt;
     GUIWorkspace workspace;
@@ -400,9 +404,14 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            // Copy from orig traitstate map to traitstate map
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+
             speciesInspectorPanel.updateText();
-            speciesInspectorPanel.getMyFrame().setVisible(true);
             speciesInspectorPanel.updateTraitDisplay();
+            speciesInspectorPanel.getMyFrame().pack();
+            speciesInspectorPanel.getMyFrame().validate();
+            speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
 
@@ -416,6 +425,9 @@ public class DeltaTickTab
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
             speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+
+            // Save origSelectedTraitsMap
+            speciesInspectorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
 
             myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
             myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
@@ -486,7 +498,9 @@ public class DeltaTickTab
 
         public void actionPerformed(ActionEvent e) {
             //SpeciesInspectorPanel
-                    speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+            speciesInspectorPanel.updateTraitDisplay();
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
@@ -720,11 +734,18 @@ public class DeltaTickTab
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
-                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
-                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
+                    SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+
+                    // Set value from previous instance or default
+                    double value = (mutationSliderValues.containsKey(sliderName)) ? mutationSliderValues.get(sliderName) : MUTATION_SLIDER_DEFAULT_VALUE;
+                    sliderWidget.valueSetter(value);
+
+                    // Set name
                     sliderWidget.name_$eq(sliderName);
-                    //sliderWidget.validate();
+
+                    WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+
                     sliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
                 }
@@ -733,11 +754,14 @@ public class DeltaTickTab
 
             revalidate();
         }
+        // Clear the sliderValuesHashMap
+        mutationSliderValues.clear();
+
         //make a note only once (March 29, 2013)
         if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
             WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
-            String note = "Chance of mutation??";
+            String note = "Chance of mutation in";
             noteWidget.setBounds(0, 80, 20, 30);
             noteWidget.text_$eq(note);
             //noteWidget.validate();
@@ -750,7 +774,11 @@ public class DeltaTickTab
         for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
-            //sliderWidgets.remove(w);
+
+            // Record the value of the slider
+            mutationSliderValues.put(p, ((SliderWidget) w.widget()).value() );
+
+            // Remove the widget from interface panel
             interfacePanel.removeWidget(w);
         }
         sliderWidgets.clear();
@@ -770,28 +798,34 @@ public class DeltaTickTab
         try {
             ////for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
-                if (plotWrappers.containsKey(plotBlock.getName()) == false) {
+                if (plotWrappers.containsKey(plotBlock.getPlotName()) == false) {
                     // Plot not previously present ==> new plot must be created
 
                     ////org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
-                    org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getName());
+                    org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
 
                     ////WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
                     WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160), true, false);
 
-                    plotWidget.displayName(plotBlock.getName());
+                    plotWidget.displayName(plotBlock.getPlotName());
 
                     ////org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
-                    org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
                     plotBlock.setNetLogoPlot(newPlot);
 
                     ////plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
-                    plotWrappers.put(plotBlock.getName(), ww);
+                    plotWrappers.put(plotBlock.getPlotName(), ww);
 
                     ////interfacePlotCount++;
 
-                    // Clear plot pens
+                    // First time creating plot.
+                    // Save pen names
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
+                    // Create new pens
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         if (newPlot.getPen(quantBlock.getPenName()).toString().equals("None")) {
                             // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
@@ -803,12 +837,25 @@ public class DeltaTickTab
                 }
                 else {
                     // Plot already exists, just recalculate its position
-                    WidgetWrapper ww = plotWrappers.get(plotBlock.getName());
+                    WidgetWrapper ww = plotWrappers.get(plotBlock.getPlotName());
                     ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
 
+                    // Clear renamed plot pens
+                    for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
+                        if (!quantBlock.getSavedPenName().equalsIgnoreCase("")) {
+                            // Previous pen name had been saved
+                            if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
+                                // Name has changed
+                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
+                                plotBlock.removePen(quantBlock.getSavedPenName());
+                            }
+                        }
+                        // Now save the new pen name
+                        quantBlock.setSavedPenName();
+                    }
 
                     // Make sure plot pens are up to date
-                    org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getName());
+                    org.nlogo.plot.Plot thisPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
                     //thisPlot.removeAllPens();
                     //TODO: Access plot editor
                     for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {

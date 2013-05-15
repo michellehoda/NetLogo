@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,7 +66,6 @@ public class TraitDisplay extends JPanel {
              (chartsPanelMap.containsKey(traitName))) {
             // Remove corresponding panel
             this.remove(chartsPanelMap.get(traitName));
-
             chartsPanelMap.remove(traitName);
         }
 
@@ -75,7 +75,24 @@ public class TraitDisplay extends JPanel {
 
     }
 
+    public void updateCharts(HashMap<String, TraitState> traitsMap) {
+        for (String traitName : chartsPanelMap.keySet()) {
+            if (! traitsMap.keySet().contains(traitName)) {
+                this.remove(chartsPanelMap.get(traitName));
+                chartsPanelMap.remove(traitName);
+            }
+            else {
+                // Update the chart
+                updateChart(traitName, traitsMap.get(traitName).getValuesPercentList());
+            }
+        }
+        this.validate();
+        this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT*chartsPanelMap.size()));
+    }
+
     private class ChartsPanel extends JPanel {
+
+        private static final int DEFAULT_PAINT_INDEX_INCREMENT = 3;
 
         HashMap<String, Piechart> selectedTraitPieChart = new HashMap<String, Piechart>();
         HashMap<String, Barchart> selectedTraitBarChart = new HashMap<String, Barchart>();
@@ -104,7 +121,7 @@ public class TraitDisplay extends JPanel {
             this.validate();
 
             this.setVisible(true);
-            defaultPaintIndex += 3;
+            defaultPaintIndex += DEFAULT_PAINT_INDEX_INCREMENT;
 
         }
 
@@ -150,10 +167,10 @@ public class TraitDisplay extends JPanel {
             COLORS.add(new Color(0x66, 0xFF, 0xFF)); // CYAN
             COLORS.add(new Color(0x00, 0x66, 0x00)); // DARK GREEN
             COLORS.add(new Color(0xFF, 0x66, 0xFF)); // PINK
-            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
-            COLORS.add(new Color(0x66, 0x66, 0x00)); // OLIVE
             COLORS.add(new Color(0x00, 0x00, 0xFF)); // BLUE
+            COLORS.add(new Color(0x66, 0x66, 0x00)); // OLIVE
             COLORS.add(new Color(0xFF, 0x66, 0x00)); // ORANGE
+            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
 
             resetIndex = defaultIndex % COLORS.size();
             paintIndex = resetIndex;

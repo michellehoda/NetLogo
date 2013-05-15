@@ -25,15 +25,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-//import org.jCharts.axisChart.AxisChart;
-//import org.jCharts.axisChart.customRenderers.axisValue.renderers.*;
-//import org.jCharts.chartData.*;
-//import org.jCharts.properties.*;
-//import org.jCharts.properties.util.ChartStroke;
-//import org.jCharts.test.TestDataGenerator;
-//import org.jCharts.types.ChartType;
-
-// import java.awt.*;
+import java.util.TreeMap;
 
 /**
 * Created by IntelliJ IDEA.
@@ -47,7 +39,7 @@ public class Barchart extends JPanel {
     ChartPanel chartPanel;
     JFreeChart chart;
     DefaultCategoryDataset dataset;
-    HashMap<String, Double> selectedVariationsPerc;
+    TreeMap<String, Double> selectedVariationsPerc;
     TraitDisplay.PaintSupplier paintSupplier;
 
     public static final int BARCHART_WIDTH = 250;
@@ -63,7 +55,7 @@ public class Barchart extends JPanel {
         trait = traitName;
         this.paintSupplier = paintSupplier;
         dataset = new DefaultCategoryDataset();
-        selectedVariationsPerc = new HashMap<String, Double>();
+        selectedVariationsPerc = new TreeMap<String, Double>();
         dataset = (DefaultCategoryDataset) createDataset();
         chart = createChart(dataset);
 
@@ -119,6 +111,12 @@ public class Barchart extends JPanel {
         renderer.setMaximumBarWidth(0.25); // 25% of total width
         renderer.setShadowVisible(false);
         renderer.setBarPainter(new StandardBarPainter());
+        if( dataset.getColumnCount() > 2) {
+            renderer.setItemMargin(-2);
+        }
+        else {
+            renderer.setItemMargin(-1);
+        }
 
         int i = 0;
         paintSupplier.reset();

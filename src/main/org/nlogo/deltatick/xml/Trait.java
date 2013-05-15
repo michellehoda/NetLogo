@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +36,11 @@ public class Trait {
         setupCode = new String(trait.setupCode);
         setupReporter = new String(trait.setupReporter);
         message = new String(trait.message);
-        variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
+        variationHashMap.clear();
+        for (Map.Entry <String, Variation> entry : trait.variationHashMap.entrySet()) {
+            this.variationHashMap.put(entry.getKey(), new Variation(entry.getValue()));
+        }
+        // variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
         mutateCode = new String(trait.mutateCode);
     }
 
