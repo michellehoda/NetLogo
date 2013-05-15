@@ -3,10 +3,13 @@ package org.nlogo.deltatick;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
+import scala.actors.threadpool.Arrays;
 
 import javax.swing.*;
 
@@ -22,7 +25,10 @@ public strictfp class BehaviorBlock
     BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
 
-    public BehaviorBlock(String name) {
+    // Set of acceptable traits
+    Set<String> applicableTraits;// = new HashSet<String>();
+
+    public BehaviorBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(0).brighter());
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
@@ -30,6 +36,9 @@ public strictfp class BehaviorBlock
                 CodeBlock.codeBlockFlavor,
         };
 
+        if (!aTraits.isEmpty()) {
+            applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
+        }
     }
 
 
@@ -256,6 +265,10 @@ public strictfp class BehaviorBlock
 
     public JPanel getLabel() {
         return label;
+    }
+
+    public Set<String> getApplicableTraits() {
+        return applicableTraits;
     }
 
     public JToolTip createToolTip() {

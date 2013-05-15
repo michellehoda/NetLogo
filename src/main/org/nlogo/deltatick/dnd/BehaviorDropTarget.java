@@ -29,14 +29,20 @@ public class BehaviorDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
-                addCodeBlock((TraitBlockNew) o);
-                ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
-                ((TraitBlockNew) o).hideRemoveButton();
-                //behBlock.setIsTrait(true); // behBlock.setTrait will set isTrait to true. Explicitly and separately setting it is unnecessary
-                behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
-                behBlock.setTrait((TraitBlockNew) o);
-                behBlock.getMyBreedBlock().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)
-                return true;
+                if ( !behBlock.getIsTrait() &&
+                        behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) ) {
+                    addCodeBlock((TraitBlockNew) o);
+                    ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
+                    ((TraitBlockNew) o).hideRemoveButton();
+                    //behBlock.setIsTrait(true); // behBlock.setTrait will set isTrait to true. Explicitly and separately setting it is unnecessary
+                    behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
+                    behBlock.setTrait((TraitBlockNew) o);
+                    behBlock.getMyBreedBlock().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
         }
         return false;
