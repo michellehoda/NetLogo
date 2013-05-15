@@ -33,7 +33,6 @@ import javax.swing.event.DocumentEvent;
 public strictfp class TraitBlock
         extends CodeBlock
 {
-    JTextField textName;
     ArrayList<String> varList;
     LinkedList<Variation> variationList = new LinkedList<Variation>();
     String breedName;

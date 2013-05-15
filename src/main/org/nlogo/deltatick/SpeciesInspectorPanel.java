@@ -89,15 +89,17 @@ public class SpeciesInspectorPanel extends JPanel {
                         .addComponent(sidePanel))
                 .addComponent(bottomPanel)
         );
-        validate();
+
+        revalidate();
+        myFrame.validate();
         myFrame.pack();
     }
 
     public void setupTopPanel() {
-        topPanel.setBackground(ColorSchemer.getColor(3));
+        //topPanel.setBackground(ColorSchemer.getColor(3));
         midPanel.setBackground(ColorSchemer.getColor(3));
-        sidePanel.setBackground(ColorSchemer.getColor(3));
-        bottomPanel.setBackground(ColorSchemer.getColor(3));
+        //sidePanel.setBackground(ColorSchemer.getColor(3));
+        //bottomPanel.setBackground(ColorSchemer.getColor(3));
         TitledBorder titleTopPanel;
         titleTopPanel = BorderFactory.createTitledBorder("Set up");
         topPanel.setBorder(titleTopPanel);
@@ -157,11 +159,13 @@ public class SpeciesInspectorPanel extends JPanel {
         titleMidPanel = BorderFactory.createTitledBorder("Preview Traits");
         midPanel.setBorder(titleMidPanel);
 
-        labelPanel = new LabelPanel();
+        labelPanel = new LabelPanel(myParent.getOwnVarNames());
         TitledBorder titleLabelPanel;
-        titleLabelPanel = BorderFactory.createTitledBorder("Set Labels");
+        titleLabelPanel = BorderFactory.createTitledBorder("Set Labels           l");
         labelPanel.setBorder(titleLabelPanel);
         labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        //labelPanel.setPreferredSize(new Dimension(LabelPanel.LABELPANEL_WIDTH, LabelPanel.LABELPANEL_HEIGHT));
 
         traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
         traitPreview.setTraits(myParent.getTraits());
@@ -172,8 +176,10 @@ public class SpeciesInspectorPanel extends JPanel {
         midPanel.add(traitPreview);
         midPanel.add(labelPanel);
 
+        labelPanel.setMinimumSize(new Dimension(traitPreview.getTotalWidth()-10, LabelPanel.LABELPANEL_HEIGHT));
+        labelPanel.setPreferredSize(new Dimension(traitPreview.getTotalWidth()-10, LabelPanel.LABELPANEL_HEIGHT));
         midPanel.setPreferredSize(new Dimension(traitPreview.getTotalWidth(), traitPreview.getTotalHeight()));
-        midPanel.validate();
+        midPanel.revalidate();
     }
 
     public void setupBottomPanel() {

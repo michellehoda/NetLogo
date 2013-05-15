@@ -4,6 +4,7 @@ package org.nlogo.deltatick;
 import org.nlogo.deltatick.dnd.RemoveButton;
 
 import org.nlogo.window.Widget;
+import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.dnd.MaxLengthTextDocument;
 
@@ -28,16 +29,16 @@ public strictfp class PlotBlock
     JTextField plotNameField;
     org.nlogo.plot.Plot netLogoPlot;
     boolean isHisto;
-    MaxLengthTextDocument maxLength;
+    JCharNumberFieldFilter textFilter;
 
     public PlotBlock() {
         super("plot", ColorSchemer.getColor(3));
         System.out.println("PlotBlock constructor firing!!!");
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.isHisto = false;
-        maxLength = new MaxLengthTextDocument();
-        maxLength.setMaxChars(10);
-        plotNameField.setDocument(maxLength);
+        textFilter = new JCharNumberFieldFilter();
+        textFilter.setMaxChars(10);
+        plotNameField.setDocument(textFilter);
 
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -136,10 +137,10 @@ public strictfp class PlotBlock
 
     public void makeLabel() {
     	System.out.println("Plot make label firing!!!");
-    	maxLength = new MaxLengthTextDocument();
-    	maxLength.setMaxChars(10);
+    	textFilter = new JCharNumberFieldFilter();
+    	textFilter.setMaxChars(10);
         plotNameField = new PrettyInput(this);
-        plotNameField.setDocument(maxLength);
+        plotNameField.setDocument(textFilter);
         ////label.add(removeButton);
         this.showRemoveButton();
         label.add(plotNameField);

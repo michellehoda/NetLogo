@@ -369,19 +369,6 @@ public String newSaveAsXML() {
         block.repaint();
     }
 
-    // Not used
-//    public void addHisto(HistogramBlock block) {
-//        myHisto.add(block);
-//        block.setHistoName("New Histogram " + myHisto.size());
-//        block.setBounds(200,
-//                0,
-//                block.getPreferredSize().width,
-//                block.getPreferredSize().height);
-//        add(block);
-//        block.doLayout();
-//        block.validate();
-//        block.repaint();
-//    }
 
     //make linked list for envt? -A. (sept 8)
     public void addEnvt(EnvtBlock block) {

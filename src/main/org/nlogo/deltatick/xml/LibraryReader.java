@@ -25,35 +25,51 @@ public class LibraryReader {
     public String fileName;
 
     CodeBlock block;
-    JOptionPane illegalFileType;
 
     ArrayList<Node> newVariationsList = new ArrayList<Node>();
 
+    // Aditi: Apr 16, 2013
+    // new LibraryReader() is created in 2 cases:
+    // 1. Explicit: When user clicks "Load Library" button and selects a library file. Argument libraryFileName is null
+    // 2. Implicit: When user opens a model (via "Open Model" button). The model file specifies the library filename
+    //              This filename is passed as an argument to the constructor. This argument MUST NOT be ignored.
+    //              Further, if libraryFileName is specified (i.e. NOT null), then FileDialog MUST NOT be opened because
+    //              the library file name has alredy been specified.
     public LibraryReader(Frame frame, DeltaTickTab deltaTickTab, String libraryFileName) {
         fileName = new String();
     	this.deltaTickTab = deltaTickTab;
-    	illegalFileType = new JOptionPane();
-    	
+
         // clear out any existing blocks
        // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
         File file = null;
-        //if (libraryFileName == null) {
-        System.out.println(fileName);
-        while (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")) {
-            fileLoader = new FileDialog(frame);
-            fileLoader.setVisible(true);
-            file = new File(fileLoader.getDirectory() + fileLoader.getFile());
-            fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
-            
-            if (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")){
-            	JOptionPane.showMessageDialog(deltaTickTab, "Oops! Please select a .xml file", "OOPS!", JOptionPane.ERROR_MESSAGE);
+        if (libraryFileName == null) {
+            // User has clicked "Load Library" button.
+            // Explicit library open.
+            //System.out.println(fileName);
+            while (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")) {
+                fileLoader = new FileDialog(frame);
+                fileLoader.setVisible(true);
+                file = new File(fileLoader.getDirectory() + fileLoader.getFile());
+                fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
+
+                if (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")){
+                    JOptionPane.showMessageDialog(deltaTickTab, "Oops! Please select a .xml file", "OOPS!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            if(fileName.equals("nullnull")){
+                return;
             }
         }
-        
-        if(fileName.equals("nullnull")){
-        	return;
+        else {
+            // Library is opened implicity because user clicked "Open Model"
+            // libraryFileName specifies the full path
+            fileName = new String(libraryFileName);
+            // Now open the library file
+            file = new File(libraryFileName);
         }
-  
+
+
         //DocumentBuilder converts XML file into Document -A. (sept 13)
         try {
             DocumentBuilder builder =
@@ -131,6 +147,7 @@ public class LibraryReader {
                 block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
+                deltaTickTab.getLibraryHolder().addToQuantityBlocksMap((QuantityBlock) block);
             }
 
             NodeList breeds = library.getElementsByTagName("breed");

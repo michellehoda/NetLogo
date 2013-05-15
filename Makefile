@@ -12,7 +12,11 @@ netlogo: resources/system/dict.txt extensions models/index.txt bin/Scripting.cla
 ifneq (,$(findstring Darwin,$(shell uname)))
 JAVA_HOME = `/usr/libexec/java_home -F -v1.6*`
 else
+ifneq (,$(findstring CYGWIN,$(shell uname)))
+JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
+else
 JAVA_HOME = /usr/lib/jvm/java-6-sun
+endif
 endif
 # you might want to specify JARGS from the command line - ST 3/14/11
 JAVA = $(JAVA_HOME)/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Xmx1024m -Djava.library.path=./lib -XX:MaxPermSize=128m -Xfuture $(JARGS)
@@ -21,7 +25,7 @@ SCALA_JAR = project/boot/scala-$(SCALA_VERSION)/lib/scala-library.jar
 # note that LIBS has a trailing colon
 LIBS = `ls -1 lib_managed/scala_$(SCALA_VERSION)/compile/*.jar | perl -pe 's/\n/:/'`
 CLASSES = target/scala_$(SCALA_VERSION)/classes
-CLASSPATH = $(LIBS)$(CLASSES):resources:$(SCALA_JAR)
+CLASSPATH = `cygpath -wp $(LIBS)$(CLASSES):resources:$(SCALA_JAR)`
 
 ### common prerequisites
 tmp:

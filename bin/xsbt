@@ -7,6 +7,9 @@ if [ ! -f $LAUNCH ] ; then
   curl -f $URL -o $LAUNCH || exit
 fi
 
+if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+    export JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
+else
 if [ `uname -s` = Linux ] ; then
   export JAVA_HOME=/usr/lib/jvm/java-1.6.0-sun-1.6.0.29
 else
@@ -15,6 +18,7 @@ else
   else
     export JAVA_HOME=/usr
   fi
+fi
 fi
 
 export PATH=$JAVA_HOME/bin:$PATH

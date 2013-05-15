@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,19 +15,27 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class LabelPanel extends JPanel {
-    JLabel label;
-    JCheckBox checkBox;
-    HashMap<JCheckBox, String> checkBoxSelectedHashMap = new HashMap<JCheckBox, String>();
+    //JLabel label;
+    //JCheckBox checkBox;
+    ArrayList<String> ownVarNames = new ArrayList<String>();
     ArrayList<String> traitNames = new ArrayList<String>();
     HashMap<String, JCheckBox> allCheckBoxes = new HashMap<String, JCheckBox>();
 
+    public static final int LABELPANEL_WIDTH = 350;
+    public static final int LABELPANEL_HEIGHT = 100;
 
-    public LabelPanel() {
+
+    public LabelPanel(ArrayList<String> ownVarNames) {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setPreferredSize(new Dimension(50, 50));
-        this.traitNames.add("age");
-        this.traitNames.add("energy");
+        //this.setPreferredSize(new Dimension(LABELPANEL_WIDTH, LABELPANEL_HEIGHT));
+        this.ownVarNames.addAll(ownVarNames);
+        for (String name : ownVarNames) {
+            traitNames.add(name);
+        }
+//        this.traitNames.add("age");
+//        this.traitNames.add("energy");
         initiComponents(traitNames);
+        this.revalidate();
     }
 
     public void initiComponents(ArrayList<String> list) {
@@ -35,34 +44,61 @@ public class LabelPanel extends JPanel {
             allCheckBoxes.put(nam, box);
             this.add(box);
         }
-        this.validate();
+        this.revalidate();
     }
 
-    public void addTraitCheckBox(String trait) {
-        JCheckBox box = new JCheckBox(trait);
-        this.add(box);
-        this.validate();
-    }
+//    public void addTraitCheckBox(String trait) {
+//        JCheckBox box = new JCheckBox(trait);
+//        this.add(box);
+//        this.revalidate();
+//    }
 
-    public void updateData(HashMap<String, TraitState> t) {
-        if (t.size() != traitNames.size()) {
-            for (JCheckBox box : allCheckBoxes.values()) {    //remove visually
+    public void updateData(Set<String> tNames) {
+
+        for (JCheckBox box : allCheckBoxes.values()) {    //remove visually
             this.remove(box);
         }
-            allCheckBoxes.clear();
-            traitNames.clear();
-            traitNames.add("age");
-            traitNames.add("energy");
-            for (String string : t.keySet()) {
-                traitNames.add(string);
-            }
+        allCheckBoxes.clear();
+        traitNames.clear();
+
+        for (String name : ownVarNames) {
+            traitNames.add(name);
+        }
+//            traitNames.add("age");
+//            traitNames.add("energy");
+        for (String str : tNames) {
+            traitNames.add(str);
+        }
+
         initiComponents(traitNames);
 
-        }
+
+        this.revalidate();
+
     }
 
-    public HashMap<String, JCheckBox> getCheckBoxes() {
-        return allCheckBoxes;
+//    public HashMap<String, JCheckBox> getCheckBoxes() {
+//        return allCheckBoxes;
+//    }
+
+    public ArrayList<String> getSelectedLabels() {
+        ArrayList<String> selectedLabels = new ArrayList<String>();
+        for (Map.Entry<String, JCheckBox> entry : allCheckBoxes.entrySet()) {
+            if (entry.getValue().isSelected()) {
+                selectedLabels.add(entry.getKey());
+            }
+        }
+        return selectedLabels;
+    }
+
+    // Sets the checkboxes corresponding to arraylist selectedLabels to true
+    // Assumes the checkboxes have already been populated
+    public void setSelectedLabels(ArrayList<String> selectedLabels) {
+        for (String labelName : selectedLabels) {
+            if (traitNames.contains(labelName)) {
+                allCheckBoxes.get(labelName).setSelected(true);
+            }
+        }
     }
 
 

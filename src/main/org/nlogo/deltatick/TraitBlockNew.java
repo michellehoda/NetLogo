@@ -25,7 +25,7 @@ public class TraitBlockNew
     JTextField textName;
     ArrayList<String> varList;
     LinkedList<Variation> variationList = new LinkedList<Variation>();
-    String breedName;
+    //String breedName;
     String traitName;
     JLabel name = new JLabel();
 
@@ -45,9 +45,9 @@ public class TraitBlockNew
         super (traitState.getNameTrait(), ColorSchemer.getColor(4));
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
-                traitBlockFlavor,
+                CodeBlock.traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
-        this.breedName = breedBlock.plural();
+        //this.breedName = breedBlock.plural();
         this.traitState = new TraitState(traitState);
         this.traitName = this.traitState.getNameTrait();
         //this.variationHashMap = variationHashMap;

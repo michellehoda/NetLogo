@@ -2,7 +2,7 @@
 
 package org.nlogo.app;
 
-import apple.laf.JRSUIConstants;
+//import apple.laf.JRSUIConstants;
 import org.nlogo.api.I18N;
 import org.nlogo.api.ModelSectionJ;
 import org.nlogo.api.Version;

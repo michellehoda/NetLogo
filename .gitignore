@@ -42,3 +42,6 @@ tmp/
 /resources/GUI_Strings_??.properties
 /resources/system/dict.txt
 /resources/system/dict3d.txt
+
+#Ignore the .idea directory -- it contains settigns for IntelliJ Idea and these may be machine/developer -specific.
+.idea/

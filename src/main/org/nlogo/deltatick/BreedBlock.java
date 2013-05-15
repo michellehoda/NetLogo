@@ -8,6 +8,8 @@ import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
 import org.nlogo.deltatick.dialogs.Warning;
+import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
+import org.nlogo.deltatick.dnd.JNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettierInput;
 import org.nlogo.deltatick.dnd.MaxLengthNoSpaceDocument;
 import org.nlogo.deltatick.xml.Breed;
@@ -78,8 +80,8 @@ public strictfp class BreedBlock
     boolean reproduceUsed = false;
     int curIconIndex;
     Color curColor;
-    MaxLengthNoSpaceDocument numberDocument;
-    MaxLengthNoSpaceDocument pluralDocument;
+    JNumberFieldFilter numberDocument;
+    JCharNumberFieldFilter pluralDocument;
 
     // Each breedblock has a species inspector panel
     // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
@@ -105,8 +107,8 @@ public strictfp class BreedBlock
         System.out.println(word.length());
         curIconIndex = 0;
         curColor = Color.GRAY;
-        numberDocument = new MaxLengthNoSpaceDocument();
-        pluralDocument = new MaxLengthNoSpaceDocument();
+        numberDocument = new JNumberFieldFilter();
+        pluralDocument = new JCharNumberFieldFilter();
         numberDocument.setMaxChars(5);
         pluralDocument.setMaxChars(11);
         number.setDocument(numberDocument);
@@ -116,7 +118,7 @@ public strictfp class BreedBlock
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-
+        
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 codeBlockFlavor,
@@ -314,21 +316,27 @@ public strictfp class BreedBlock
 
     public String setupTraitLabels() {
         String code = "";
-        //int i = 0;
-        if (traitLabels.size() >= 1) {
+        if (traitLabels.size() > 0) {
             code += "ask " + plural() + "[";
-            code += "set label (word ";
-            for (int i = 0; i < traitLabels.size(); i++) {
-                code += traitLabels.get(i);
-                if (traitLabels.size() > 1) {
-//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-                    code += "\"-\"";
-                    i--;
-                }
-            }
-            code += " )] \n";
+            code += setTraitLabelCode();
+            code += "]\n";
         }
-         return code;
+        return code;
+    }
+
+    private String setTraitLabelCode() {
+        String code = "";
+        // Generate code if there is atleast one label
+        if (traitLabels.size() > 0) {
+            code += "set label (word ";
+            code += traitLabels.get(0);
+            for (int i = 1; i < traitLabels.size(); i++) {
+                code += " \"-\" ";
+                code += traitLabels.get(i);
+            }
+            code += ")\n";
+        }
+        return code;
     }
 
     // moves Update Code from XML file to procedures tab - A. (feb 14., 2012)
@@ -352,19 +360,22 @@ public strictfp class BreedBlock
                 }
             }
             code += "\n";
-            if (traitLabels.size() >= 1) {
-            code += "set label (word ";
-            for (int i = 0; i < traitLabels.size(); i++) {
-                code += traitLabels.get(i);
-                if (traitLabels.size() > 1) {
-//                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-                    code += "\"-\"";
-                    i--;
-                }
-            }
-            code += " ) \n";
-        }
-        code += "]\n";
+
+            // Do we need to put code for labels/trait labels here?
+
+//            if (traitLabels.size() >= 1) {
+//                code += "set label (word ";
+//                for (int i = 0; i < traitLabels.size(); i++) {
+//                    code += traitLabels.get(i);
+//                    if (traitLabels.size() > 1) {
+////                if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+//                        code += "\"-\"";
+//                        i--;
+//                    }
+//                }
+//                code += " ) \n";
+//            }
+            code += "]\n";
         }
         return code;
     }
@@ -413,7 +424,14 @@ public strictfp class BreedBlock
     public ArrayList<String> getTraitLabels() {
         return traitLabels;
     }
+    public void setTraitLabels(ArrayList<String> selectedLabels) {
+        traitLabels.clear();
+        traitLabels.addAll(selectedLabels);
+    }
 
+    public ArrayList<String> getOwnVarNames() {
+        return breed.getOwnVarsName();
+    }
 
     public Object getTransferData(DataFlavor dataFlavor)
             throws UnsupportedFlavorException {
