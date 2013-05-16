@@ -4,6 +4,10 @@ import org.nlogo.deltatick.BehaviorBlock;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+//////////////////////////////////////
+// THIS CLASS IS NOT USED ANYWHERE  //
+//////////////////////////////////////
+
 /**
  * Created by IntelliJ IDEA.
  * User: aditiwagh
@@ -15,7 +19,7 @@ public class Behavior {
     BehaviorBlock block;
 
     public Behavior (Node beh) {
-        block = new BehaviorBlock(beh.getAttributes().getNamedItem("name").getTextContent());
+        block = new BehaviorBlock(beh.getAttributes().getNamedItem("name").getTextContent(), beh.getAttributes().getNamedItem("traits").getTextContent());
         //seekAndAttachInfo(beh);
 
     }

@@ -79,7 +79,7 @@ public class ShapeSelector
 
          //TODO: Change layout so it looks better (feb 22, 2013)
         // Create the buttons
-        importButton = new javax.swing.JButton("Use this shape");
+        importButton = new javax.swing.JButton("Set color");
         importButton.addActionListener
                 (new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {

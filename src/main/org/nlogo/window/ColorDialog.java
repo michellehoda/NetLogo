@@ -201,9 +201,10 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     blackButtonContainer.add(blackName);
     blackButtonContainer.add(new JLabel(""));
     topNameContainer.add(blackButtonContainer);
-      topNameContainer.add(selectColor);
-      selectColor.setAction(getSelectedColorName);
-
+    topNameContainer.add(selectColor);
+    selectColor.setAction(getSelectedColorName);
+    selectColor.setText("Set Color");
+    
     // Create the white button
     Container whiteButtonContainer = new Container();
     whiteButtonContainer.setLayout(new GridLayout(1, 3));

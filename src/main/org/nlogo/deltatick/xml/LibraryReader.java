@@ -22,10 +22,9 @@ public class LibraryReader {
     //FileDialog class displays a dialog window from which the user can select a file. -A. (sept 13)
     FileDialog fileLoader;
     DeltaTickTab deltaTickTab;
-    String fileName;
+    public String fileName;
 
     CodeBlock block;
-    JOptionPane illegalFileType;
 
     ArrayList<Node> newVariationsList = new ArrayList<Node>();
 
@@ -39,7 +38,6 @@ public class LibraryReader {
     public LibraryReader(Frame frame, DeltaTickTab deltaTickTab, String libraryFileName) {
         fileName = new String();
     	this.deltaTickTab = deltaTickTab;
-    	illegalFileType = new JOptionPane();
 
         // clear out any existing blocks
        // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
@@ -96,7 +94,8 @@ public class LibraryReader {
             for (int i = 0; i < behaviors.getLength(); i++) {
                 Node behavior = behaviors.item(i);
                 boolean b = false;
-                block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent());
+                block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent(),
+                                          behavior.getAttributes().getNamedItem("traits").getTextContent());
                 if (behavior.getAttributes().getNamedItem("mutate") != null) {
                     b = behavior.getAttributes().getNamedItem("mutate").getTextContent().equalsIgnoreCase("true");
                     if (b) {
