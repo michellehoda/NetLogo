@@ -14,6 +14,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +33,8 @@ public abstract class CodeBlock
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
     //JLabel nameLabel;
-    String code;
+    String code; // From XML
+    String processedCode; // After replacing placeholders XML
     //private JButton exitButton = new JButton();
     String ifCode;
 
@@ -198,6 +200,10 @@ public abstract class CodeBlock
             }
         }
         return false;
+    }
+
+    // Provides an interface for blocks in case any placeholders need to be replaced
+    public void processCodePlaceholders() {
     }
 
     // not sure what these unpack methods are doing here
