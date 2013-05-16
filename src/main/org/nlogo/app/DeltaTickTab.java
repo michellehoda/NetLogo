@@ -940,6 +940,7 @@ public class DeltaTickTab
                 this.add(addPlot) ;
                 addHisto = new JButton( addHistoAction );
                 addHisto.setEnabled(false);
+
                 this.add(addHisto) ;
                 //addEnvt = new JButton ( chgEnvtAction );
                 //addEnvt.setEnabled(false);
