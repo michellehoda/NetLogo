@@ -88,12 +88,20 @@ public class DeltaTickTab
 
 
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
-    HashMap<String, WidgetWrapper> sliderWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> mutationSliderWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> carryingCapacitySliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
 
-    // HasMap to store Mutation slider values
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
+
+    private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
+    private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 500.0;
+    private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = CARRYING_CAPACITY_SLIDER_MAX_VALUE;
+
+
+    // HashMaps to store slider values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
+    HashMap<String, Double> carryingCapacitySliderValues = new HashMap<String, Double>();
 
     //InterfaceTab it;
     ProceduresTab pt;
@@ -723,11 +731,11 @@ public class DeltaTickTab
 
 
     public void populateMutationSlider() {
-        System.out.println("populateMutationSlider()");
+        //System.out.println("populateMutationSlider()");
         boolean putNoteWidget = false;
-        interfaceSliderCount = 0;
+        //interfaceSliderCount = 0;
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            System.out.println("Breedblock: " + bBlock.getName());
+            //System.out.println("Breedblock: " + bBlock.getName());
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
@@ -743,7 +751,7 @@ public class DeltaTickTab
 
                     WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
 
-                    sliderWidgets.put(sliderName, ww);
+                    mutationSliderWidgets.put(sliderName, ww);
                     interfaceSliderCount++;
                 }
 
@@ -764,11 +772,11 @@ public class DeltaTickTab
             //noteWidget.validate();
             noteWidgets.put("MutationNote", widgetw);
         }
-        System.out.println("interfaceSliderCount = " + interfaceSliderCount);
+        //System.out.println("interfaceSliderCount = " + interfaceSliderCount);
     }
 
     public void removeMutationSlider() {
-        for (Map.Entry<String, WidgetWrapper> entry : sliderWidgets.entrySet()) {
+        for (Map.Entry<String, WidgetWrapper> entry : mutationSliderWidgets.entrySet()) {
             String p = entry.getKey();
             WidgetWrapper w = entry.getValue();
 
@@ -778,7 +786,8 @@ public class DeltaTickTab
             // Remove the widget from interface panel
             interfacePanel.removeWidget(w);
         }
-        sliderWidgets.clear();
+        mutationSliderWidgets.clear();
+
         for (Map.Entry<String, WidgetWrapper> entry : noteWidgets.entrySet()) {
             WidgetWrapper w = entry.getValue();
 
@@ -789,6 +798,47 @@ public class DeltaTickTab
         revalidate();
     }
 
+    public void populateCarryingCapacitySlider() {
+
+        // First remove carrying capacity sliders
+        for (Map.Entry<String, WidgetWrapper> entry : carryingCapacitySliderWidgets.entrySet()) {
+            String p = entry.getKey();
+            WidgetWrapper w = entry.getValue();
+
+            // Record the value of the slider
+            carryingCapacitySliderValues.put(p, ((SliderWidget) w.widget()).value() );
+
+            // Remove the widget from interface panel
+            interfacePanel.removeWidget(w);
+        }
+        carryingCapacitySliderWidgets.clear();
+        // All carrying capacity sliders removed
+
+        // Now re-populate carrying capacity sliders
+        for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            if (bBlock.getReproduceUsed()) {
+                // Put the slider
+                String sliderName = bBlock.plural() + "-" + "carrying-capacity";
+                SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
+
+                sliderWidget.minimumCode_$eq(CARRYING_CAPACITY_SLIDER_MIN_VALUE.toString());
+                sliderWidget.maximumCode_$eq(CARRYING_CAPACITY_SLIDER_MAX_VALUE.toString());
+
+                double value = (carryingCapacitySliderValues.containsKey(sliderName)) ? carryingCapacitySliderValues.get(sliderName) : CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE;
+                sliderWidget.valueSetter(value);
+
+                // Set name
+                sliderWidget.name_$eq(sliderName);
+
+                WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+
+                carryingCapacitySliderWidgets.put(sliderName, ww);
+            }
+        }
+        revalidate();
+        // Clear the sliderValuesHashMap - this will be populated with latest values when the tab is switched back
+        carryingCapacitySliderValues.clear();
+    }
 
     public void populatePlots() {
         int plotCount = 0;
@@ -997,7 +1047,9 @@ public class DeltaTickTab
             removePlots();
             populatePlots();
             removeMutationSlider();
+            interfaceSliderCount = 0;
             populateMutationSlider();
+            populateCarryingCapacitySlider();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;
         }

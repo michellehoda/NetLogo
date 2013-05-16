@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
 import scala.actors.threadpool.Arrays;
@@ -91,40 +92,49 @@ public strictfp class BehaviorBlock
           if ( ifCode != null ) {
               passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
           }
-          else {
-              passBack += "\n" + code + "\n";
-              if (isMutate == true) {
-                  if (myBreedBlock != null) {
-                      if (myBreedBlock.getMyTraitBlocks().size() > 0) {
-                          passBack += "mutate";
-                      }
-//                      for (TraitBlockNew traitBlock :  myBreedBlock.getMyTraitBlocks()) {
-//
-//                          String traitName = traitBlock.getTraitName();
-//                          //TODO: this is likely to throw a bug if reproduce is in condition block (April 1, 2013)
-//                          //passBack += "if random 100 <= " + this.getMyBreedBlock().plural() + "-" + traitBlock.getTraitName() + "-mutation [\n";
-//                          //passBack += "set " + traitName + " " + traitName + " * 0.01 \n]]]\n";
-//                          passBack += "ifelse random 2 = 0 \n";
-//                          passBack += "[set " + traitName + " (" + traitName + " - random-float " + this.getMyBreedBlock().plural() + "-" +
-//                                                        traitBlock.getTraitName() + "-mutation)]\n";
-//                          passBack += "[set " + traitName + " (" + traitName + " + random-float " + this.getMyBreedBlock().plural() + "-" +
-//                                                        traitBlock.getTraitName() + "-mutation)]";
-//
+// May 15, 2013. The following original code is commented out to try the hacky way of implementing the 'reproduce' behavior
+// The commented code reads the behavior from XML
+// Eventually, the hacky code below must somehow be integrated in the XML
+//          else {
+//              passBack += "\n" + code + "\n";
+//              if (isMutate == true) {
+//                  if (myBreedBlock != null) {
+//                      if (myBreedBlock.getMyTraitBlocks().size() > 0) {
+//                          passBack += "mutate";
 //                      }
-                      passBack += "\n]"; //corresponds to hatch
-                      passBack += "\n]\n"; // corresponds to if-chance block
+//                      passBack += "\n\t\t]"; //corresponds to hatch
+//                      passBack += "\n\t]\n"; // corresponds to if-chance block
+//
+//                  }
+//              }
+//          }
 
-//                      if (myBreedBlock.getMyTraitBlocks().size() == 0) {
-//                          passBack += "]]\n";
-//                      }
-                  }
+          // Checking carryingCapacitySlider
+          if (isMutate) {
+              // This is a reproduce behavior block
+              String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
+              passBack += "\n";
+              passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
+              passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";
+              // mutate here
+              if (myBreedBlock.getMyTraitBlocks().size() > 0) {
+                  passBack += "\t\tmutate\n";
               }
+              passBack += "\t\t]";
+              passBack += "\t]\n";
           }
+          else {
+              // Regular behavior block
+              passBack += "\n" + code + "\n";
+          }
+
           if (energyInputs.size() > 0) {
               for (JTextField inputName : energyInputs.values()) {
                   passBack += "set energy energy " + inputName.getText() + "\n";
               }
           }
+
+
           passBack += "end\n\n";
 
           return passBack;
