@@ -33,7 +33,6 @@ public strictfp class PlotBlock
 
     public PlotBlock() {
         super("plot", ColorSchemer.getColor(3));
-        System.out.println("PlotBlock constructor firing!!!");
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.isHisto = false;
         textFilter = new JCharNumberFieldFilter();
@@ -140,7 +139,6 @@ public strictfp class PlotBlock
 
 
     public void makeLabel() {
-    	System.out.println("Plot make label firing!!!");
     	textFilter = new JCharNumberFieldFilter();
     	textFilter.setMaxChars(10);
         plotNameField = new PrettyInput(this);
