@@ -82,6 +82,10 @@ public class SpeciesInspectorPanel extends JPanel {
                 .addComponent(bottomPanel)
         );
 
+        // Hide age and energy
+        // Temporary -- for prototype implementation
+        topPanel.setVisible(false);
+
         revalidate();
         myFrame.validate();
         myFrame.pack();
@@ -128,6 +132,7 @@ public class SpeciesInspectorPanel extends JPanel {
                 .addComponent(energyBlank, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(50)
         );
+
         validate();
 
     }
