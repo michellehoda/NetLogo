@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.nlogo.app.DeltaTickTab;
+import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
 import scala.actors.threadpool.Arrays;
@@ -180,6 +180,7 @@ public strictfp class BehaviorBlock
     public void updateBehaviorInput() {
         Container parent = getParent();
         if (parent instanceof TraitBlock) {
+        	JCharNumberFieldFilter textFilter = new JCharNumberFieldFilter();
             HashMap<String, Variation> hashMap = ((TraitBlock) parent).variationHashMap;
             String selectedVariationName = ((TraitBlock) parent).getDropdownList().getSelectedItem().toString();
             String trait = ((TraitBlock) parent).getName();
@@ -188,7 +189,9 @@ public strictfp class BehaviorBlock
             String value = tmp.value;
             for ( String s : behaviorInputs.keySet()) {
                 if (s.equals(trait)) {
+                	textFilter.setMaxChars(10);
                     JTextField textField = behaviorInputs.get(s);
+                    textField.setDocument(textFilter);
                     textField.setText(value);
                 }
             }

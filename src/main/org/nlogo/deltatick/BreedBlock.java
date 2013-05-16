@@ -1,12 +1,17 @@
 package org.nlogo.deltatick;
 
 import com.sun.java.swing.plaf.nimbus.LoweredBorder;
+
+
 import org.nlogo.api.Shape;
 import org.nlogo.app.DeltaTickTab;
 import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
 import org.nlogo.deltatick.dialogs.Warning;
+import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
+import org.nlogo.deltatick.dnd.JNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettierInput;
+import org.nlogo.deltatick.dnd.MaxLengthNoSpaceDocument;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -64,7 +69,7 @@ public strictfp class BreedBlock
     //ShapeSelector myShapeSelector;
     int id;
     transient String trait;
-    JTextField traitLabel;
+    JTextField traitLabel; //Apparently has no function, never used
     transient String variation;
     HashSet<String> myUsedTraits = new HashSet<String>();
     boolean hasSpeciesInspector;
@@ -75,6 +80,8 @@ public strictfp class BreedBlock
     boolean reproduceUsed = false;
     int curIconIndex;
     Color curColor;
+    JNumberFieldFilter numberDocument;
+    JCharNumberFieldFilter pluralDocument;
 
     // Each breedblock has a species inspector panel
     // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
@@ -96,12 +103,22 @@ public strictfp class BreedBlock
         this.maxAge = breed.getOwnVarMaxReporter("age");
         this.maxEnergy = breed.getOwnVarMaxReporter("energy");
         number.setText(breed.getStartQuant());
+        String word = number.getText();
+        System.out.println(word.length());
         curIconIndex = 0;
         curColor = Color.GRAY;
+        numberDocument = new JNumberFieldFilter();
+        pluralDocument = new JCharNumberFieldFilter();
+        numberDocument.setMaxChars(5);
+        pluralDocument.setMaxChars(11);
+        number.setDocument(numberDocument);
+        this.plural.setDocument(pluralDocument);
+        number.setText("100");
+        this.plural.setText(getName());
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-
+        
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 codeBlockFlavor,
@@ -461,17 +478,19 @@ public strictfp class BreedBlock
 
         number = new PrettyInput(this); // number of turtles of a breed starting with -a.
         number.setText("100");
+
         label.add(number);
 
         //plural = new PrettyInput(this);
         plural = new PrettierInput(this);
         plural.setText(getName());
+
         label.add(plural);
 
         label.add(makeBreedShapeButton());
         inspectSpeciesButton = new InspectSpeciesButton(this);
         label.add(inspectSpeciesButton);
-
+        
         addRect();
         label.setBackground(getBackground());
         add(label);

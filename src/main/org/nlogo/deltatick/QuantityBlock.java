@@ -202,25 +202,17 @@ public strictfp class QuantityBlock
 
     public void updateLabelImage() {
         try {
-            ////histoImage = ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png"));
-            ////histoImageIcon = new ImageIcon(histoImage);
-
             histoImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png")));
-
         if (histo == true) {
             image.setIcon(histoImageIcon);
             image.revalidate();
-
-        }
-
+            }
         }
         catch (IOException ex) {
-             }
-
+        }
     }
 
     public void addColorButton() {
-
         label.add(colorButton);
     }
 
