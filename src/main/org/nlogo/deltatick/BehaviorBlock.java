@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
@@ -45,6 +46,12 @@ public strictfp class BehaviorBlock
 
     //codeBlockFlavor in Condition Block, Beh Block is what makes it a valid block for Breed   -A.
 
+    @Override
+    public void processCodePlaceholders() {
+        // Replace all %breed% with breed name
+        processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
+    }
+
     public String unPackAsCode() {
         if (myParent == null) {
             return unPackAsProcedure();
@@ -54,6 +61,9 @@ public strictfp class BehaviorBlock
       //TODO: Box bracket appears when it need not (March 9)
     //extracting the argument to be passed after name of procedure (March 2)
       public String unPackAsProcedure() {
+
+          processCodePlaceholders();
+
           String passBack = "";
           passBack += "to " + getName() + " ";
 
@@ -90,7 +100,7 @@ public strictfp class BehaviorBlock
           }
 
           if ( ifCode != null ) {
-              passBack += "\n" + ifCode + "[\n" + code + "\n" + "]";
+              passBack += "\n" + ifCode + "[\n" + processedCode + "\n" + "]";
           }
 // May 15, 2013. The following original code is commented out to try the hacky way of implementing the 'reproduce' behavior
 // The commented code reads the behavior from XML
@@ -125,7 +135,7 @@ public strictfp class BehaviorBlock
           }
           else {
               // Regular behavior block
-              passBack += "\n" + code + "\n";
+              passBack += "\n" + processedCode + "\n";
           }
 
           if (energyInputs.size() > 0) {
