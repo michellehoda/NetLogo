@@ -33,7 +33,7 @@ public class CodeBlockDragSource implements DragGestureListener,
     // Implementation of DragGestureListener interface.
     public void dragGestureRecognized(DragGestureEvent dge) {
         try {
-            dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), block);
+                dge.startDrag(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR), block);
         }
         catch(Exception e) {
         }

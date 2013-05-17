@@ -52,6 +52,7 @@ public strictfp class QuantityBlock
         };
 
         colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
+        colorButton.setBackground(color);
         //label.add(colorButton);
         updateLabelImage();
     }

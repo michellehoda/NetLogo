@@ -61,32 +61,13 @@ public abstract class CodeBlock
 
     }
 
-//    // Copy constructor
-//    public CodeBlock(CodeBlock block) {
-//        code = new String(block.code);
-//        ifCode = new String(block.ifCode);
-//        inputs = new LinkedHashMap<String, JTextField>(block.inputs);
-//        energyInputs = new LinkedHashMap<String, JTextField>(block.energyInputs);
-//        behaviorInputs = new LinkedHashMap<String, PrettyInput>(block.behaviorInputs);
-//        agentInputs = new LinkedHashMap<String, JTextField>(block.agentInputs);
-//        percentInputs = new LinkedHashMap<String, JTextField>(block.percentInputs);
-//        myBlocks = new LinkedList<CodeBlock>(block.myBlocks);
-//
-//        myLayout = block.myLayout;
-//        myParent = block.myParent;
-//        color = block.color;
-//        label = block.label;
-//        removeButtonPanel = block.removeButtonPanel;
-//        removeButton = block.removeButton;
-//
-//    }
-//
     //BoxLayout.Y_AXIS is why blocks stack one below each other -A. (sept 9)
     public CodeBlock(String name, Color color) {
 
         removeButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         removeButtonPanel.setBackground(color);
         removeButtonPanel.add(removeButton);
+        removeButton.setBackground(color);
         removeButton.setVisible(false);
 
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -99,7 +80,7 @@ public abstract class CodeBlock
         add(removeButtonPanel);
         makeLabel();
         add(label);
-
+        validate();
     }
 
     //copy constructor for modelReader (April 1, 2013)
@@ -135,22 +116,15 @@ public abstract class CodeBlock
     public void makeLabel() {
         JLabel name = new JLabel(getName());
         java.awt.Font font = name.getFont();
-        name.setFont(new java.awt.Font("Arial", font.getStyle(), 11));
+        name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
          // for PC
-
-//        label.add(removeButton);
-//        removeButton.setVisible(false);
-
         label.setBackground(getBackground());
         if (this instanceof QuantityBlock) {
             ((QuantityBlock)this).setLabelImage();
         }
-//        if (this instanceof TraitBlock) {
-//            JLabel condition = new JLabel();
-//            condition.setText("If");
-//            label.add(condition);
-//        }
+
         label.add(name);
+        label.validate();
     }
 
     public class RemoveButton extends JButton {
@@ -164,11 +138,11 @@ public abstract class CodeBlock
             setAction(deleteAction);
             setBorder(null);
             try {
-            Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
-            setIcon(new ImageIcon(img));
+                Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
+                setIcon(new ImageIcon(img));
             }
             catch (IOException ex) {
-             }
+            }
             //setForeground(java.awt.Color.gray);
             //setForeground(Color.DARK_GRAY);
             //setBorderPainted(false);
@@ -419,7 +393,6 @@ public abstract class CodeBlock
             return myParent;
         }
         return null;
-
     }
 
 
@@ -433,7 +406,7 @@ public abstract class CodeBlock
         block.enableInputs();
 
         block.showRemoveButton();
-        this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+        //this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
         block.setMyParent(this);
         block.doLayout();
         block.validate();

@@ -1,6 +1,7 @@
 package org.nlogo.deltatick.dnd;
 
 import com.sun.media.ui.ToolTip;
+import org.nlogo.deltatick.ColorSchemer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +23,9 @@ public class PrettyInput extends javax.swing.JTextField {
                 new javax.swing.border.LineBorder(parent.getBackground().darker()),
                 javax.swing.BorderFactory.createEmptyBorder(1, 2, 0, 0)
         ));
-        setFont(new java.awt.Font("Courier New", 1, 12));
+        setFont(new java.awt.Font("Arial", 1, 11));
         setSize(this.getWidth(), 10);
+        setBackground(parent.getBackground());
 
         // Create the tooltip
         toolTip = super.createToolTip();
