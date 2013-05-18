@@ -1,20 +1,13 @@
 package org.nlogo.deltatick;
 
-import com.sun.java.swing.plaf.nimbus.LoweredBorder;
-
-
 import org.nlogo.api.Shape;
-import org.nlogo.app.DeltaTickTab;
-import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
-import org.nlogo.deltatick.dialogs.Warning;
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.JNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettierInput;
-import org.nlogo.deltatick.dnd.MaxLengthNoSpaceDocument;
+import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
-import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
@@ -22,20 +15,30 @@ import org.nlogo.shape.VectorShape;
 import org.nlogo.shape.editor.ImportDialog;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-
-import org.nlogo.deltatick.dialogs.TraitSelectorOld;
+import java.util.Map;
 //import sun.jvm.hotspot.code.CodeBlob;
 
 // BreedBlock contains code for how whatever happens in BreedBlock is converted into NetLogo code -A. (aug 25)
@@ -62,7 +65,10 @@ public strictfp class BreedBlock
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
     List<String>myUsedPercentInputs = new ArrayList<String>();
+
+    // This list contains all defined trait(blocks) for this breed(block)
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
+
     String maxAge;
     String maxEnergy;
     String colorName = new String("gray");
@@ -71,7 +77,7 @@ public strictfp class BreedBlock
     transient String trait;
     JTextField traitLabel; //Apparently has no function, never used
     transient String variation;
-    HashSet<String> myUsedTraits = new HashSet<String>();
+    HashSet<String> myUsedTraits = new HashSet<String>(); // Perhaps not necessary (May 18, 2013)
     boolean hasSpeciesInspector;
     ArrayList<String> traitLabels = new ArrayList<String>();
 
@@ -624,12 +630,24 @@ public strictfp class BreedBlock
         return breed;
     }
 
-    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
-        traitBlock.showColorButton();
-        traitBlock.doLayout();
-        traitBlock.validate();
-        traitBlock.repaint();
+    public boolean hasTrait(String traitName) {
+        for (TraitBlockNew block : myTraitBlocks) {
+            if (block.getTraitName().equalsIgnoreCase(traitName)) {
+                return true;
+            }
+        }
+        return false;
     }
+    public int numTraits() {
+        return myTraitBlocks.size();
+    }
+
+//    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
+//        traitBlock.showColorButton();
+//        traitBlock.doLayout();
+//        traitBlock.validate();
+//        traitBlock.repaint();
+//    }
 
     public void mouseEnter(MouseEvent evt) {
     }

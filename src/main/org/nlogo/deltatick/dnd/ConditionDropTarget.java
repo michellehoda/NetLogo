@@ -20,7 +20,7 @@ public class ConditionDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
-                addCodeBlock((BehaviorBlock) o);
+
                 if (((BehaviorBlock) o).getIsMutate() == true) {
                     //((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) ((CodeBlock)block).getMyParent()));
                     ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
@@ -28,6 +28,7 @@ public class ConditionDropTarget
                         ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
                     }
                 }
+                addCodeBlock((BehaviorBlock) o);
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }

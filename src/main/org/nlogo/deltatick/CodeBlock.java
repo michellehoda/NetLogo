@@ -34,7 +34,7 @@ public abstract class CodeBlock
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
     //JLabel nameLabel;
     String code; // From XML
-    String processedCode; // After replacing placeholders XML
+    String processedCode = new String(""); // After replacing placeholders XML
     //private JButton exitButton = new JButton();
     String ifCode;
 

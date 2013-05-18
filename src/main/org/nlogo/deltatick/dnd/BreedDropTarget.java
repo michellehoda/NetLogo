@@ -28,12 +28,28 @@ public class BreedDropTarget
                 deltaTickTab.addCondition((ConditionBlock) o);
                 return true;
             } else if (o instanceof BehaviorBlock) {
-                addCodeBlock((BehaviorBlock) o);
+
                 ((BehaviorBlock) o).setMyBreedBlock((BreedBlock) this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
                 if (((BehaviorBlock) o).getIsMutate() == true) {
                     ((BreedBlock) block).setReproduceUsed(true);
                 }
+
+                // If breed has traits, and any trait is applicable to this behavior block then show a the panel
+                if (((BreedBlock) block).numTraits() > 0) {
+                    boolean addPanel = false;
+                    for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
+                        if (((BreedBlock) block).hasTrait(traitName)) {
+                            addPanel = true;
+                        }
+                    }
+                    if (addPanel) {
+                        ((BehaviorBlock) o).removeBehaviorInput();
+                        ((BehaviorBlock) o).addTraitblockPanel();
+                    }
+                }
+
+                addCodeBlock((BehaviorBlock) o);
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
