@@ -259,6 +259,7 @@ public class DeltaTickTab
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
         		addClear.setEnabled(true);
+                saveModelButton.setEnabled(true);
         	    buildPanel.removeRect();
 
         	    if (buildPanel.getMyBreeds().size() == 0) {
@@ -859,8 +860,10 @@ public class DeltaTickTab
 
                     plotWidget.displayName(plotBlock.getPlotName());
 
+
                     ////org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
                     org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
+
                     plotBlock.setNetLogoPlot(newPlot);
 
                     ////plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
@@ -1003,6 +1006,7 @@ public class DeltaTickTab
                 saveModelButton.setAction(opensaveModelAction);
                 saveModelButton.setText("Save Model");
                 this.add(saveModelButton);
+                saveModelButton.setEnabled(false);
                 openModelButton = new JButton();
                 openModelButton.setAction(opensaveModelAction);
                 openModelButton.setText("Open Model");
