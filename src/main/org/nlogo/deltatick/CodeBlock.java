@@ -44,6 +44,7 @@ public abstract class CodeBlock
     Map<String, PrettyInput> behaviorInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, PrettyInput> agentInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, PrettyInput> percentInputs = new LinkedHashMap<String, PrettyInput>();
+    JLabel percentLabel;
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
     //BoxLayout either stacks components on top of each other, or in a row -A. (sept 9)
@@ -313,8 +314,8 @@ public abstract class CodeBlock
 
     public void updatePercentLabel() {
         if (percentInputs.size() > 0) {
-            JLabel percent = new JLabel("%");
-            label.add(percent);
+            percentLabel = new JLabel("%");
+            label.add(percentLabel);
         }
     }
 
@@ -550,6 +551,12 @@ public abstract class CodeBlock
         for (JTextField input : energyInputs.values()) {
             input.setEditable(false);
         }
+        for (JTextField input : percentInputs.values()) {
+            input.setEditable(false);
+        }
+        for (JTextField input : agentInputs.values()) {
+            input.setEditable(false);
+        }
 
     }
 
@@ -563,7 +570,52 @@ public abstract class CodeBlock
         for (JTextField input : energyInputs.values()) {
             input.setEditable(true);
         }
+        for (JTextField input : percentInputs.values()) {
+            input.setEditable(true);
+        }
+        for (JTextField input : agentInputs.values()) {
+            input.setEditable(true);
+        }
     }
+
+    public void hideInputs() {
+        for (JTextField input : inputs.values()) {
+            input.setVisible(false);
+        }
+        for (JTextField input : behaviorInputs.values()) {
+            input.setVisible(false);
+        }
+        for (JTextField input : energyInputs.values()) {
+            input.setVisible(false);
+        }
+        for (JTextField input : percentInputs.values()) {
+            input.setVisible(false);
+            percentLabel.setVisible(false);
+        }
+        for (JTextField input : agentInputs.values()) {
+            input.setVisible(false);
+        }
+    }
+
+    public void showInputs() {
+        for (JTextField input : inputs.values()) {
+            input.setVisible(true);
+        }
+        for (JTextField input : behaviorInputs.values()) {
+            input.setVisible(true);
+        }
+        for (JTextField input : energyInputs.values()) {
+            input.setVisible(true);
+        }
+        for (JTextField input : percentInputs.values()) {
+            input.setVisible(true);
+            percentLabel.setVisible(true);
+        }
+        for (JTextField input : agentInputs.values()) {
+            input.setVisible(true);
+        }
+    }
+
 
     public void showRemoveButton() {
        removeButton.setVisible(true);

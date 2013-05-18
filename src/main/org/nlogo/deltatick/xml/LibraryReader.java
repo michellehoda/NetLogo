@@ -104,6 +104,7 @@ public class LibraryReader {
                 }
                 seekAndAttachInfo(behavior);
                 deltaTickTab.getLibraryHolder().addToBehaviorBlocksList((BehaviorBlock) block);
+                block.hideInputs();
             }
 
             // make the conditions

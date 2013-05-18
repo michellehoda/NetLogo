@@ -69,9 +69,12 @@ public class DropTarget
         // mhw just added
         new PlantedCodeBlockDragSource(codeBlock);
         //block.revalidate();
+        codeBlock.showInputs();
+        codeBlock.enableInputs();
         block.doLayout();
         block.validate();
+        codeBlock.validate();
         block.repaint();
-        block.enableInputs();
+        codeBlock.repaint();
     }
 }
