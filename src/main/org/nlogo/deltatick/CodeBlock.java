@@ -619,6 +619,7 @@ public abstract class CodeBlock
 
     public void showRemoveButton() {
        removeButton.setVisible(true);
+        validate();
     }
 
     // TODO: Remove trait from myTraits when it is deleted from LibraryHolder

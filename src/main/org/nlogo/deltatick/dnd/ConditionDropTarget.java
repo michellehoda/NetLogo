@@ -24,8 +24,19 @@ public class ConditionDropTarget
                 if (((BehaviorBlock) o).getIsMutate() == true) {
                     //((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) ((CodeBlock)block).getMyParent()));
                     ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
-                    if (((BehaviorBlock) o).getIsMutate() == true) {
-                        ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
+                    ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
+                }
+                // If breed has traits, and any trait is applicable to this behavior block then show a the panel
+                if (((BreedBlock) block.getMyParent()).numTraits() > 0) {
+                    boolean addPanel = false;
+                    for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
+                        if (((BreedBlock) block).hasTrait(traitName)) {
+                            addPanel = true;
+                        }
+                    }
+                    if (addPanel) {
+                        ((BehaviorBlock) o).removeBehaviorInput();
+                        ((BehaviorBlock) o).addTraitblockPanel();
                     }
                 }
                 addCodeBlock((BehaviorBlock) o);

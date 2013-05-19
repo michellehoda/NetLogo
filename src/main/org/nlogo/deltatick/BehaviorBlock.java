@@ -53,6 +53,7 @@ public strictfp class BehaviorBlock
     public void processCodePlaceholders() {
         // Replace all %breed% with breed name
         processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
+        processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
     }
 
     public String unPackAsCode() {

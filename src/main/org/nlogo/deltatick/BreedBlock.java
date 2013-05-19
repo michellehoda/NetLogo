@@ -497,7 +497,7 @@ public strictfp class BreedBlock
         inspectSpeciesButton = new InspectSpeciesButton(this);
         label.add(inspectSpeciesButton);
 
-        addRect();
+        makeRect();
 
         add(label);
         add(rectPanel);
@@ -507,7 +507,7 @@ public strictfp class BreedBlock
         label.validate();
     }
 
-    public void addRect() {
+    public void makeRect() {
         rectPanel = new JPanel();
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
