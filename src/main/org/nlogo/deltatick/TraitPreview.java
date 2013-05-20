@@ -61,12 +61,12 @@ public class TraitPreview extends JPanel {
     // Number of colums in the trait info table
     public static final int NUMBER_COLUMNS = 3;
     // column index where value is stored/displayed
-    public static final int VARVALUE_COLUMN_INDEX = 0;
+    public static final int VARVALUE_COLUMN_INDEX = 2;
     public static final int VARVALUE_COLUMN_WIDTH = 50;
     // column index where variation name is stored/displayed
     public static final int VARNAME_COLUMN_INDEX = 1;
     public static final int VARNAME_COLUMN_WIDTH = 75;
-    public static final int VARCHECKBOX_COLUMN_INDEX = 2;
+    public static final int VARCHECKBOX_COLUMN_INDEX = 0;
     public static final int VARCHECKBOX_COLUMN_WIDTH = 75;
 
 
@@ -388,7 +388,8 @@ public class TraitPreview extends JPanel {
                         String key = entry.getKey();
                         Variation var = entry.getValue();
                         Object[] row = new Object[NUMBER_COLUMNS];
-                        Vector<Object> rrow = new Vector<Object>(NUMBER_COLUMNS);
+                        Vector<Object> rrow = new Vector<Object>();
+                        rrow.setSize(NUMBER_COLUMNS);
 
                         boolean varSelected = false;
                         String value = new String (var.value);
@@ -400,13 +401,14 @@ public class TraitPreview extends JPanel {
                             }
                         }
 
-                        row[0] = new String(value);
-                        row[1] = new String(key);
-                        row[2] = new Boolean(varSelected);
+                        row[VARVALUE_COLUMN_INDEX] = new String(value);
+                        row[VARNAME_COLUMN_INDEX] = new String(key);
+                        row[VARCHECKBOX_COLUMN_INDEX] = new Boolean(varSelected);
                         tempTableData.add(row);
-                        rrow.add(0, new String(value));
-                        rrow.add(1, new String(key));
-                        rrow.add(2, new Boolean(varSelected));
+
+                        rrow.set(VARVALUE_COLUMN_INDEX, new String(value));
+                        rrow.set(VARNAME_COLUMN_INDEX, new String(key));
+                        rrow.set(VARCHECKBOX_COLUMN_INDEX, new Boolean(varSelected));
                         tmpTableData.add(rrow);
                     } // for map
                 } // trait match
@@ -419,8 +421,9 @@ public class TraitPreview extends JPanel {
 
             // Pre-sort the table
             traitInfoTable.setAutoCreateRowSorter(true);
-            RowSorter sorter = traitInfoTable.getRowSorter();
-            sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
+            RowSorter<TraitTableModel> sorter;
+            sorter = (RowSorter<TraitTableModel>) traitInfoTable.getRowSorter();
+            sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(VARVALUE_COLUMN_INDEX, SortOrder.ASCENDING)));
             // Presort done
 
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
@@ -489,12 +492,14 @@ public class TraitPreview extends JPanel {
 
     //class TraitTableModel extends AbstractTableModel {
     class TraitTableModel extends DefaultTableModel {
-        private String[] columnNames = {"Value", "Description", "Add variation?"};
+        private String[] columnNames = {"Add Variation?", "Description", "Value"};
         //, "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
 
         TraitTableModel() {
+            super();
+            dataVector = new Vector< Vector<Object> >();
             setColumnIdentifiers(columnNames);
             reset();
         }
@@ -514,13 +519,15 @@ public class TraitPreview extends JPanel {
 
         public void setTraitData(Vector< Vector<Object> > source) {
             dataVector.clear();
+            Vector myDataVector = new Vector< Vector<Object> >();
             for (int i = 0; i < source.size(); ++i) {
                 Vector<Object> tVector = new Vector<Object>();
                 for (int j = 0; j < source.get(i).size(); ++j) {
                     tVector.add(source.get(i).get(j));
                 }
-                dataVector.add(tVector);
+                myDataVector.add(tVector);
             }
+            setDataVector(myDataVector, new Vector<String>(Arrays.asList(columnNames)));
         }
 
         public void reset() {
@@ -551,9 +558,9 @@ public class TraitPreview extends JPanel {
 
        public Class getColumnClass(int c) {
            switch (c) {
-               case 0: { return String.class; }
-               case 1: { return String.class; }
-               case 2: { return Boolean.class; }
+               case VARVALUE_COLUMN_INDEX: { return String.class; }
+               case VARNAME_COLUMN_INDEX: { return String.class; }
+               case VARCHECKBOX_COLUMN_INDEX: { return Boolean.class; }
                default: { return null; }
            }
             //return getValueAt(0, c).getClass();
@@ -570,6 +577,13 @@ public class TraitPreview extends JPanel {
 
        public String getColumnName(int col) {
             return columnNames[col];
+       }
+
+       public void setColumnName(int col, String columnName) {
+           if (col < NUMBER_COLUMNS) {
+               columnNames[col] = new String(columnName);
+               setColumnIdentifiers(columnNames);
+           }
        }
 
        public Object getValueAt(int row, int col) {

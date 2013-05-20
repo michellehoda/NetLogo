@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,7 +12,6 @@ import java.util.regex.Matcher;
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
-import scala.actors.threadpool.Arrays;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -43,6 +43,7 @@ public strictfp class BehaviorBlock
 
         if (!aTraits.isEmpty()) {
             applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
+            //applicableTraits.addAll(Arrays.asList(aTraits.split(",")));
         }
     }
 
@@ -52,7 +53,6 @@ public strictfp class BehaviorBlock
     @Override
     public void processCodePlaceholders() {
         // Replace all %breed% with breed name
-        processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
         processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
     }
 
