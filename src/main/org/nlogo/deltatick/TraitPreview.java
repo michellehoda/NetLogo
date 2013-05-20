@@ -588,7 +588,9 @@ public class TraitPreview extends JPanel {
 
        public Object getValueAt(int row, int col) {
            //return tableData.get(row)[col];
-           return ((Vector<Object>) dataVector.get(row)).get(col);
+           Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
+           //return ((Vector<Object>) dataVector.get(row)).get(col);
+           return myDataVector.get(row).get(col);
        }
     }
 
