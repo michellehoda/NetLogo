@@ -28,7 +28,7 @@ public class BreedDropTarget
                 deltaTickTab.addCondition((ConditionBlock) o);
                 return true;
             } else if (o instanceof BehaviorBlock) {
-
+                addCodeBlock((BehaviorBlock) o);
                 ((BehaviorBlock) o).setMyBreedBlock((BreedBlock) this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
                 if (((BehaviorBlock) o).getIsMutate() == true) {
@@ -49,7 +49,7 @@ public class BreedDropTarget
                     }
                 }
 
-                addCodeBlock((BehaviorBlock) o);
+//                addCodeBlock((BehaviorBlock) o);
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }

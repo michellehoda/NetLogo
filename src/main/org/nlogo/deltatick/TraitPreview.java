@@ -417,13 +417,16 @@ public class TraitPreview extends JPanel {
             // Send data to tablemodel
             //((TraitTableModel) traitInfoTable.getModel()).setTraitData(tempTableData);
             ((TraitTableModel) traitInfoTable.getModel()).setTraitData(tmpTableData);
+            ((TraitTableModel) traitInfoTable.getModel()).setColumnName(VARVALUE_COLUMN_INDEX, getSelectedTraitName());
             traitInfoTable.validate();
 
             // Pre-sort the table
             traitInfoTable.setAutoCreateRowSorter(true);
-            RowSorter<TraitTableModel> sorter;
-            sorter = (RowSorter<TraitTableModel>) traitInfoTable.getRowSorter();
+            RowSorter<TraitTableModel> sorter = (RowSorter<TraitTableModel>) traitInfoTable.getRowSorter();
             sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(VARVALUE_COLUMN_INDEX, SortOrder.ASCENDING)));
+            //TableRowSorter sorter = new TableRowSorter<TraitTableModel>((TraitTableModel) traitInfoTable.getModel());
+            //traitInfoTable.setRowSorter(sorter);
+            //sorter.setSortsOnUpdates(true);
             // Presort done
 
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
@@ -492,14 +495,20 @@ public class TraitPreview extends JPanel {
 
     //class TraitTableModel extends AbstractTableModel {
     class TraitTableModel extends DefaultTableModel {
-        private String[] columnNames = {"Add Variation?", "Description", "Value"};
+        //private String[] columnNames = {"Add Variation?", "Description", "Value"};
+        private Vector columnNames = new Vector<String>();
         //, "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
 
         TraitTableModel() {
             super();
-            dataVector = new Vector< Vector<Object> >();
+            //dataVector = new Vector< Vector<Object> >();
+            columnNames.setSize(NUMBER_COLUMNS);
+            columnNames.set(VARVALUE_COLUMN_INDEX, "Value?");
+            columnNames.set(VARNAME_COLUMN_INDEX, "Description");
+            columnNames.set(VARCHECKBOX_COLUMN_INDEX, "Add Variation?");
+
             setColumnIdentifiers(columnNames);
             reset();
         }
@@ -527,7 +536,7 @@ public class TraitPreview extends JPanel {
                 }
                 myDataVector.add(tVector);
             }
-            setDataVector(myDataVector, new Vector<String>(Arrays.asList(columnNames)));
+            setDataVector(myDataVector, columnNames);
         }
 
         public void reset() {
@@ -536,19 +545,21 @@ public class TraitPreview extends JPanel {
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex){
-            if (columnIndex == VARCHECKBOX_COLUMN_INDEX) {
-                return true;
-            }
-            else {
-            return false;
-            }
+            return  (columnIndex == VARCHECKBOX_COLUMN_INDEX);
         }
 
-        public void setValueAt(Object value, int row, int col) {
-            //tableData.get(row)[col] = value;
-            ((Vector<Object>) dataVector.get(row)).set(col, value);
-            fireTableCellUpdated(row, col);
-        }
+//        public void setValueAt(Object value, int row, int col) {
+//            //tableData.get(row)[col] = value;
+//            Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
+//            //((Vector<Object>) dataVector.get(row)).set(col, value);
+//            myDataVector.get(row).set(col, value);
+//            setDataVector(myDataVector, columnNames);
+//
+//            fireTableCellUpdated(row, col);
+//            // Fire all rows updated for re-sorting table
+//            // fireTableRowsUpdated(0, getDataVector().size() - 1);
+//        }
+
         /*
          * JTable uses this method to determine the default renderer/
          * editor for each cell.  If we didn't implement this method,
@@ -567,31 +578,32 @@ public class TraitPreview extends JPanel {
         }
 
        public int getColumnCount() {
-            return columnNames.length;
+            return columnNames.size();
        }
 
-       public int getRowCount() {
-           //return tableData.size();
-           return dataVector.size();
-       }
+//       public int getRowCount() {
+//           //return tableData.size();
+//           return getDataVector().size();
+//       }
 
-       public String getColumnName(int col) {
-            return columnNames[col];
-       }
+//       public String getColumnName(int col) {
+//            return (String) columnNames.get(col);
+//       }
 
        public void setColumnName(int col, String columnName) {
            if (col < NUMBER_COLUMNS) {
-               columnNames[col] = new String(columnName);
+               columnNames.set(col, columnName);
+               //columnNames[col] = new String(columnName);
                setColumnIdentifiers(columnNames);
            }
        }
 
-       public Object getValueAt(int row, int col) {
-           //return tableData.get(row)[col];
-           Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
-           //return ((Vector<Object>) dataVector.get(row)).get(col);
-           return myDataVector.get(row).get(col);
-       }
+//       public Object getValueAt(int row, int col) {
+//           //return tableData.get(row)[col];
+//           Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
+//           //return ((Vector<Object>) dataVector.get(row)).get(col);
+//           return myDataVector.get(row).get(col);
+//       }
     }
 
     public int getTotalWidth() {
