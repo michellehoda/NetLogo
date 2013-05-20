@@ -262,6 +262,7 @@ public class SpeciesInspectorPanel extends JPanel {
     // Implements listener when the variation table is modified
     class TraitTableModelListener implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
+
             if (e.getColumn() == TraitPreview.VARCHECKBOX_COLUMN_INDEX) {
                 traitPreview.updateVariationSelection(e);
                 updateTraitDisplay();

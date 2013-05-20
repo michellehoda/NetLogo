@@ -61,14 +61,13 @@ public class TraitPreview extends JPanel {
     // Number of colums in the trait info table
     public static final int NUMBER_COLUMNS = 3;
     // column index where value is stored/displayed
-    public static final int VARVALUE_COLUMN_INDEX = 2;
+    public static final int VARVALUE_COLUMN_INDEX = 1;
     public static final int VARVALUE_COLUMN_WIDTH = 50;
     // column index where variation name is stored/displayed
-    public static final int VARNAME_COLUMN_INDEX = 1;
+    public static final int VARNAME_COLUMN_INDEX = 0;
     public static final int VARNAME_COLUMN_WIDTH = 75;
-    public static final int VARCHECKBOX_COLUMN_INDEX = 0;
+    public static final int VARCHECKBOX_COLUMN_INDEX = 2;
     public static final int VARCHECKBOX_COLUMN_WIDTH = 75;
-
 
     public static final int TRAIT_TEXT_HEIGHT = 20;
     public static final int TRAIT_SCROLLPANE_WIDTH = 150;
@@ -311,9 +310,6 @@ public class TraitPreview extends JPanel {
         traitInfoTable = new JTable(new TraitTableModel());
         traitTableModel = new TraitTableModel();
         traitInfoTable.setModel(traitTableModel);
-        // Pre-sort the table
-        // Presort done
-
 
         traitDistriPanel = new JPanel();
         traitDistriPanel.setLayout(new BoxLayout(traitDistriPanel, BoxLayout.Y_AXIS));
@@ -429,6 +425,15 @@ public class TraitPreview extends JPanel {
             //sorter.setSortsOnUpdates(true);
             // Presort done
 
+            // Set center alignment
+            DefaultTableCellRenderer dctr = new DefaultTableCellRenderer();
+            dctr.setHorizontalAlignment(JLabel.CENTER);
+            dctr.setHorizontalTextPosition(JLabel.CENTER);
+            traitInfoTable.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setCellRenderer(dctr);
+            //traitInfoTable.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setCellRenderer(dctr);
+            //traitInfoTable.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setCellRenderer(dctr);
+
+
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
             updateTraitDistriPanel(traitInfoTable.getModel(), true);
 
@@ -484,8 +489,7 @@ public class TraitPreview extends JPanel {
         Component comp = null;
         int headerWidth = 0;
         int cellWidth = 0;
-        TableCellRenderer headerRenderer =
-            table.getTableHeader().getDefaultRenderer();
+        // TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
 
         table.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setPreferredWidth(VARVALUE_COLUMN_WIDTH);
         table.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setPreferredWidth(VARNAME_COLUMN_WIDTH);
@@ -505,7 +509,7 @@ public class TraitPreview extends JPanel {
             super();
             //dataVector = new Vector< Vector<Object> >();
             columnNames.setSize(NUMBER_COLUMNS);
-            columnNames.set(VARVALUE_COLUMN_INDEX, "Value?");
+            columnNames.set(VARVALUE_COLUMN_INDEX, "Value");
             columnNames.set(VARNAME_COLUMN_INDEX, "Description");
             columnNames.set(VARCHECKBOX_COLUMN_INDEX, "Add Variation?");
 
