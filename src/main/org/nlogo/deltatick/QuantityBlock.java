@@ -33,6 +33,9 @@ public strictfp class QuantityBlock
     String penColorString;
     ColorButton colorButton;
 
+    String xLabel;
+    String yLabel;
+
     JLabel image;
     //Image histoImage;
     ImageIcon histoImageIcon;
@@ -41,11 +44,13 @@ public strictfp class QuantityBlock
 
 
 
-    public QuantityBlock(String name, boolean histo, String bars, String trait) {
+    public QuantityBlock(String name, boolean histo, String bars, String trait, String xLabel, String yLabel) {
         super(name, ColorSchemer.getColor(2));
         this.histo = histo;
         this.bars = bars;
         this.trait = trait;
+        this.xLabel = xLabel;
+        this.yLabel = yLabel;
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 quantityBlockFlavor
@@ -263,6 +268,13 @@ public strictfp class QuantityBlock
     }
     public String getSavedPenName() {
         return savedPenName;
+    }
+
+    public String getXLabel() {
+        return xLabel;
+    }
+    public String getYLabel() {
+        return yLabel;
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {

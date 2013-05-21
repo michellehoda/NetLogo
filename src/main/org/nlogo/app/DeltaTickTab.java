@@ -886,6 +886,8 @@ public class DeltaTickTab
                             // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
                             PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
                             plotPen.updateCode(quantBlock.getPenUpdateCode());
+                            ((PlotWidget) plotWidget).xLabel(quantBlock.getXLabel());
+                            ((PlotWidget) plotWidget).yLabel(quantBlock.getYLabel());
                         }
                     }
                     ////interfacePlotCount++;
@@ -918,6 +920,8 @@ public class DeltaTickTab
                             PlotPen newPlotPen = thisPlot.createPlotPen(qBlock.getPenName(), false);
                             newPlotPen.updateCode(qBlock.getPenUpdateCode());
                             newPlotPen.plot(thisPlot.xMax(), thisPlot.yMax());
+                            ((PlotWidget) ww.widget()).xLabel(qBlock.getXLabel());
+                            ((PlotWidget) ww.widget()).yLabel(qBlock.getYLabel());
                             //newPlotPen._hidden = true;
                         }
                     }

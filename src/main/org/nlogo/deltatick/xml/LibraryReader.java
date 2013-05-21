@@ -142,11 +142,14 @@ public class LibraryReader {
                 String bars = "0";
                 String trait = " ";
 
+                String xLabel = new String(quantity.getAttributes().getNamedItem("xlabel").getTextContent());
+                String yLabel = new String(quantity.getAttributes().getNamedItem("ylabel").getTextContent());
+
                 if (quantity.getAttributes().getNamedItem("histo").getTextContent().contains("true")) {
                     histo = true;
                     bars = quantity.getAttributes().getNamedItem("bars").getTextContent();
                 }
-                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait);
+                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
                 deltaTickTab.getLibraryHolder().addToQuantityBlocksMap((QuantityBlock) block);
