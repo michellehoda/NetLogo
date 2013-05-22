@@ -70,7 +70,8 @@ public class DeltaTickModelReader {
                 codeBlock.doLayout();
                 codeBlock.validate();
                 codeBlock.repaint();
-                codeBlock.enableInputs();
+                ((BehaviorBlock) o).enableInputs();
+                ((BehaviorBlock) o).showInputs();
 
                 //TODO: Get ismutate code from BreedDropTarget
                 if (((BehaviorBlock) o).getIsMutate() == true) {
@@ -134,6 +135,8 @@ public class DeltaTickModelReader {
 
                 }
 
+                ((BehaviorBlock) o).validate();
+                ((BehaviorBlock) o).repaint();
             }
         }
 
@@ -320,6 +323,7 @@ public class DeltaTickModelReader {
                         // From DropTarget
                         plotBlock.addBlock(quantityBlock);
                         new PlantedCodeBlockDragSource(quantityBlock);
+                        plotBlock.removeQuantityblockPanel();
                         plotBlock.doLayout();
                         plotBlock.validate();
                         plotBlock.repaint();
