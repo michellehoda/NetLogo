@@ -870,12 +870,13 @@ public class DeltaTickTab
                     plotWrappers.put(plotBlock.getPlotName(), ww);
 
                     ////interfacePlotCount++;
-
                     // First time creating plot.
                     // Save pen names
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         // Now save the new pen name
                         quantBlock.setSavedPenName();
+                        ((AbstractPlotWidget) plotWidget).xLabel("Count");
+                        //plot.legendIsOpen
                     }
 
                     // Create new pens

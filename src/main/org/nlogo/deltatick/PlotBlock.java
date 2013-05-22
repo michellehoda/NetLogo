@@ -35,9 +35,9 @@ public strictfp class PlotBlock
         super("plot", ColorSchemer.getColor(3));
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
         this.isHisto = false;
-        textFilter = new JCharNumberFieldFilter();
-        textFilter.setMaxChars(10);
-        plotNameField.setDocument(textFilter);
+        //textFilter = new JCharNumberFieldFilter();
+        //textFilter.setMaxChars(10);
+        //plotNameField.setDocument(textFilter);
 
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -139,11 +139,11 @@ public strictfp class PlotBlock
 
 
     public void makeLabel() {
-    	textFilter = new JCharNumberFieldFilter();
-    	textFilter.setMaxChars(10);
+    	//textFilter = new JCharNumberFieldFilter();
+    	//textFilter.setMaxChars(10);
         plotNameField = new PrettyInput(this);
-        plotNameField.setDocument(textFilter);
-        ////label.add(removeButton);
+        //plotNameField.setDocument(textFilter);
+
         this.showRemoveButton();
         label.add(plotNameField);
         label.setBackground(getBackground());
