@@ -65,10 +65,14 @@ object App{
     // renderer since that's the new default, but for now, the
     // Quartz renderer is what we've long used and tested, so
     // let's stick with it - ST 12/4/07
-    ////System.setProperty("apple.awt.graphics.UseQuartz", "true")
-    ////System.setProperty("apple.awt.showGrowBox", "true")
-    ////System.setProperty("apple.laf.useScreenMenuBar", "true")
+    if(System.getProperty("os.name").startsWith("Mac")) {
+    System.setProperty("apple.awt.graphics.UseQuartz", "true")
+    System.setProperty("apple.awt.showGrowBox", "true")
+    System.setProperty("apple.laf.useScreenMenuBar", "true")
+    }
+    else {
     UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+    }
     // tweak behavior of Quaqua
     ////System.setProperty("Quaqua.visualMargin", "1,1,1,1")
     // we need to call MacHandlers.init() very early (I'm guessing

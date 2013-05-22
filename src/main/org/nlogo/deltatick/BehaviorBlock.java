@@ -30,7 +30,7 @@ public strictfp class BehaviorBlock
 
     // Set of acceptable traits
     Set<String> applicableTraits;// = new HashSet<String>();
-    JPanel traitblockLabelPanel;
+    JPanel traitblockLabelPanel = null;
 
 
     public BehaviorBlock(String name, String aTraits) {
@@ -299,7 +299,9 @@ public strictfp class BehaviorBlock
     }
 
     public void removeTraitblockPanel() {
-        remove(traitblockLabelPanel);
+        if (traitblockLabelPanel != null) {
+            remove(traitblockLabelPanel);
+        }
         validate();
     }
 

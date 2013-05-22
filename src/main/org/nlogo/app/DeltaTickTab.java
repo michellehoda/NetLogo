@@ -370,6 +370,9 @@ public class DeltaTickTab
             newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
         }
 
+        // Add the appropriate remove/close button listener
+        newBreed.getRemoveButton().addActionListener(new BreedBlockRemoveButtonListener(newBreed));
+
         // Create speciesinspectorpanel for the breedblock
         JFrame jFrame = new JFrame("Species Inspector");
         speciesInspectorPanel = new SpeciesInspectorPanel(newBreed, jFrame);
@@ -402,6 +405,30 @@ public class DeltaTickTab
         return newBreed;
     }
 
+    private final javax.swing.Action removeBreedAction =
+            new javax.swing.AbstractAction( "Remove Species" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                   //removeBreedBlock();
+                }
+            };
+
+    class BreedBlockRemoveButtonListener implements ActionListener {
+        BreedBlock breedBlock;
+
+        BreedBlockRemoveButtonListener (BreedBlock block) {
+            this.breedBlock = block;
+        }
+        public void actionPerformed(ActionEvent e) {
+            breedBlock.die();
+            // Remove trait blocks associated with this breed
+            for (TraitBlockNew tBlock: breedBlock.getMyTraitBlocks()) {
+                libraryHolder.removeTraitBlock(tBlock);
+                buildPanel.removeTrait(tBlock);
+                userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+            }
+        }
+
+    }
 
     class SpeciesButtonListener implements ActionListener {
         BreedBlock myParent;
@@ -423,6 +450,7 @@ public class DeltaTickTab
             speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
+
 
     public class SpeciesPanelOkayListener implements ActionListener {
         BreedBlock myParent;

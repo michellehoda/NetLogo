@@ -642,6 +642,10 @@ public strictfp class BreedBlock
         return myTraitBlocks.size();
     }
 
+    public RemoveButton getRemoveButton() {
+        return removeButton;
+    }
+
 //    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
 //        traitBlock.showColorButton();
 //        traitBlock.doLayout();
