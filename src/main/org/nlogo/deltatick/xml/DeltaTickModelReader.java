@@ -135,6 +135,7 @@ public class DeltaTickModelReader {
 
                 }
 
+
                 ((BehaviorBlock) o).validate();
                 ((BehaviorBlock) o).repaint();
             }
