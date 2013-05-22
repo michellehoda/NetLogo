@@ -14,7 +14,7 @@ public class PrettierInput extends PrettyInput {
     public PrettierInput(Component parent) {
         super(parent);
 
-        setBorder(BorderFactory.createLoweredBevelBorder());
+        //setBorder(BorderFactory.createLoweredBevelBorder());
         //setBackground(Color.white);
         //setForeground(Color.white);
     }

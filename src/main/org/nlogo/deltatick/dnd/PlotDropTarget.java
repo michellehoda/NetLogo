@@ -20,10 +20,15 @@ public class PlotDropTarget
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
         Object o = transferable.getTransferData(CodeBlock.quantityBlockFlavor);
+
         if (o instanceof QuantityBlock) {
             if (((QuantityBlock) o).getHisto() == false) {
-            addCodeBlock((QuantityBlock) o);
-            return true;
+                ((PlotBlock) block).removeQuantityblockPanel();
+                addCodeBlock((QuantityBlock) o);
+                ((QuantityBlock) o).validate();
+                ((QuantityBlock) o).repaint();
+                block.validate();
+                return true;
             }
             else {
                 String message = new String(((QuantityBlock) o).getName() + " is a block for histograms, not line graphs.");

@@ -360,7 +360,7 @@ public class DeltaTickTab
       };
 
     public BreedBlock makeBreedBlock(String plural, String setupNumber) {
-        BreedBlock newBreed = new BreedBlock();
+        BreedBlock newBreed;// = new BreedBlock();
         buildPanel.removeRect();
         Breed breed = buildPanel.availBreeds().get(0);
 
@@ -532,7 +532,9 @@ public class DeltaTickTab
         else {
             new PlotDropTarget(newPlotBlock);
         }
+        newPlotBlock.validate();
         contentPanel.validate();
+        getParent().repaint();
         return newPlotBlock;
     }
 
@@ -900,7 +902,7 @@ public class DeltaTickTab
                             // Previous pen name had been saved
                             if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
                                 // Name has changed
-                                System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
+                                // System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
                                 plotBlock.removePen(quantBlock.getSavedPenName());
                             }
                         }

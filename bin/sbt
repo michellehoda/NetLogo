@@ -1,9 +1,10 @@
 #!/bin/sh
 
 NETLOGO_ROOT=.
+CLASSPATH=
 if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
     export JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
-	NETLOGO_ROOT=/cygdrive/c/Users/salil/Documents/MISC/NetLogo
+    NETLOGO_ROOT=/cygdrive/c/Users/salil/Documents/MISC/NetLogo
 else
     if [ `uname -s` = Linux ] ; then
 	export JAVA_HOME=/usr/lib/jvm/java-6-sun
@@ -16,9 +17,14 @@ else
     fi
 fi
 
+if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+    CLASSPATH=`cygpath -wp $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar`
+else
+    CLASSPATH=$JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar
+fi
+
 export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
-
 
 SBTJAR_DIR=$NETLOGO_ROOT/`dirname $0`
 

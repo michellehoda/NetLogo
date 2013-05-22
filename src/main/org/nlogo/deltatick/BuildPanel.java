@@ -367,6 +367,7 @@ public String newSaveAsXML() {
         block.doLayout();
         block.validate();
         block.repaint();
+        this.validate();
     }
 
 
@@ -384,21 +385,21 @@ public String newSaveAsXML() {
 
 
     }
-
-    public void addPlot(String name, int x, int y) {
-        PlotBlock newPlot = new PlotBlock();
-        myPlots.add(newPlot);
-        newPlot.setPlotName(name);
-        newPlot.setBounds(400,
-                0,
-                newPlot.getPreferredSize().width,
-                newPlot.getPreferredSize().height);
-        newPlot.setLocation(x, y);
-        add(newPlot);
-        newPlot.doLayout();
-        newPlot.validate();
-        newPlot.repaint();
-    }
+//    //UNUSED
+//    public void addPlot(String name, int x, int y) {
+//        PlotBlock newPlot = new PlotBlock();
+//        myPlots.add(newPlot);
+//        newPlot.setPlotName(name);
+//        newPlot.setBounds(400,
+//                0,
+//                newPlot.getPreferredSize().width,
+//                newPlot.getPreferredSize().height);
+//        newPlot.setLocation(x, y);
+//        add(newPlot);
+//        newPlot.doLayout();
+//        newPlot.validate();
+//        newPlot.repaint();
+//    }
 
 
     // Collection<typeObject> object that groups multiple elements into a single unit -A. (sept 8)

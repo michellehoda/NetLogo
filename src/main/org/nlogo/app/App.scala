@@ -22,6 +22,8 @@ import org.picocontainer.Parameter
 import javax.swing._
 import java.awt.event.{WindowAdapter, WindowEvent}
 import java.awt.{Toolkit, Dimension, Frame}
+import javax.swing.plaf.synth.SynthLookAndFeel
+import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel
 
 /**
  * The main class for the complete NetLogo application.
@@ -34,7 +36,7 @@ import java.awt.{Toolkit, Dimension, Frame}
  * for example code.
  */
 object App{
-  
+
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -63,11 +65,12 @@ object App{
     // renderer since that's the new default, but for now, the
     // Quartz renderer is what we've long used and tested, so
     // let's stick with it - ST 12/4/07
-    System.setProperty("apple.awt.graphics.UseQuartz", "true")
-    System.setProperty("apple.awt.showGrowBox", "true")
-    System.setProperty("apple.laf.useScreenMenuBar", "true")
+    ////System.setProperty("apple.awt.graphics.UseQuartz", "true")
+    ////System.setProperty("apple.awt.showGrowBox", "true")
+    ////System.setProperty("apple.laf.useScreenMenuBar", "true")
+    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
     // tweak behavior of Quaqua
-    System.setProperty("Quaqua.visualMargin", "1,1,1,1")
+    ////System.setProperty("Quaqua.visualMargin", "1,1,1,1")
     // we need to call MacHandlers.init() very early (I'm guessing
     // it must be before the AWT initializes), in order for the
     // handlers to work.  At this point, we don't have an app
@@ -248,7 +251,7 @@ object App{
     }
   }
 }
-  
+
 class App extends
     org.nlogo.window.Event.LinkChild with
     org.nlogo.util.Exceptions.Handler with
@@ -325,7 +328,7 @@ class App extends
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.NONE,
                                   frame, frame, hubNetManagerFactory, App.this, listenerManager) {
-      val compiler = pico.getComponent(classOf[CompilerInterface])                                    
+      val compiler = pico.getComponent(classOf[CompilerInterface])
       // lazy to avoid initialization order snafu - ST 3/1/11
       lazy val updateManager = new UpdateManager {
         override def defaultFrameRate = _workspace.frameRate
@@ -389,9 +392,9 @@ class App extends
     pico.addComponent(new MenuBarFactory())
     aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
     frame.addLinkComponent(aggregateManager)
-    
+
     pico.addComponent(new EditorFactory(workspace))
-    
+
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
@@ -399,7 +402,7 @@ class App extends
 
     val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
     workspace.init(viewManager)
-    frame.addLinkComponent(viewManager)    
+    frame.addLinkComponent(viewManager)
 
     fileMenu = pico.getComponent(classOf[FileMenu])
     val menuBar = new JMenuBar(){
@@ -432,14 +435,14 @@ class App extends
     smartPack(frame.getPreferredSize)
 
     if(! System.getProperty("os.name").startsWith("Mac")){ org.nlogo.awt.Positioning.center(frame, null) }
-    
-    org.nlogo.app.FindDialog.init(frame) 
-    
+
+    org.nlogo.app.FindDialog.init(frame)
+
     Splash.endSplash()
     frame.setVisible(true)
     if(System.getProperty("os.name").startsWith("Mac")){ MacHandlers.ready(this) }
   }
-  
+
   def startLogging(properties:String) {
     if(new java.io.File(properties).exists) {
       val username =
@@ -620,7 +623,7 @@ class App extends
       }
     }
   }
-  
+
   /**
    * Internal use only.
    */
@@ -688,7 +691,7 @@ class App extends
   def handle(e:AboutToQuitEvent){ if(logger != null) logger.close() }
 
   /**
-   * Generates OS standard frame title. 
+   * Generates OS standard frame title.
    */
   private def makeFrameTitle = {
     if(workspace.getModelFileName() == null) "NetLogo"
@@ -702,7 +705,7 @@ class App extends
 
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType() == ModelType.Normal) title += " {" + workspace.getModelDir() + "}"
-      title 
+      title
     }
   }
 
@@ -899,7 +902,7 @@ class App extends
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
-  
+
   def smartPack(targetSize:Dimension) {
     val gc = frame.getGraphicsConfiguration
     val maxBounds = gc.getBounds
@@ -910,33 +913,33 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-    
+
     tabs.interfaceTab.adjustTargetSize(targetSize)
-    
+
     // reduce our size ambitions if necessary
     var newWidth  = StrictMath.min(targetSize.width, maxWidth )
     var newHeight = StrictMath.min(targetSize.height, maxHeight)
-    
+
     // move up/left to get more room if possible and necessary
     val moveLeft = StrictMath.max(0, frame.getLocation().x + newWidth  - maxX)
     val moveUp   = StrictMath.max(0, frame.getLocation().y + newHeight - maxY)
-    
+
     // now we can compute our new position
     val newX = StrictMath.max(maxBoundsX, frame.getLocation().x - moveLeft)
     val newY = StrictMath.max(maxBoundsY, frame.getLocation().y - moveUp  )
-    
+
     // and now that we know our position, we can compute our new size
     newWidth  = StrictMath.min(newWidth, maxX - newX)
     newHeight = StrictMath.min(newHeight, maxY - newY)
-    
+
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)
     frame.validate()
-    
+
     // not sure why this is sometimes necessary - ST 11/24/03
     tabs.requestFocus()
   }
-  
+
   /**
    * Internal use only.
    */

@@ -3,17 +3,32 @@ package org.nlogo.deltatick;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.*;
-import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,14 +76,13 @@ public class TraitPreview extends JPanel {
     // Number of colums in the trait info table
     public static final int NUMBER_COLUMNS = 3;
     // column index where value is stored/displayed
-    public static final int VARVALUE_COLUMN_INDEX = 0;
+    public static final int VARVALUE_COLUMN_INDEX = 1;
     public static final int VARVALUE_COLUMN_WIDTH = 50;
     // column index where variation name is stored/displayed
-    public static final int VARNAME_COLUMN_INDEX = 1;
+    public static final int VARNAME_COLUMN_INDEX = 0;
     public static final int VARNAME_COLUMN_WIDTH = 75;
     public static final int VARCHECKBOX_COLUMN_INDEX = 2;
     public static final int VARCHECKBOX_COLUMN_WIDTH = 75;
-
 
     public static final int TRAIT_TEXT_HEIGHT = 20;
     public static final int TRAIT_SCROLLPANE_WIDTH = 150;
@@ -311,9 +325,6 @@ public class TraitPreview extends JPanel {
         traitInfoTable = new JTable(new TraitTableModel());
         traitTableModel = new TraitTableModel();
         traitInfoTable.setModel(traitTableModel);
-        // Pre-sort the table
-        // Presort done
-
 
         traitDistriPanel = new JPanel();
         traitDistriPanel.setLayout(new BoxLayout(traitDistriPanel, BoxLayout.Y_AXIS));
@@ -369,6 +380,7 @@ public class TraitPreview extends JPanel {
     }
 
     // This function is called by the handler when a trait is clicked on (in the trait selection list)
+    @SuppressWarnings("unchecked")
     public void updateTraitSelection(ListSelectionEvent e) {
 
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
@@ -388,7 +400,8 @@ public class TraitPreview extends JPanel {
                         String key = entry.getKey();
                         Variation var = entry.getValue();
                         Object[] row = new Object[NUMBER_COLUMNS];
-                        Vector<Object> rrow = new Vector<Object>(NUMBER_COLUMNS);
+                        Vector<Object> rrow = new Vector<Object>();
+                        rrow.setSize(NUMBER_COLUMNS);
 
                         boolean varSelected = false;
                         String value = new String (var.value);
@@ -400,13 +413,14 @@ public class TraitPreview extends JPanel {
                             }
                         }
 
-                        row[0] = new String(value);
-                        row[1] = new String(key);
-                        row[2] = new Boolean(varSelected);
+                        row[VARVALUE_COLUMN_INDEX] = new String(value);
+                        row[VARNAME_COLUMN_INDEX] = new String(key);
+                        row[VARCHECKBOX_COLUMN_INDEX] = new Boolean(varSelected);
                         tempTableData.add(row);
-                        rrow.add(0, new String(value));
-                        rrow.add(1, new String(key));
-                        rrow.add(2, new Boolean(varSelected));
+
+                        rrow.set(VARVALUE_COLUMN_INDEX, new String(value));
+                        rrow.set(VARNAME_COLUMN_INDEX, new String(key));
+                        rrow.set(VARCHECKBOX_COLUMN_INDEX, new Boolean(varSelected));
                         tmpTableData.add(rrow);
                     } // for map
                 } // trait match
@@ -415,13 +429,26 @@ public class TraitPreview extends JPanel {
             // Send data to tablemodel
             //((TraitTableModel) traitInfoTable.getModel()).setTraitData(tempTableData);
             ((TraitTableModel) traitInfoTable.getModel()).setTraitData(tmpTableData);
+            ((TraitTableModel) traitInfoTable.getModel()).setColumnName(VARVALUE_COLUMN_INDEX, getSelectedTraitName());
             traitInfoTable.validate();
 
             // Pre-sort the table
             traitInfoTable.setAutoCreateRowSorter(true);
-            RowSorter sorter = traitInfoTable.getRowSorter();
-            sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
+            RowSorter<TraitTableModel> sorter = (RowSorter<TraitTableModel>) traitInfoTable.getRowSorter();
+            sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(VARVALUE_COLUMN_INDEX, SortOrder.ASCENDING)));
+            //TableRowSorter sorter = new TableRowSorter<TraitTableModel>((TraitTableModel) traitInfoTable.getModel());
+            //traitInfoTable.setRowSorter(sorter);
+            //sorter.setSortsOnUpdates(true);
             // Presort done
+
+            // Set center alignment
+            DefaultTableCellRenderer dctr = new DefaultTableCellRenderer();
+            dctr.setHorizontalAlignment(JLabel.CENTER);
+            dctr.setHorizontalTextPosition(JLabel.CENTER);
+            traitInfoTable.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setCellRenderer(dctr);
+            //traitInfoTable.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setCellRenderer(dctr);
+            //traitInfoTable.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setCellRenderer(dctr);
+
 
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
             updateTraitDistriPanel(traitInfoTable.getModel(), true);
@@ -478,8 +505,7 @@ public class TraitPreview extends JPanel {
         Component comp = null;
         int headerWidth = 0;
         int cellWidth = 0;
-        TableCellRenderer headerRenderer =
-            table.getTableHeader().getDefaultRenderer();
+        // TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
 
         table.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setPreferredWidth(VARVALUE_COLUMN_WIDTH);
         table.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setPreferredWidth(VARNAME_COLUMN_WIDTH);
@@ -489,12 +515,21 @@ public class TraitPreview extends JPanel {
 
     //class TraitTableModel extends AbstractTableModel {
     class TraitTableModel extends DefaultTableModel {
-        private String[] columnNames = {"Value", "Description", "Add variation?"};
+        //private String[] columnNames = {"Add Variation?", "Description", "Value"};
+        private Vector columnNames = new Vector<String>();
         //, "Edit"};
 
         private ArrayList<Object[]> tableData = new ArrayList<Object[]>();
 
+        @SuppressWarnings("unchecked")
         TraitTableModel() {
+            super();
+            //dataVector = new Vector< Vector<Object> >();
+            columnNames.setSize(NUMBER_COLUMNS);
+            ((Vector<String>) columnNames).set(VARVALUE_COLUMN_INDEX, "Value");
+            ((Vector<String>) columnNames).set(VARNAME_COLUMN_INDEX, "Description");
+            ((Vector<String>) columnNames).set(VARCHECKBOX_COLUMN_INDEX, "Add Variation?");
+
             setColumnIdentifiers(columnNames);
             reset();
         }
@@ -512,15 +547,18 @@ public class TraitPreview extends JPanel {
             } // for i
         }
 
+        @SuppressWarnings("unchecked")
         public void setTraitData(Vector< Vector<Object> > source) {
             dataVector.clear();
+            Vector myDataVector = new Vector< Vector<Object> >();
             for (int i = 0; i < source.size(); ++i) {
                 Vector<Object> tVector = new Vector<Object>();
                 for (int j = 0; j < source.get(i).size(); ++j) {
                     tVector.add(source.get(i).get(j));
                 }
-                dataVector.add(tVector);
+                myDataVector.add(tVector);
             }
+            setDataVector(myDataVector, columnNames);
         }
 
         public void reset() {
@@ -529,19 +567,21 @@ public class TraitPreview extends JPanel {
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex){
-            if (columnIndex == VARCHECKBOX_COLUMN_INDEX) {
-                return true;
-            }
-            else {
-            return false;
-            }
+            return  (columnIndex == VARCHECKBOX_COLUMN_INDEX);
         }
 
-        public void setValueAt(Object value, int row, int col) {
-            //tableData.get(row)[col] = value;
-            ((Vector<Object>) dataVector.get(row)).set(col, value);
-            fireTableCellUpdated(row, col);
-        }
+//        public void setValueAt(Object value, int row, int col) {
+//            //tableData.get(row)[col] = value;
+//            Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
+//            //((Vector<Object>) dataVector.get(row)).set(col, value);
+//            myDataVector.get(row).set(col, value);
+//            setDataVector(myDataVector, columnNames);
+//
+//            fireTableCellUpdated(row, col);
+//            // Fire all rows updated for re-sorting table
+//            // fireTableRowsUpdated(0, getDataVector().size() - 1);
+//        }
+
         /*
          * JTable uses this method to determine the default renderer/
          * editor for each cell.  If we didn't implement this method,
@@ -549,33 +589,44 @@ public class TraitPreview extends JPanel {
          * rather than a check box.
          */
 
-       public Class getColumnClass(int c) {
-           switch (c) {
-               case 0: { return String.class; }
-               case 1: { return String.class; }
-               case 2: { return Boolean.class; }
-               default: { return null; }
-           }
+        public Class getColumnClass(int c) {
+            switch (c) {
+                case VARVALUE_COLUMN_INDEX: { return String.class; }
+                case VARNAME_COLUMN_INDEX: { return String.class; }
+                case VARCHECKBOX_COLUMN_INDEX: { return Boolean.class; }
+                default: { return null; }
+            }
             //return getValueAt(0, c).getClass();
         }
 
-       public int getColumnCount() {
-            return columnNames.length;
-       }
+        public int getColumnCount() {
+            return columnNames.size();
+        }
 
-       public int getRowCount() {
-           //return tableData.size();
-           return dataVector.size();
-       }
+//       public int getRowCount() {
+//           //return tableData.size();
+//           return getDataVector().size();
+//       }
 
-       public String getColumnName(int col) {
-            return columnNames[col];
-       }
+//       public String getColumnName(int col) {
+//            return (String) columnNames.get(col);
+//       }
 
-       public Object getValueAt(int row, int col) {
-           //return tableData.get(row)[col];
-           return ((Vector<Object>) dataVector.get(row)).get(col);
-       }
+        @SuppressWarnings("unchecked")
+        public void setColumnName(int col, String columnName) {
+            if (col < NUMBER_COLUMNS) {
+                ((Vector<String>) columnNames).set(col, columnName);
+                //columnNames[col] = new String(columnName);
+                setColumnIdentifiers(columnNames);
+            }
+        }
+
+//       public Object getValueAt(int row, int col) {
+//           //return tableData.get(row)[col];
+//           Vector< Vector<Object> > myDataVector = new Vector(getDataVector());
+//           //return ((Vector<Object>) dataVector.get(row)).get(col);
+//           return myDataVector.get(row).get(col);
+//       }
     }
 
     public int getTotalWidth() {

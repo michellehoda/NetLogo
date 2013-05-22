@@ -498,13 +498,13 @@ public class DeltaTickModelReader {
         //breedBlock.appendChild(behaviorBlock);
         behaviorBlock.setAttribute("name", block.getName());
         //mutate attribute
-        String isMutate = (((BehaviorBlock) block).getIsMutate())? "true" : "false";
+        String isMutate = (block.getIsMutate())? "true" : "false";
         behaviorBlock.setAttribute("mutate", isMutate);
         // isTrait
-        String isTrait = (((BehaviorBlock) block).getIsTrait()) ? "true" : "false";
+        String isTrait = (block.getIsTrait()) ? "true" : "false";
         behaviorBlock.setAttribute("isTrait", isTrait);
-        if (((BehaviorBlock) block).getIsTrait()) {
-            String traitName = ((BehaviorBlock) block).getTrait();
+        if (block.getIsTrait()) {
+            String traitName = block.getTrait();
             behaviorBlock.setAttribute("traitName", traitName);
         }
 

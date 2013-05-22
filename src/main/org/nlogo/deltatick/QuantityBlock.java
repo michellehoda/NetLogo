@@ -52,8 +52,29 @@ public strictfp class QuantityBlock
         };
 
         colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
+        colorButton.setBackground(color);
         //label.add(colorButton);
-        updateLabelImage();
+        makeQuantityBlockLabel();
+        //updateLabelImage();
+        validate();
+    }
+
+    @Override
+    public void makeLabel() {
+    }
+
+    public void makeQuantityBlockLabel() {
+        label.setBackground(getBackground());
+
+        setLabelImage();
+
+        JLabel name = new JLabel(getName());
+        java.awt.Font font = name.getFont();
+        name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
+
+        label.add(name);
+        label.validate();
+        validate();
     }
 
     // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
@@ -67,6 +88,9 @@ public strictfp class QuantityBlock
             ((PlotBlock) myParent).removePen(getPenName());
             }
         }
+        myParent.doLayout();
+        myParent.validate();
+        myParent.repaint();
     }
 
     public String unPackAsCode() {
@@ -197,6 +221,7 @@ public strictfp class QuantityBlock
             }
         }
         catch (IOException ex) {
+            System.err.println("Could not set label image for quantity block " + getName());
              }
     }
 
@@ -210,10 +235,12 @@ public strictfp class QuantityBlock
         }
         catch (IOException ex) {
         }
+        validate();
     }
 
     public void addColorButton() {
         label.add(colorButton);
+        validate();
     }
 
     public void setButtonColor( Color color ) {

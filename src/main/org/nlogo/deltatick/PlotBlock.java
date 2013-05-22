@@ -1,22 +1,17 @@
 package org.nlogo.deltatick;
 
 // need to have some kind of pens
-import org.nlogo.deltatick.dnd.RemoveButton;
 
-import org.nlogo.window.Widget;
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
-import org.nlogo.deltatick.dnd.MaxLengthTextDocument;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -28,40 +23,48 @@ public strictfp class PlotBlock
     PlotBlock plotBlock = this; // for deleteAction
     JTextField plotNameField;
     org.nlogo.plot.Plot netLogoPlot;
-    boolean isHisto;
+    boolean isHisto = false;
     JCharNumberFieldFilter textFilter;
 
-    public PlotBlock() {
-        super("plot", ColorSchemer.getColor(3));
-        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        this.isHisto = false;
-        //textFilter = new JCharNumberFieldFilter();
-        //textFilter.setMaxChars(10);
-        //plotNameField.setDocument(textFilter);
+    JPanel quantityblockLabelPanel;
 
-        addMouseMotionListener(this);
-        addMouseListener(this);
+//    // UNUSED
+//    public PlotBlock() {
+//        super("plot", ColorSchemer.getColor(3));
+//        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+//        this.isHisto = false;
+////        textFilter = new JCharNumberFieldFilter();
+////        textFilter.setMaxChars(10);
+////        plotNameField.setDocument(textFilter);
+//
+//        addMouseMotionListener(this);
+//        addMouseListener(this);
+//
+//        flavors = new DataFlavor[]{
+//                DataFlavor.stringFlavor,
+//                plotBlockFlavor
+//        };
+//    }
 
-        flavors = new DataFlavor[]{
-                DataFlavor.stringFlavor,
-                plotBlockFlavor
-        };
-    }
 
     //constructor is for histograms if argument is true- not sure -A. (jan 15, 2013)
     public PlotBlock(boolean histo) {
         super("plot", ColorSchemer.getColor(3));
         this.isHisto = histo;
 
+        makePlotLabel();
+        add(label);
+        addQuantityblockPanel();
+
         //label.add(removeButton);
 
-        if (this.isHisto == true) {
-            label.add(new JLabel("Histogram of "));
-        }
-        else {
-            label.add(new JLabel("Graph of "));
-        }
-        label.add(plotNameField);
+//        if (this.isHisto == true) {
+//            label.add(new JLabel("Histogram of "));
+//        }
+//        else {
+//            label.add(new JLabel("Graph of "));
+//        }
+//        label.add(plotNameField);
 
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
@@ -73,6 +76,39 @@ public strictfp class PlotBlock
                 plotBlockFlavor
         };
     }
+
+    public void addQuantityblockPanel() {
+        // Set up the panel
+        quantityblockLabelPanel = new JPanel();
+        //quantityblockLabelPanel.setLayout(new BoxLayout(quantityblockLabelPanel, BoxLayout.Y_AXIS));
+        quantityblockLabelPanel.setPreferredSize(new Dimension(this.getWidth(), 50));
+        quantityblockLabelPanel.setBackground(getBackground());
+        quantityblockLabelPanel.setAlignmentX(CENTER_ALIGNMENT);
+        quantityblockLabelPanel.setAlignmentY(CENTER_ALIGNMENT);
+        quantityblockLabelPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+
+        // Set up the label
+        JLabel traitblockLabel = new JLabel();
+        traitblockLabel.setText("Add orange block here");
+        traitblockLabel.setFont(new Font("Arial", 0, 11));
+        traitblockLabel.setBackground(getBackground());
+        traitblockLabel.setForeground(Color.BLACK);
+        traitblockLabel.setAlignmentX(CENTER_ALIGNMENT);
+        traitblockLabel.setAlignmentY(CENTER_ALIGNMENT);
+
+        // Add label and update
+        quantityblockLabelPanel.add(traitblockLabel);
+        quantityblockLabelPanel.setVisible(true);
+        quantityblockLabelPanel.validate();
+        add(quantityblockLabelPanel);
+        validate();
+    }
+
+    public void removeQuantityblockPanel() {
+        remove(quantityblockLabelPanel);
+        validate();
+    }
+
 
     //called in DeltaTickTab to populate plots -A. (sept 26)
     public void setNetLogoPlot(org.nlogo.plot.Plot netLogoPlot) {
@@ -99,7 +135,8 @@ public strictfp class PlotBlock
 
     public void addBlock (CodeBlock block) {
         System.out.println(myBlocks.size());
-        if (myBlocks.size() < 0) {
+        if (isHisto &&
+            (myBlocks.size() > 0)) {
             String message = "You can only use one block here";
             JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -137,16 +174,26 @@ public strictfp class PlotBlock
         return blocks;
     }
 
-
+    @Override
     public void makeLabel() {
-    	//textFilter = new JCharNumberFieldFilter();
-    	//textFilter.setMaxChars(10);
-        plotNameField = new PrettyInput(this);
-        //plotNameField.setDocument(textFilter);
+        showRemoveButton();
+    }
 
-        this.showRemoveButton();
+    public void makePlotLabel() {
+        if (this.isHisto == true) {
+            label.add(new JLabel("Histogram of "));
+        }
+        else {
+            label.add(new JLabel("Graph of "));
+        }
+        textFilter = new JCharNumberFieldFilter();
+        textFilter.setMaxChars(10);
+        plotNameField = new PrettyInput(this);
+        plotNameField.setDocument(textFilter);
+
         label.add(plotNameField);
         label.setBackground(getBackground());
+        validate();
     }
 
 

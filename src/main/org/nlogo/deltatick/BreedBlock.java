@@ -1,20 +1,13 @@
 package org.nlogo.deltatick;
 
-import com.sun.java.swing.plaf.nimbus.LoweredBorder;
-
-
 import org.nlogo.api.Shape;
-import org.nlogo.app.DeltaTickTab;
-import org.nlogo.deltatick.buttons.DottedRect;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
-import org.nlogo.deltatick.dialogs.Warning;
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.JNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettierInput;
-import org.nlogo.deltatick.dnd.MaxLengthNoSpaceDocument;
+import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
-import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
@@ -22,20 +15,30 @@ import org.nlogo.shape.VectorShape;
 import org.nlogo.shape.editor.ImportDialog;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-
-import org.nlogo.deltatick.dialogs.TraitSelectorOld;
+import java.util.Map;
 //import sun.jvm.hotspot.code.CodeBlob;
 
 // BreedBlock contains code for how whatever happens in BreedBlock is converted into NetLogo code -A. (aug 25)
@@ -62,7 +65,10 @@ public strictfp class BreedBlock
     HashSet<String> myUsedBehaviorInputs = new HashSet<String>();
     List<String> myUsedAgentInputs = new ArrayList<String>();
     List<String>myUsedPercentInputs = new ArrayList<String>();
+
+    // This list contains all defined trait(blocks) for this breed(block)
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
+
     String maxAge;
     String maxEnergy;
     String colorName = new String("gray");
@@ -71,7 +77,7 @@ public strictfp class BreedBlock
     transient String trait;
     JTextField traitLabel; //Apparently has no function, never used
     transient String variation;
-    HashSet<String> myUsedTraits = new HashSet<String>();
+    HashSet<String> myUsedTraits = new HashSet<String>(); // Perhaps not necessary (May 18, 2013)
     boolean hasSpeciesInspector;
     ArrayList<String> traitLabels = new ArrayList<String>();
 
@@ -118,7 +124,7 @@ public strictfp class BreedBlock
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-        
+
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 codeBlockFlavor,
@@ -134,47 +140,47 @@ public strictfp class BreedBlock
             addTraitBlock(block);
         }
         else {
-        myBlocks.add(block);
-        this.add(block);
-        block.enableInputs();
-        block.showRemoveButton();
-        this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
+            myBlocks.add(block);
+            this.add(block);
+            block.enableInputs();
+            block.showRemoveButton();
+            this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
 
-        if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
-            remove(rectPanel);
-            removedRectPanel = true;
-        }
+            if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
+                remove(rectPanel);
+                removedRectPanel = true;
+            }
 
-        block.setMyParent(this);
-        block.doLayout();
-        block.validate();
-        block.repaint();
+            block.setMyParent(this);
+            block.doLayout();
+            block.validate();
+            block.repaint();
 //        if (block instanceof TraitBlock) {
 //            addTraitBlock(block);
 //        }
-        if (block instanceof BehaviorBlock) {
-            String tmp = ((BehaviorBlock) block).getBehaviorInputName();
-            addBehaviorInputToList(tmp);
-            String s = ((BehaviorBlock) block).getAgentInputName();
-            addAgentInputToList(s);
-            String p = ((BehaviorBlock) block).getPercentInputName();
-            addPercentInputToList(p);
-        }
-        else if (block instanceof ConditionBlock) {
-            String tmp = ((ConditionBlock) block).getBehaviorInputName();
-            addBehaviorInputToList(tmp);
-            String s = ((ConditionBlock) block).getAgentInputName();
-            addAgentInputToList(s);
-            ((ConditionBlock) block).addRect();
+            if (block instanceof BehaviorBlock) {
+                String tmp = ((BehaviorBlock) block).getBehaviorInputName();
+                addBehaviorInputToList(tmp);
+                String s = ((BehaviorBlock) block).getAgentInputName();
+                addAgentInputToList(s);
+                String p = ((BehaviorBlock) block).getPercentInputName();
+                addPercentInputToList(p);
+            }
+            else if (block instanceof ConditionBlock) {
+                String tmp = ((ConditionBlock) block).getBehaviorInputName();
+                addBehaviorInputToList(tmp);
+                String s = ((ConditionBlock) block).getAgentInputName();
+                addAgentInputToList(s);
+                ((ConditionBlock) block).addRect();
 
+            }
+            doLayout();
+            validate();
+            repaint();
+            this.getParent().doLayout();
+            this.getParent().validate();
+            this.getParent().repaint();
         }
-        doLayout();
-        validate();
-        repaint();
-        this.getParent().doLayout();
-        this.getParent().validate();
-        this.getParent().repaint();
-    }
     }
 
 
@@ -490,35 +496,27 @@ public strictfp class BreedBlock
         label.add(makeBreedShapeButton());
         inspectSpeciesButton = new InspectSpeciesButton(this);
         label.add(inspectSpeciesButton);
-        
-        addRect();
-        label.setBackground(getBackground());
+
+        makeRect();
+
         add(label);
         add(rectPanel);
 
+        label.setBackground(getBackground());
+        //label.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        label.validate();
     }
-     //being called from deltaticktab (march 31, 2013)
-//    public SpeciesInspectorPanel createSpeciesInspectorPanel() {
-//        JFrame jFrame = new JFrame("Species Inspector");
-//        //jFrame.setPreferredSize(new Dimension(1000, 700)); // testing jframe size
-//        speciesInspectorPanel = new SpeciesInspectorPanel(this, jFrame);
-//
-//        //speciesInspectorPanelMap.put(myParent, speciesInspectorPanel); // should be in deltaticktab
-//        speciesInspectorPanel.addPanels(jFrame.getContentPane());
-//        this.setHasSpeciesInspector(true);
-//        jFrame.setResizable(true);
-//        jFrame.pack();
-//        jFrame.setVisible(false);
-//        return speciesInspectorPanel;
-//    }
 
-    public void addRect() {
+    public void makeRect() {
         rectPanel = new JPanel();
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        rectPanel.setBackground(getBackground());
         JLabel label = new JLabel();
+        label.setBackground(getBackground());
         label.setText("Add blocks here");
         rectPanel.add(label);
+        rectPanel.validate();
     }
 
     public String[] getTraitTypes() {
@@ -557,6 +555,7 @@ public strictfp class BreedBlock
         breedShapeButton.setActionCommand(this.getName());
         breedShapeButton.addActionListener(this);
         breedShapeButton.setSize(30, 30);
+        breedShapeButton.setBackground(color);
         breedShapeButton.setToolTipText("Change shape");
         return breedShapeButton;
     }
@@ -574,7 +573,8 @@ public strictfp class BreedBlock
             catch (IOException ex) {
              }
             setForeground(java.awt.Color.gray);
-            setBorderPainted(true);
+            setBackground(color);
+            //setBorderPainted(true);
             setMargin(new java.awt.Insets(1, 1, 1, 1));
             setToolTipText("Edit species");
         }
@@ -630,12 +630,24 @@ public strictfp class BreedBlock
         return breed;
     }
 
-    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
-        traitBlock.showColorButton();
-        traitBlock.doLayout();
-        traitBlock.validate();
-        traitBlock.repaint();
+    public boolean hasTrait(String traitName) {
+        for (TraitBlockNew block : myTraitBlocks) {
+            if (block.getTraitName().equalsIgnoreCase(traitName)) {
+                return true;
+            }
+        }
+        return false;
     }
+    public int numTraits() {
+        return myTraitBlocks.size();
+    }
+
+//    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)
+//        traitBlock.showColorButton();
+//        traitBlock.doLayout();
+//        traitBlock.validate();
+//        traitBlock.repaint();
+//    }
 
     public void mouseEnter(MouseEvent evt) {
     }

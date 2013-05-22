@@ -20,7 +20,7 @@ public class DistanceInput extends javax.swing.JTextField {
                 javax.swing.BorderFactory.createEmptyBorder(1, 2, 0, 0)
         ));
         //setBackground( Color.white );
-        setFont(new java.awt.Font("Courier New", 1, 12));
+        setFont(new java.awt.Font("Arial", 1, 11));
         setSize(this.getWidth(), 10);
         this.setToolTipText("Within how much distance?");
     }

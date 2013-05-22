@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,9 +12,9 @@ import java.util.regex.Matcher;
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
-import scala.actors.threadpool.Arrays;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 
 // strictfp: When applied to a class, all calculations inside the class use strict floating-point math.-a.
 
@@ -29,6 +30,8 @@ public strictfp class BehaviorBlock
 
     // Set of acceptable traits
     Set<String> applicableTraits;// = new HashSet<String>();
+    JPanel traitblockLabelPanel;
+
 
     public BehaviorBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(0).brighter());
@@ -40,6 +43,7 @@ public strictfp class BehaviorBlock
 
         if (!aTraits.isEmpty()) {
             applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
+            //applicableTraits.addAll(Arrays.asList(aTraits.split(",")));
         }
     }
 
@@ -251,9 +255,9 @@ public strictfp class BehaviorBlock
         return isTrait;
     }
 
-    public void setIsTrait(boolean value) {
-        isTrait = value;
-    }
+//    public void setIsTrait(boolean value) {
+//        isTrait = value;
+//    }
 
     public void setTrait(TraitBlockNew traitBlockNew) {
         tBlockNew = traitBlockNew;
@@ -266,6 +270,37 @@ public strictfp class BehaviorBlock
             retVal = new String(tBlockNew.getTraitName());
         }
         return retVal;
+    }
+
+    public void addTraitblockPanel() {
+        // Set up the panel
+        traitblockLabelPanel = new JPanel();
+        traitblockLabelPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        traitblockLabelPanel.setBackground(getBackground());
+        traitblockLabelPanel.setAlignmentX(CENTER_ALIGNMENT);
+        traitblockLabelPanel.setAlignmentY(CENTER_ALIGNMENT);
+        traitblockLabelPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+
+        // Set up the label
+        JLabel traitblockLabel = new JLabel();
+        traitblockLabel.setText("Add trait block here");
+        traitblockLabel.setFont(new Font("Arial", 1, 11));
+        traitblockLabel.setBackground(getBackground());
+        traitblockLabel.setForeground(Color.WHITE);
+        traitblockLabel.setAlignmentX(CENTER_ALIGNMENT);
+        traitblockLabel.setAlignmentY(CENTER_ALIGNMENT);
+
+        // Add label and update
+        traitblockLabelPanel.add(traitblockLabel);
+        traitblockLabelPanel.setVisible(true);
+        traitblockLabelPanel.validate();
+        add(traitblockLabelPanel);
+        validate();
+    }
+
+    public void removeTraitblockPanel() {
+        remove(traitblockLabelPanel);
+        validate();
     }
 
     // check if I'm a reproduce block -(March 25, 2013)
