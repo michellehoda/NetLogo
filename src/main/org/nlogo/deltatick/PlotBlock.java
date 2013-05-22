@@ -46,6 +46,7 @@ public strictfp class PlotBlock
 //        };
 //    }
 
+
     //constructor is for histograms if argument is true- not sure -A. (jan 15, 2013)
     public PlotBlock(boolean histo) {
         super("plot", ColorSchemer.getColor(3));
@@ -185,7 +186,6 @@ public strictfp class PlotBlock
         else {
             label.add(new JLabel("Graph of "));
         }
-
         textFilter = new JCharNumberFieldFilter();
         textFilter.setMaxChars(10);
         plotNameField = new PrettyInput(this);
