@@ -96,9 +96,8 @@ public class DeltaTickTab
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
 
     private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
-    private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 500.0;
+    private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 50.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = CARRYING_CAPACITY_SLIDER_MAX_VALUE;
-
 
     // HashMaps to store slider values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
