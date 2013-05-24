@@ -36,6 +36,8 @@ public strictfp class QuantityBlock
     String xLabel;
     String yLabel;
 
+    boolean isRunResult = false;
+
     JLabel image;
     //Image histoImage;
     ImageIcon histoImageIcon;
@@ -161,13 +163,13 @@ public strictfp class QuantityBlock
 
         if (parent instanceof PlotBlock) {
             //passBack += "  set-current-plot-pen \"" + this.getName() + "\" \n"; // commented 20130319
-            passBack += "  set-current-plot-pen \"" + this.getPenName() + "\" \n";
+            passBack += "\tset-current-plot-pen \"" + this.getPenName() + "\" \n";
             if (colorButton.gotColor() == true) {
-                passBack += "set-plot-pen-color " + colorButton.getSelectedColorName() + "\n";
+                passBack += "\tset-plot-pen-color " + colorButton.getSelectedColorName() + "\n";
             }
 
             if (((PlotBlock) parent).isHisto == true) {
-                passBack += "set-plot-pen-mode 1 \n";
+                passBack += "\tset-plot-pen-mode 1 \n";
                 for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
                     if (entry.getKey().equalsIgnoreCase("breed-type")) {
                         population = entry.getValue().getText().toString();
@@ -176,14 +178,29 @@ public strictfp class QuantityBlock
                         variable = entry.getValue().getText().toString();
                     }
                 }
-                passBack += "histogram [ " + variable + " ] of " + population ;
+                passBack += "\thistogram [ " + variable + " ] of " + population ;
                 passBack += "\n";
             }
 
             else {
-                passBack += "plot " + getName() + " ";
-                for (JTextField input : inputs.values()) {
-                    passBack += input.getText() + " ";
+                // Not Histogram -- plot line
+                if (isRunResult()) {
+                    passBack += "\tplot (runresult task [" + getName() + " ";
+                    for (JTextField input : inputs.values()) {
+                        if (input.getName().equalsIgnoreCase("variable")) {
+                            passBack += "\"" + input.getText() + "\"" + " ";
+                        }
+                        else {
+                            passBack += input.getText() + " ";
+                        }
+                    }
+                    passBack += "])";
+                }
+                else {
+                    passBack += "plot " + getName() + " ";
+                    for (JTextField input : inputs.values()) {
+                        passBack += input.getText() + " ";
+                    }
                 }
             }
 
@@ -246,6 +263,14 @@ public strictfp class QuantityBlock
     public void addColorButton() {
         label.add(colorButton);
         validate();
+    }
+
+    public void setRunResult(boolean runResult) {
+        isRunResult = runResult;
+    }
+
+    public boolean isRunResult() {
+        return isRunResult;
     }
 
     public void setButtonColor( Color color ) {

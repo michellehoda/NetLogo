@@ -141,6 +141,7 @@ public class LibraryReader {
                 boolean histo = false;
                 String bars = "0";
                 String trait = " ";
+                boolean isRunResult = false;
 
                 String xLabel = new String(quantity.getAttributes().getNamedItem("xlabel").getTextContent());
                 String yLabel = new String(quantity.getAttributes().getNamedItem("ylabel").getTextContent());
@@ -149,9 +150,15 @@ public class LibraryReader {
                     histo = true;
                     bars = quantity.getAttributes().getNamedItem("bars").getTextContent();
                 }
+                if (quantity.getAttributes().getNamedItem("runresult") != null) {
+                    isRunResult = quantity.getAttributes().getNamedItem("runresult").getTextContent().equalsIgnoreCase("true");
+                }
+
+
                 block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
+                ((QuantityBlock) block).setRunResult(isRunResult);
                 deltaTickTab.getLibraryHolder().addToQuantityBlocksMap((QuantityBlock) block);
             }
 
