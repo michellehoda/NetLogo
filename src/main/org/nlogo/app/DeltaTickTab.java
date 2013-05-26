@@ -864,6 +864,7 @@ public class DeltaTickTab
                 sliderWidget.name_$eq(sliderName);
 
                 WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+                interfaceSliderCount++;
 
                 carryingCapacitySliderWidgets.put(sliderName, ww);
             }
