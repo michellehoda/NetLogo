@@ -26,9 +26,7 @@ public class LibraryReader {
 
     CodeBlock block;
 
-    ArrayList<Node> newVariationsList = new ArrayList<Node>();
-
-    // Aditi: Apr 16, 2013
+        // Aditi: Apr 16, 2013
     // new LibraryReader() is created in 2 cases:
     // 1. Explicit: When user clicks "Load Library" button and selects a library file. Argument libraryFileName is null
     // 2. Implicit: When user opens a model (via "Open Model" button). The model file specifies the library filename

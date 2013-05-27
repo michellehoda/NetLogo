@@ -21,9 +21,8 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,7 +52,7 @@ public class DeltaTickTab
     UserInput userInput = new UserInput();
 
     JSeparator separator = new JSeparator();
-    JSeparator librarySeparator = new JSeparator();
+    //JSeparator librarySeparator = new JSeparator();
     JPanel contentPanel = new JPanel();
     JPanel libraryPanel;
     BuildPanel buildPanel;
@@ -61,8 +60,8 @@ public class DeltaTickTab
     HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
 
 
-    LibraryHolder libraryHolder;
 
+    JButton loadLibrary;
     JButton addBreed;
     JButton addPlot;
     JButton addHisto;
@@ -111,7 +110,9 @@ public class DeltaTickTab
     DeltaTickTab deltaTickTab = this;
     PlotManager plotManager;
 
+    LibraryHolder libraryHolder;
     LibraryReader libraryReader;
+    List<String> openLibraries = new ArrayList<String>();
     DeltaTickModelReader deltaTickModelParser;
 
     public final SimpleJobOwner defaultOwner ;
@@ -232,10 +233,24 @@ public class DeltaTickTab
     }
 
     private final javax.swing.Action loadAction =
-		new javax.swing.AbstractAction( "Load Behavior Library" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                openLibrary(null);
-            }
+            new AbstractAction("Load Behavior Library") {
+                JFileChooser fileChooser = new JFileChooser();
+
+                public void actionPerformed (ActionEvent e) {
+                    fileChooser.addChoosableFileFilter(new XMLFilter());
+                    fileChooser.setAcceptAllFileFilterUsed(false);
+
+                    int returnVal = fileChooser.showOpenDialog(DeltaTickTab.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        String fileName = new String(fileChooser.getSelectedFile().getAbsolutePath());
+                        openLibrary(fileName);
+                    }
+                }
+
+//		new javax.swing.AbstractAction( "Load Behavior Library" ) {
+//            public void actionPerformed( java.awt.event.ActionEvent e ) {
+//                openLibrary(null);
+//            }
         };
 
     public void openLibrary(String  fileName) {
@@ -650,7 +665,7 @@ public class DeltaTickTab
         }
 
         public String getDescription() {
-            return "XML File filter";
+            return "XML files (.xml)";
         }
 
         public String getExtension(File f) {
@@ -1020,7 +1035,9 @@ public class DeltaTickTab
 		return new org.nlogo.swing.ToolBar() {
             @Override
             public void addControls() {
-                this.add( new JButton( loadAction ) ) ;
+                loadLibrary = new JButton( loadAction );
+                this.add(loadLibrary);
+                //this.add( new JButton( loadAction ) ) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 //this.add( new JButton( loadAction2 ) );
                 addBreed = new JButton( addBreedAction );
