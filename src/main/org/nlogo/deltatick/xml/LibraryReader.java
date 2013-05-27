@@ -26,9 +26,7 @@ public class LibraryReader {
 
     CodeBlock block;
 
-    ArrayList<Node> newVariationsList = new ArrayList<Node>();
-
-    // Aditi: Apr 16, 2013
+        // Aditi: Apr 16, 2013
     // new LibraryReader() is created in 2 cases:
     // 1. Explicit: When user clicks "Load Library" button and selects a library file. Argument libraryFileName is null
     // 2. Implicit: When user opens a model (via "Open Model" button). The model file specifies the library filename
@@ -141,14 +139,24 @@ public class LibraryReader {
                 boolean histo = false;
                 String bars = "0";
                 String trait = " ";
+                boolean isRunResult = false;
+
+                String xLabel = new String(quantity.getAttributes().getNamedItem("xlabel").getTextContent());
+                String yLabel = new String(quantity.getAttributes().getNamedItem("ylabel").getTextContent());
 
                 if (quantity.getAttributes().getNamedItem("histo").getTextContent().contains("true")) {
                     histo = true;
                     bars = quantity.getAttributes().getNamedItem("bars").getTextContent();
                 }
-                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait);
+                if (quantity.getAttributes().getNamedItem("runresult") != null) {
+                    isRunResult = quantity.getAttributes().getNamedItem("runresult").getTextContent().equalsIgnoreCase("true");
+                }
+
+
+                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
+                ((QuantityBlock) block).setRunResult(isRunResult);
                 deltaTickTab.getLibraryHolder().addToQuantityBlocksMap((QuantityBlock) block);
             }
 

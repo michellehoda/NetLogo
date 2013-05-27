@@ -277,7 +277,7 @@ public strictfp class BreedBlock
             if (block instanceof TraitBlockNew) {
                 String traitName =  block.getTraitName();
                 if (setTraits.contains(traitName) != true) {
-                    code += "let all-" + plural() + "-" + traitName + " sort " + plural() + " \n";
+                    code += "let all-" + plural() + "-" + traitName + " shuffle sort " + plural() + " \n";
                     setTraits.add(traitName);
 
                     int i = 0;
@@ -640,6 +640,10 @@ public strictfp class BreedBlock
     }
     public int numTraits() {
         return myTraitBlocks.size();
+    }
+
+    public RemoveButton getRemoveButton() {
+        return removeButton;
     }
 
 //    public void addTraittoBreed(TraitBlock traitBlock) { // not used -A. (Aug 10, 2012)

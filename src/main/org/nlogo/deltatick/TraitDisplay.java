@@ -76,16 +76,25 @@ public class TraitDisplay extends JPanel {
     }
 
     public void updateCharts(HashMap<String, TraitState> traitsMap) {
+        ArrayList<String> removeTraits = new ArrayList<String>();
+
+        // Get list of traits to remove
         for (String traitName : chartsPanelMap.keySet()) {
-            if (! traitsMap.keySet().contains(traitName)) {
-                this.remove(chartsPanelMap.get(traitName));
-                chartsPanelMap.remove(traitName);
-            }
-            else {
-                // Update the chart
-                updateChart(traitName, traitsMap.get(traitName).getValuesPercentList());
+            if ((traitsMap.size() == 0) || (! traitsMap.keySet().contains(traitName))) {
+                removeTraits.add(traitName);
             }
         }
+        // Remove the charts and corresponding entries from the map
+        for (String traitName : removeTraits) {
+            this.remove(chartsPanelMap.get(traitName));
+            chartsPanelMap.remove(traitName);
+        }
+        // Update remaining charts
+        for (String traitName : chartsPanelMap.keySet()) {
+            // Update the chart
+            updateChart(traitName, traitsMap.get(traitName).getValuesPercentList());
+        }
+
         this.validate();
         this.setPreferredSize(new Dimension(TRAITDISPLAY_WIDTH, TRAITDISPLAY_HEIGHT*chartsPanelMap.size()));
     }

@@ -21,9 +21,8 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,7 +52,7 @@ public class DeltaTickTab
     UserInput userInput = new UserInput();
 
     JSeparator separator = new JSeparator();
-    JSeparator librarySeparator = new JSeparator();
+    //JSeparator librarySeparator = new JSeparator();
     JPanel contentPanel = new JPanel();
     JPanel libraryPanel;
     BuildPanel buildPanel;
@@ -61,8 +60,8 @@ public class DeltaTickTab
     HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
 
 
-    LibraryHolder libraryHolder;
 
+    JButton loadLibrary;
     JButton addBreed;
     JButton addPlot;
     JButton addHisto;
@@ -96,9 +95,8 @@ public class DeltaTickTab
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
 
     private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
-    private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 500.0;
-    private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = CARRYING_CAPACITY_SLIDER_MAX_VALUE;
-
+    private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
+    private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
 
     // HashMaps to store slider values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
@@ -112,7 +110,9 @@ public class DeltaTickTab
     DeltaTickTab deltaTickTab = this;
     PlotManager plotManager;
 
+    LibraryHolder libraryHolder;
     LibraryReader libraryReader;
+    List<String> openLibraries = new ArrayList<String>();
     DeltaTickModelReader deltaTickModelParser;
 
     public final SimpleJobOwner defaultOwner ;
@@ -233,10 +233,24 @@ public class DeltaTickTab
     }
 
     private final javax.swing.Action loadAction =
-		new javax.swing.AbstractAction( "Load Behavior Library" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                openLibrary(null);
-            }
+            new AbstractAction("Load Behavior Library") {
+                JFileChooser fileChooser = new JFileChooser();
+
+                public void actionPerformed (ActionEvent e) {
+                    fileChooser.addChoosableFileFilter(new XMLFilter());
+                    fileChooser.setAcceptAllFileFilterUsed(false);
+
+                    int returnVal = fileChooser.showOpenDialog(DeltaTickTab.this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        String fileName = new String(fileChooser.getSelectedFile().getAbsolutePath());
+                        openLibrary(fileName);
+                    }
+                }
+
+//		new javax.swing.AbstractAction( "Load Behavior Library" ) {
+//            public void actionPerformed( java.awt.event.ActionEvent e ) {
+//                openLibrary(null);
+//            }
         };
 
     public void openLibrary(String  fileName) {
@@ -370,6 +384,9 @@ public class DeltaTickTab
             newBreed = new BreedBlock( breed , breed.plural() + buildPanel.breedCount(), workspace.getFrame() );
         }
 
+        // Add the appropriate remove/close button listener
+        newBreed.getRemoveButton().addActionListener(new BreedBlockRemoveButtonListener(newBreed));
+
         // Create speciesinspectorpanel for the breedblock
         JFrame jFrame = new JFrame("Species Inspector");
         speciesInspectorPanel = new SpeciesInspectorPanel(newBreed, jFrame);
@@ -402,6 +419,30 @@ public class DeltaTickTab
         return newBreed;
     }
 
+    private final javax.swing.Action removeBreedAction =
+            new javax.swing.AbstractAction( "Remove Species" ) {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                   //removeBreedBlock();
+                }
+            };
+
+    class BreedBlockRemoveButtonListener implements ActionListener {
+        BreedBlock breedBlock;
+
+        BreedBlockRemoveButtonListener (BreedBlock block) {
+            this.breedBlock = block;
+        }
+        public void actionPerformed(ActionEvent e) {
+            breedBlock.die();
+            // Remove trait blocks associated with this breed
+            for (TraitBlockNew tBlock: breedBlock.getMyTraitBlocks()) {
+                libraryHolder.removeTraitBlock(tBlock);
+                buildPanel.removeTrait(tBlock);
+                userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+            }
+        }
+
+    }
 
     class SpeciesButtonListener implements ActionListener {
         BreedBlock myParent;
@@ -423,6 +464,7 @@ public class DeltaTickTab
             speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
+
 
     public class SpeciesPanelOkayListener implements ActionListener {
         BreedBlock myParent;
@@ -623,7 +665,7 @@ public class DeltaTickTab
         }
 
         public String getDescription() {
-            return "XML File filter";
+            return "XML files (.xml)";
         }
 
         public String getExtension(File f) {
@@ -837,6 +879,7 @@ public class DeltaTickTab
                 sliderWidget.name_$eq(sliderName);
 
                 WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
+                interfaceSliderCount++;
 
                 carryingCapacitySliderWidgets.put(sliderName, ww);
             }
@@ -887,6 +930,8 @@ public class DeltaTickTab
                             // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
                             PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
                             plotPen.updateCode(quantBlock.getPenUpdateCode());
+                            ((PlotWidget) plotWidget).xLabel(quantBlock.getXLabel());
+                            ((PlotWidget) plotWidget).yLabel(quantBlock.getYLabel());
                         }
                     }
                     ////interfacePlotCount++;
@@ -919,6 +964,8 @@ public class DeltaTickTab
                             PlotPen newPlotPen = thisPlot.createPlotPen(qBlock.getPenName(), false);
                             newPlotPen.updateCode(qBlock.getPenUpdateCode());
                             newPlotPen.plot(thisPlot.xMax(), thisPlot.yMax());
+                            ((PlotWidget) ww.widget()).xLabel(qBlock.getXLabel());
+                            ((PlotWidget) ww.widget()).yLabel(qBlock.getYLabel());
                             //newPlotPen._hidden = true;
                         }
                     }
@@ -988,7 +1035,9 @@ public class DeltaTickTab
 		return new org.nlogo.swing.ToolBar() {
             @Override
             public void addControls() {
-                this.add( new JButton( loadAction ) ) ;
+                loadLibrary = new JButton( loadAction );
+                this.add(loadLibrary);
+                //this.add( new JButton( loadAction ) ) ;
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 //this.add( new JButton( loadAction2 ) );
                 addBreed = new JButton( addBreedAction );

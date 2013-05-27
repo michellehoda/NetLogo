@@ -30,7 +30,7 @@ public strictfp class BehaviorBlock
 
     // Set of acceptable traits
     Set<String> applicableTraits;// = new HashSet<String>();
-    JPanel traitblockLabelPanel;
+    JPanel traitblockLabelPanel = null;
 
 
     public BehaviorBlock(String name, String aTraits) {
@@ -283,7 +283,7 @@ public strictfp class BehaviorBlock
 
         // Set up the label
         JLabel traitblockLabel = new JLabel();
-        traitblockLabel.setText("Add trait block here");
+        traitblockLabel.setText("Add yellow block here");
         traitblockLabel.setFont(new Font("Arial", 1, 11));
         traitblockLabel.setBackground(getBackground());
         traitblockLabel.setForeground(Color.WHITE);
@@ -299,7 +299,9 @@ public strictfp class BehaviorBlock
     }
 
     public void removeTraitblockPanel() {
-        remove(traitblockLabelPanel);
+        if (traitblockLabelPanel != null) {
+            remove(traitblockLabelPanel);
+        }
         validate();
     }
 

@@ -2,6 +2,7 @@ package org.nlogo.deltatick.dnd;
 
 import org.nlogo.deltatick.*;
 
+import javax.swing.JOptionPane;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -29,8 +30,14 @@ public class BehaviorDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
-                if ( !behBlock.getIsTrait() &&
-                        behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) ) {
+                if ( !behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) ) {
+                    String message = "Oops! This variation does not belong to this species!";
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+                    return false;
+                }
+                else if ( // behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) &&
+                      !behBlock.getIsTrait() &&
+                      behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) ) {
 
                     addCodeBlock((TraitBlockNew) o);
                     ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());

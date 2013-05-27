@@ -36,5 +36,5 @@ $JAVA \
   $JAVA_OPTS \
   -Djava.awt.headless=true \
   -Dapple.awt.graphics.UseQuartz=false \
-  -classpath $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar \
+  -classpath `cygpath -wp $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar` \
   xsbt.boot.Boot "$@"

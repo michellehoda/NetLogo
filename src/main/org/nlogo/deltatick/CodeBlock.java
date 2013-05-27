@@ -136,7 +136,9 @@ public abstract class CodeBlock
             this.myParent = myParent;
             this.thisButton = this;
             setPreferredSize(new Dimension(10, 10));
-            setAction(deleteAction);
+            if (!(myParent instanceof BreedBlock)) {
+                setAction(deleteAction);
+            }
             setBorder(null);
             try {
                 Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
@@ -656,7 +658,7 @@ public abstract class CodeBlock
         }
         if (parent instanceof BuildPanel) {
             if (this instanceof BreedBlock) {
-                //((BreedBlock) this).inspectSpeciesButton.
+
                 ((BuildPanel) parent).removeBreed((BreedBlock) this);
 
                 for (Component child : getComponents()) {

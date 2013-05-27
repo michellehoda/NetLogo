@@ -8,12 +8,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -39,7 +39,7 @@ import javax.swing.event.MouseInputAdapter;
  * <p>
  * All properties in this class are bound: when a properties value
  * is changed, all PropertyChangeListeners are fired.
- * 
+ *
  * @author Hans Muller
  */
 public class MultiSplitPane extends JPanel {
@@ -48,7 +48,7 @@ public class MultiSplitPane extends JPanel {
     public DividerPainter dividerPainter = new DefaultDividerPainter();
 
     /**
-     * Creates a MultiSplitPane with it's LayoutManager set to 
+     * Creates a MultiSplitPane with it's LayoutManager set to
      * to an empty MultiSplitLayout.
      */
     public MultiSplitPane() {
@@ -60,10 +60,10 @@ public class MultiSplitPane extends JPanel {
 	setFocusable(true);
     }
 
-    /** 
-     * A convenience method that returns the layout manager cast 
+    /**
+     * A convenience method that returns the layout manager cast
      * to MutliSplitLayout.
-     * 
+     *
      * @return this MultiSplitPane's layout manager
      * @see java.awt.Container#getLayout
      * @see #setModel
@@ -72,10 +72,10 @@ public class MultiSplitPane extends JPanel {
 	return (MultiSplitLayout)getLayout();
     }
 
-    /** 
+    /**
      * A convenience method that sets the MultiSplitLayout model.
      * Equivalent to <code>getMultiSplitLayout.setModel(model)</code>
-     * 
+     *
      * @param model the root of the MultiSplitLayout model
      * @see #getMultiSplitLayout
      * @see MultiSplitLayout#setModel
@@ -84,11 +84,11 @@ public class MultiSplitPane extends JPanel {
 	getMultiSplitLayout().setModel(model);
     }
 
-    /** 
+    /**
      * A convenience method that sets the MultiSplitLayout dividerSize
-     * property. Equivalent to 
+     * property. Equivalent to
      * <code>getMultiSplitLayout().setDividerSize(newDividerSize)</code>.
-     * 
+     *
      * @param dividerSize the value of the dividerSize property
      * @see #getMultiSplitLayout
      * @see MultiSplitLayout#setDividerSize
@@ -114,7 +114,7 @@ public class MultiSplitPane extends JPanel {
 
     /**
      * Returns true if dragging a divider only updates
-     * the layout when the drag gesture ends (typically, when the 
+     * the layout when the drag gesture ends (typically, when the
      * mouse button is released).
      *
      * @return the value of the <code>continuousLayout</code> property
@@ -124,10 +124,10 @@ public class MultiSplitPane extends JPanel {
         return continuousLayout;
     }
 
-    /** 
+    /**
      * Returns the Divider that's currently being moved, typically
      * because the user is dragging it, or null.
-     * 
+     *
      * @return the Divider that's being moved or null.
      */
     public MultiSplitLayout.Divider activeDivider() {
@@ -136,15 +136,15 @@ public class MultiSplitPane extends JPanel {
 
     /**
      * Draws a single Divider.  Typically used to specialize the
-     * way the active Divider is painted.  
-     * 
+     * way the active Divider is painted.
+     *
      * @see #getDividerPainter
      * @see #setDividerPainter
      */
     public static abstract class DividerPainter {
 	/**
-	 * Paint a single Divider.       
-	 * 
+	 * Paint a single Divider.
+	 *
 	 * @param g the Graphics object to paint with
 	 * @param divider the Divider to paint
 	 */
@@ -154,40 +154,93 @@ public class MultiSplitPane extends JPanel {
     //Added from Amartya's file for TraitDistribution (Aditi, March 9, 2013)
     private class DefaultDividerPainter extends DividerPainter {
         public void paint(Graphics g, MultiSplitLayout.Divider divider) {
+            boolean useImageDivider = true;
 
             Graphics2D g2d = (Graphics2D)g;
 
             BufferedImage in = null;
-            try {
-                in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
-            }
-            catch (IOException ex) {
-                System.out.println("Could not open divider image. Error: " + ex.getMessage());
-            }
+            BufferedImage in_plain = null;
+            BufferedImage in_selected = null;
+//            try {
+//                in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
+//            }
+//            catch (IOException ex) {
+//                System.out.println("Could not open divider image. Error: " + ex.getMessage());
+//            }
 
-            if ((divider == activeDivider()) && !isContinuousLayout()) {
+            if (useImageDivider) {
+
+                try {
+                    in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
+                    in_plain = ImageIO.read(getClass().getResource("/images/slider_plain.png"));
+                    in_selected = ImageIO.read(getClass().getResource("/images/slider_selected.png"));
+                }
+                catch (IOException ex) {
+                    System.out.println("Could not open divider image. Error: " + ex.getMessage());
+                }
+
+
+                if ((divider == activeDivider()) && !isContinuousLayout()) {
+                    g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    repaint();
+                }
+                //The divider turns blue on click
+                else if((divider == activeDivider())){
+                    g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    repaint();
+                }
+                //The divider starts out gray
+                else if((divider != activeDivider())&&(divider.getBounds().width!=0)){
+                    g2d.drawImage(in_plain, null, divider.getBounds().x, divider.getBounds().y);
+                    repaint();
+                }
+
+            }
+            else {
+                // Regular divider
+                if ((divider == activeDivider()) && !isContinuousLayout()) {
                     g2d.setColor(Color.red);
                     g2d.fill(divider.getBounds());
                     repaint();
                 }
                 //The divider turns blue on click
                 else if((divider == activeDivider())){
-
-                    g2d.drawImage(in, null, divider.getBounds().x, divider.getBounds().y);
-
-                    //g2d.setColor(Color.blue);
-                    //g2d.fill(divider.getBounds());
+                    g2d.setColor(Color.blue);
+                    g2d.fill(divider.getBounds());
                     repaint();
                 }
                 //The divider starts out gray
                 else if((divider != activeDivider())&&(divider.getBounds().width!=0)){
-                    g2d.drawImage(in, null, divider.getBounds().x, divider.getBounds().y);
-
-//                    g2d.setColor(Color.gray);
-//                    g2d.fill(divider.getBounds());
-//
+                    g2d.setColor(Color.gray);
+                    g2d.fill(divider.getBounds());
                     repaint();
                 }
+
+            }
+
+//            if ((divider == activeDivider()) && !isContinuousLayout()) {
+//                    g2d.setColor(Color.red);
+//                    g2d.fill(divider.getBounds());
+//                    repaint();
+//                }
+//                //The divider turns blue on click
+//                else if((divider == activeDivider())){
+//
+//                    g2d.drawImage(in, null, divider.getBounds().x, divider.getBounds().y);
+//
+//                    //g2d.setColor(Color.blue);
+//                    //g2d.fill(divider.getBounds());
+//                    repaint();
+//                }
+//                //The divider starts out gray
+//                else if((divider != activeDivider())&&(divider.getBounds().width!=0)){
+//                    g2d.drawImage(in, null, divider.getBounds().x, divider.getBounds().y);
+//
+////                    g2d.setColor(Color.gray);
+////                    g2d.fill(divider.getBounds());
+////
+//                    repaint();
+//                }
 
 
 
@@ -216,10 +269,10 @@ public class MultiSplitPane extends JPanel {
 //        }
 //    }
 
-    /** 
+    /**
      * The DividerPainter that's used to paint Dividers on this MultiSplitPane.
      * This property may be null.
-     * 
+     *
      * @return the value of the dividerPainter Property
      * @see #setDividerPainter
      */
@@ -227,15 +280,15 @@ public class MultiSplitPane extends JPanel {
 	return dividerPainter;
     }
 
-    /** 
-     * Sets the DividerPainter that's used to paint Dividers on this 
+    /**
+     * Sets the DividerPainter that's used to paint Dividers on this
      * MultiSplitPane.  The default DividerPainter only draws
-     * the activeDivider (if there is one) and then, only if 
-     * continuousLayout is false.  The value of this property is 
+     * the activeDivider (if there is one) and then, only if
+     * continuousLayout is false.  The value of this property is
      * used by the paintChildren method: Dividers are painted after
-     * the MultiSplitPane's children have been rendered so that 
+     * the MultiSplitPane's children have been rendered so that
      * the activeDivider can appear "on top of" the children.
-     * 
+     *
      * @param dividerPainter the value of the dividerPainter property, can be null
      * @see #paintChildren
      * @see #activeDivider
@@ -247,7 +300,7 @@ public class MultiSplitPane extends JPanel {
     /**
      * Uses the DividerPainter (if any) to paint each Divider that
      * overlaps the clip Rectangle.  This is done after the call to
-     * <code>super.paintChildren()</code> so that Dividers can be 
+     * <code>super.paintChildren()</code> so that Dividers can be
      * rendered "on top of" the children.
      * <p>
      * {@inheritDoc}
@@ -278,7 +331,7 @@ public class MultiSplitPane extends JPanel {
     private int dragOffsetY = 0;
     private int dragMin = -1;
     private int dragMax = -1;
-    
+
     private void startDrag(int mx, int my) {
 	requestFocusInWindow();
 	MultiSplitLayout msl = getMultiSplitLayout();
@@ -373,8 +426,8 @@ public class MultiSplitPane extends JPanel {
 	    }
 	}
     }
-    
-    private void cancelDrag() {       
+
+    private void cancelDrag() {
 	if (dragUnderway) {
 	    dragDivider.setBounds(initialDividerBounds);
 	    getMultiSplitLayout().setFloatingDividers(oldFloatingDividers);
@@ -393,8 +446,8 @@ public class MultiSplitPane extends JPanel {
 	if (show) {
 	    MultiSplitLayout.Divider divider = getMultiSplitLayout().dividerAt(x, y);
 	    if (divider != null) {
-		cursorID  = (divider.isVertical()) ? 
-		    Cursor.E_RESIZE_CURSOR : 
+		cursorID  = (divider.isVertical()) ?
+		    Cursor.E_RESIZE_CURSOR :
 		    Cursor.N_RESIZE_CURSOR;
 	    }
 	}
@@ -423,9 +476,9 @@ public class MultiSplitPane extends JPanel {
 	    finishDrag(e.getX(), e.getY());
 	}
 	public void mouseDragged(MouseEvent e) {
-	    updateDrag(e.getX(), e.getY());	    
+	    updateDrag(e.getX(), e.getY());
 	}
-        public void keyPressed(KeyEvent e) { 
+        public void keyPressed(KeyEvent e) {
 	    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 		cancelDrag();
 	    }
@@ -440,7 +493,7 @@ public class MultiSplitPane extends JPanel {
         }
         return accessibleContext;
     }
-    
+
     protected class AccessibleMultiSplitPane extends AccessibleJPanel {
         public AccessibleRole getAccessibleRole() {
             return AccessibleRole.SPLIT_PANE;

@@ -71,12 +71,30 @@ public class ModelBackgroundInfo {
 
             for (int i = 0; i < envtNodes.getLength(); i++) {
                 Node envtNode = envtNodes.item(i);
-                envts.add(new Envt(envtNode));
+                boolean addToList = true;
+                Envt newEnvt = new Envt(envtNode);
+                for (Envt envt : envts) {
+                    if (envt.nameEnvt.equalsIgnoreCase(newEnvt.nameEnvt)) {
+                        addToList = true;
+                    }
+                }
+                if (addToList) {
+                    envts.add(new Envt(envtNode));
+                }
             }
 
             for (int i = 0; i < globalNodes.getLength(); i++) {
                 Node globalNode = globalNodes.item(i);
-                globals.add(new Global(globalNode));
+                boolean addToList = true;
+                Global newGlobal = new Global(globalNode);
+                for (Global global : globals) {
+                    if (global.name.equalsIgnoreCase(newGlobal.name)) {
+                        addToList = false;
+                    }
+                }
+                if (addToList) {
+                    globals.add(newGlobal);
+                }
             }
 
 
