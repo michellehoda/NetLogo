@@ -181,10 +181,10 @@ public strictfp class PlotBlock
 
     public void makePlotLabel() {
         if (this.isHisto == true) {
-            label.add(new JLabel("Histogram of "));
+            label.add(new JLabel("Bar Graph of "));
         }
         else {
-            label.add(new JLabel("Graph of "));
+            label.add(new JLabel("Line Graph of "));
         }
         textFilter = new JCharNumberFieldFilter();
         textFilter.setMaxChars(10);

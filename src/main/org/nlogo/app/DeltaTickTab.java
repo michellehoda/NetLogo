@@ -587,7 +587,7 @@ public class DeltaTickTab
                 }
             };
     private final javax.swing.Action addHistoAction =
-            new javax.swing.AbstractAction( "Add Histogram" ) {
+            new javax.swing.AbstractAction( "Add Bar Graph" ) {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     // histogram, so parameter is true
                     makePlotBlock(true);
