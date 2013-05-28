@@ -86,14 +86,13 @@ public class DeltaTickTab
     int interfaceGraphCount;
     int interfaceSliderCount = 0; //to make sure mutation note is created just once (March 29, 2013)
 
-
     HashMap<String, WidgetWrapper> plotWrappers = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> mutationSliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> carryingCapacitySliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> chooserWidgets = new HashMap<String, WidgetWrapper>();
 
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
-
     private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
     private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
@@ -588,7 +587,7 @@ public class DeltaTickTab
                 }
             };
     private final javax.swing.Action addHistoAction =
-            new javax.swing.AbstractAction( "Add Histogram" ) {
+            new javax.swing.AbstractAction( "Add Bar Graph" ) {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     // histogram, so parameter is true
                     makePlotBlock(true);
@@ -889,6 +888,38 @@ public class DeltaTickTab
         carryingCapacitySliderValues.clear();
     }
 
+    public void populateLabelChooser() {
+
+        // Remove chooserWidget
+        for (WidgetWrapper w : chooserWidgets.values()) {
+            interfacePanel.remove(w);
+        }
+        chooserWidgets.clear();
+
+        // Now populate labels
+        for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
+            boolean putChooser = false;
+            String labelOptions = "\"none\"";
+            for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
+                labelOptions += "\"" + tBlock.getTraitName() + "\"";
+                putChooser = true;
+            }
+
+            if (putChooser) {
+                ChooserWidget chooserWidget = ((ChooserWidget) interfacePanel.makeWidget("CHOOSER", false));
+                String chooserWidgetName = new String(bBlock.plural() + "-label");
+                chooserWidget.name(chooserWidgetName);
+                chooserWidget.choicesWrapper(labelOptions);
+
+                WidgetWrapper ww = interfacePanel.addWidget(chooserWidget, 0, (120 + interfaceSliderCount * 60), true, false);
+                interfaceSliderCount++;
+
+                chooserWidgets.put(chooserWidgetName, ww);
+            }
+
+        }
+    }
+
     public void populatePlots() {
         int plotCount = 0;
         try {
@@ -1108,10 +1139,11 @@ public class DeltaTickTab
             populateInterface();
             removePlots();
             populatePlots();
-            removeMutationSlider();
+            //removeMutationSlider();
             interfaceSliderCount = 0;
-            populateMutationSlider();
+            //populateMutationSlider();
             populateCarryingCapacitySlider();
+            populateLabelChooser();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;
         }

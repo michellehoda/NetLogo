@@ -62,50 +62,50 @@ public strictfp class BehaviorBlock
         }
         return unPackAsCommand();
     }
-      //TODO: Box bracket appears when it need not (March 9)
+    //TODO: Box bracket appears when it need not (March 9)
     //extracting the argument to be passed after name of procedure (March 2)
-      public String unPackAsProcedure() {
+    public String unPackAsProcedure() {
 
-          processCodePlaceholders();
+        processCodePlaceholders();
 
-          String passBack = "";
-          passBack += "to " + getName() + " ";
+        String passBack = "";
+        passBack += "to " + getName() + " ";
 
-          if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) || (isTrait == true) ) {
-              passBack += "[ ";
-          }
-          if (inputs.size() > 0) {
-              for (String input : inputs.keySet()) {
-                  passBack += input + " ";
-              }
-          }
-          if (agentInputs.size() > 0) {
-              for (String s : agentInputs.keySet()) {
-                  passBack += s + " ";
-              }
-          }
-          if (behaviorInputs.size() > 0) {
-              for (String s : behaviorInputs.keySet()) {
-                  passBack += s + " ";
-              }
-          }
-          if (percentInputs.size() > 0) {
-              for (String s : percentInputs.keySet()) {
-                  passBack += s + " ";
-              }
-          }
-          //when traitname appears as an input, it clashes with the trait defined as a breed-variable so using behaviorinput
-          //instead (March 29, 2013)
+        if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) || (isTrait == true) ) {
+            passBack += "[ ";
+        }
+        if (inputs.size() > 0) {
+            for (String input : inputs.keySet()) {
+                passBack += input + " ";
+            }
+        }
+        if (agentInputs.size() > 0) {
+            for (String s : agentInputs.keySet()) {
+                passBack += s + " ";
+            }
+        }
+        if (behaviorInputs.size() > 0) {
+            for (String s : behaviorInputs.keySet()) {
+                passBack += s + " ";
+            }
+        }
+        if (percentInputs.size() > 0) {
+            for (String s : percentInputs.keySet()) {
+                passBack += s + " ";
+            }
+        }
+        //when traitname appears as an input, it clashes with the trait defined as a breed-variable so using behaviorinput
+        //instead (March 29, 2013)
 //          if (isTrait == true) {
 //              passBack += tBlockNew.getTraitName() + " ";
 //          }
-          if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || (percentInputs.size() > 0)) || (isTrait == true) ) {
-              passBack += " ]";
-          }
+        if ((agentInputs.size()  > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || (percentInputs.size() > 0)) || (isTrait == true) ) {
+            passBack += " ]";
+        }
 
-          if ( ifCode != null ) {
-              passBack += "\n" + ifCode + "[\n" + processedCode + "\n" + "]";
-          }
+        if ( ifCode != null ) {
+            passBack += "\n" + ifCode + "[\n" + processedCode + "\n" + "]";
+        }
 // May 15, 2013. The following original code is commented out to try the hacky way of implementing the 'reproduce' behavior
 // The commented code reads the behavior from XML
 // Eventually, the hacky code below must somehow be integrated in the XML
@@ -123,36 +123,40 @@ public strictfp class BehaviorBlock
 //              }
 //          }
 
-          // Checking carryingCapacitySlider
-          if (isMutate) {
-              // This is a reproduce behavior block
-              String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
-              passBack += "\n";
-              passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
-              passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";
-              // mutate here
-              if (myBreedBlock.getMyTraitBlocks().size() > 0) {
-                  passBack += "\t\tmutate\n";
-              }
-              passBack += "\t\t]";
-              passBack += "\t]\n";
-          }
-          else {
-              // Regular behavior block
-              passBack += "\n" + processedCode + "\n";
-          }
+        // Checking carryingCapacitySlider
+        if (isMutate) {
+            // This is a reproduce behavior block
+            String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
+            passBack += "\n";
+            passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
+            passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";
+            // mutate here
+            if (myBreedBlock.getMyTraitBlocks().size() > 0) {
+                //passBack += "\t\tmutate\n"; // Commented May 27, 2013 for OOJH Activity1
+            }
+            // Closing brackets for code
+            passBack += "\t\t]";
+            passBack += "\t]\n";
+        }
+        else {
+            // Regular behavior block
+            passBack += "\n" + processedCode + "\n";
 
-          if (energyInputs.size() > 0) {
-              for (JTextField inputName : energyInputs.values()) {
-                  passBack += "set energy energy " + inputName.getText() + "\n";
-              }
-          }
+        }
+        // End - Hacky code
 
 
-          passBack += "end\n\n";
+        if (energyInputs.size() > 0) {
+            for (JTextField inputName : energyInputs.values()) {
+                passBack += "set energy energy " + inputName.getText() + "\n";
+            }
+        }
 
-          return passBack;
-      }
+
+        passBack += "end\n\n";
+
+        return passBack;
+    }
 
     // extracting name of behavior into "to go" -A. (sept 24)
     public String unPackAsCommand() {

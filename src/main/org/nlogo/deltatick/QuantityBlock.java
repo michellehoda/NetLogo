@@ -76,12 +76,38 @@ public strictfp class QuantityBlock
         setLabelImage();
 
         JLabel name = new JLabel(getName());
+        if (histo) {
+            name.setText("count");
+        }
         java.awt.Font font = name.getFont();
         name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
 
         label.add(name);
         label.validate();
         validate();
+    }
+
+    @Override
+    public void addInput(String inputName, String defaultValue) {
+        PrettyInput input = new PrettyInput(this);
+        input.setName(inputName);
+        input.setText(defaultValue);
+
+        //inputs is a linked hashmap <String, JTextField> (march 2)
+        inputs.put(inputName, input);
+
+        if (this.histo) {
+            if (inputName.equalsIgnoreCase("trait")) {
+                JLabel byLabel = new JLabel();
+                byLabel.setText("by");
+                java.awt.Font font = byLabel.getFont();
+                byLabel.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
+                label.add(byLabel);
+            }
+        }
+
+        label.add(input);
+
     }
 
     // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
@@ -296,7 +322,11 @@ public strictfp class QuantityBlock
     }
 
     public String getXLabel() {
-        return xLabel;
+        String retLabel = xLabel;
+        if (histo) {
+            retLabel = inputs.get("trait").getText();
+        }
+        return retLabel;
     }
     public String getYLabel() {
         return yLabel;

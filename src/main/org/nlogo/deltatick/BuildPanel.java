@@ -487,7 +487,7 @@ public String newSaveAsXML() {
         boolean needMutateCode = false;
         for (BreedBlock bBlock : myBreeds) {
             if (bBlock.getReproduceUsed() && bBlock.getMyTraitBlocks().size() > 0) {
-                needMutateCode = true;
+                //needMutateCode = true; // Commented May 27, 2013 for OOJH Activity1
             }
         }
 
