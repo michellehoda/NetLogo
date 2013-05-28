@@ -139,6 +139,7 @@ public abstract class CodeBlock
             if (!(myParent instanceof BreedBlock)) {
                 setAction(deleteAction);
             }
+            setBorderPainted(false);
             setBorder(null);
             try {
                 Image img = ImageIO.read(getClass().getResource("/images/deltatick/remove_10.png"));
@@ -522,7 +523,7 @@ public abstract class CodeBlock
             return ((CodeBlock) getParent()).getPreferredWidth() - 10;
         }
 
-        return 240;
+        return 250;
     }
 
     public Insets getInsets() {
@@ -620,7 +621,8 @@ public abstract class CodeBlock
 
 
     public void showRemoveButton() {
-       removeButton.setVisible(true);
+        removeButton.setVisible(true);
+        removeButton.setBorderPainted(false);
         validate();
     }
 

@@ -74,6 +74,13 @@ public strictfp class BehaviorBlock
         if ((agentInputs.size() > 0) || (inputs.size() > 0) || (behaviorInputs.size() > 0 || percentInputs.size() > 0) || (isTrait == true) ) {
             passBack += "[ ";
         }
+
+        // May 27, 2013 hardcoded fix for reproduce block
+        // Must be cleaned up later
+        if (isMutate) {
+            passBack += "breedname ";
+        }
+
         if (inputs.size() > 0) {
             for (String input : inputs.keySet()) {
                 passBack += input + " ";
@@ -128,14 +135,18 @@ public strictfp class BehaviorBlock
             // This is a reproduce behavior block
             String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
             passBack += "\n";
-            passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
-            passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";
-            // mutate here
-            if (myBreedBlock.getMyTraitBlocks().size() > 0) {
-                //passBack += "\t\tmutate\n"; // Commented May 27, 2013 for OOJH Activity1
-            }
-            // Closing brackets for code
-            passBack += "\t\t]";
+            passBack += "\tif count breedname  < runresult (word breedname \"-carrying-capacity\") [\n";
+            //passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
+// Commented May 27, 2013 for OOJH Activity1
+//            passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";
+//            // mutate here
+//            if (myBreedBlock.getMyTraitBlocks().size() > 0) {
+//                passBack += "\t\tmutate\n";
+//            }
+//            // Closing brackets for code
+
+            passBack += processedCode + "\n";
+            passBack += "\t\t] ]";
             passBack += "\t]\n";
         }
         else {
@@ -163,6 +174,12 @@ public strictfp class BehaviorBlock
         String passBack = "";
 
         passBack += " " + getName() + " ";
+        // May 27, 2013 Hardcoded fix for reproduce block
+        if (isMutate) {
+            passBack += getMyBreedBlock().plural() + " ";
+        }
+        // Fix done
+
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }

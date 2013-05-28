@@ -323,7 +323,7 @@ public strictfp class BreedBlock
     public String setupTraitLabels() {
         String code = "";
         if (numTraits() > 0) {
-            code += "ask " + plural() + "[  if not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ]  ]";
+            code += "ask " + plural() + "[  ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [set label \"\" ]  ]";
         }
 
 //        if (traitLabels.size() > 0) {
@@ -375,7 +375,7 @@ public strictfp class BreedBlock
 
             // Update labels
             if (numTraits() > 0) {
-                code += "if not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ]";
+                code += "ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [ set label \"\" ] ";
             }
 
 //           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)
