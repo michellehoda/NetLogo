@@ -172,7 +172,7 @@ public class SpeciesInspectorPanel extends JPanel {
 
         // Add to midPanel
         midPanel.add(traitPreview);
-        midPanel.add(labelPanel);
+        //midPanel.add(labelPanel);
 
         labelPanel.setMinimumSize(new Dimension(traitPreview.getTotalWidth()-10, LabelPanel.LABELPANEL_HEIGHT));
         labelPanel.setPreferredSize(new Dimension(traitPreview.getTotalWidth()-10, LabelPanel.LABELPANEL_HEIGHT));

@@ -322,14 +322,20 @@ public strictfp class BreedBlock
 
     public String setupTraitLabels() {
         String code = "";
-        if (traitLabels.size() > 0) {
-            code += "ask " + plural() + "[";
-            code += setTraitLabelCode();
-            code += "]\n";
+        if (numTraits() > 0) {
+            code += "ask " + plural() + "[  if not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ]  ]";
         }
+
+//        if (traitLabels.size() > 0) {
+//            code += "ask " + plural() + "[";
+//            code += setTraitLabelCode();
+//            code += "]\n";
+//        }
+
         return code;
     }
 
+    // UNUSED
     private String setTraitLabelCode() {
         String code = "";
         // Generate code if there is atleast one label
@@ -367,20 +373,25 @@ public strictfp class BreedBlock
             }
             code += "\n";
 
-           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)
-
-            if (traitLabels.size() >= 1) {
-                code += "set label (word ";
-                for (int i = 0; i < traitLabels.size(); i++) {
-                    code += traitLabels.get(i);
-                    if (traitLabels.size() > 1) {
-//               if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
-                        code += "\"-\"";
-                        i--;
-                    }
-                }
-                code += " ) \n";
+            // Update labels
+            if (numTraits() > 0) {
+                code += "if not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ]";
             }
+
+//           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)
+//            if (traitLabels.size() >= 1) {
+//                code += "set label (word ";
+//                for (int i = 0; i < traitLabels.size(); i++) {
+//                    code += traitLabels.get(i);
+//                    if (traitLabels.size() > 1) {
+////               if (i++ == traitLabels.lastIndexOf(traitLabels.get(i)) == false) { // if this is not the last item
+//                        code += "\"-\"";
+//                        i--;
+//                    }
+//                }
+//                code += " ) \n";
+//            }
+
             code += "]\n";
         }
         return code;
