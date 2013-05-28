@@ -42,7 +42,8 @@ public class HistoDropTarget
                 return true;
             }
             else {
-                String message = new String(((QuantityBlock) o).getName() + " is a block for line graphs, not histograms.");
+                // String message = new String(((QuantityBlock) o).getName() + " is a block for line graphs, not histograms.");
+                String message = new String("This is a block for line graphs, not bar graphs.");
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
             }
         }

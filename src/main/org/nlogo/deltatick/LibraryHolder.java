@@ -83,12 +83,14 @@ public class LibraryHolder extends JPanel {
     public void addTraittoTab( TraitBlockNew block, int numberTraits ) {
         String tabName = new String("Your blocks");
 
-        if (numberTraits == 1) {
-            panel = (JComponent) new JPanel();
-            panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
-        }
-        panel.add(block);
-        tabbedPane.addTab(tabName, panel);
+        // Following 2 pieces commented to figure out if traitblock can be added to the same panel as library blocks
+//        if (numberTraits == 1) {
+//            panel = (JComponent) new JPanel();
+//            panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
+//        }
+//        panel.add(block);
+//        tabbedPane.addTab(tabName, panel);
+        addBlock(block);
         traitsNew.add(block);
     }
 
@@ -101,6 +103,7 @@ public class LibraryHolder extends JPanel {
                tabbedPane.removeTabAt(i);
             } // if
         } // for
+        panel.validate();
     }
 
     public void removeTab(int i){

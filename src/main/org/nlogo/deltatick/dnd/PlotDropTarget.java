@@ -31,7 +31,8 @@ public class PlotDropTarget
                 return true;
             }
             else {
-                String message = new String(((QuantityBlock) o).getName() + " is a block for histograms, not line graphs.");
+                //String message = new String(((QuantityBlock) o).getName() + " is a block for histograms, not line graphs.");
+                String message = new String("This is a block for bar graphs, not line graphs.");
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
             }
         }
