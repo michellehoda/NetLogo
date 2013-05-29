@@ -27,14 +27,14 @@ public class HistoDropTarget
     protected boolean dropComponent(Transferable transferable)
             throws IOException, UnsupportedFlavorException {
         Object o = transferable.getTransferData(CodeBlock.quantityBlockFlavor);
-        if (((PlotBlock) block).isHistogram() &&
-                (((PlotBlock) block).getMyBlocks().size() > 0)) {
-            String message = "You can only use one block here";
-            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
         if (o instanceof QuantityBlock) {
-            if (((QuantityBlock) o).getHisto() == true) {
+            if (((PlotBlock) block).isHistogram() &&
+                    (((PlotBlock) block).getMyBlocks().size() > 0)) {
+                String message = "You can only use one block here";
+                JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+            else if (((QuantityBlock) o).getHisto() == true) {
                 ((PlotBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
                 ((QuantityBlock) o).validate();
@@ -46,6 +46,11 @@ public class HistoDropTarget
                 String message = new String("This is a block for line graphs, not bar graphs.");
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
             }
+        }
+        else {
+            String message = new String("Oops! You can only add orange blocks here!");
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+
         }
         return false;
     }
