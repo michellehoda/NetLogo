@@ -258,10 +258,11 @@ public strictfp class BreedBlock
                     }
                 }
             }
+
             code += "set color " + colorName + '\n';
             code += setupTrait();
-            code += setupTraitLabels();
             code += "]\n";
+            code += setupTraitLabels();
             code += setBreedShape();
             int i;
         }
@@ -323,7 +324,7 @@ public strictfp class BreedBlock
     public String setupTraitLabels() {
         String code = "";
         if (numTraits() > 0) {
-            code += "ask " + plural() + "[  ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [set label \"\" ]  ]";
+            code += "\task " + plural() + "[  ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [set label \"\" ]  ]";
         }
 
 //        if (traitLabels.size() > 0) {

@@ -387,7 +387,7 @@ public abstract class CodeBlock
 
 
     public void setMyParent(CodeBlock block) {
-        myParent = block;
+        myParent =  block;
 
     }
 
