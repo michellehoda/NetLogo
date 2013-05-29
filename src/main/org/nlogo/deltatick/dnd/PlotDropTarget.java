@@ -32,10 +32,16 @@ public class PlotDropTarget
             }
             else {
                 //String message = new String(((QuantityBlock) o).getName() + " is a block for histograms, not line graphs.");
-                String message = new String("This is a block for bar graphs, not line graphs.");
+                String message = new String("Oops! You dragged a block for bar graphs. You can only add line graphs here.");
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+                return false;
             }
         }
-        return false;
+        else {
+            String message = new String("Oops! You can only add orange blocks here!");
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+
     }
 }

@@ -25,7 +25,7 @@ public class TraitBlockNew
     JTextField textName;
     ArrayList<String> varList;
     LinkedList<Variation> variationList = new LinkedList<Variation>();
-    //String breedName;
+    String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     String traitName;
     JLabel name = new JLabel();
 
@@ -150,7 +150,12 @@ public class TraitBlockNew
     }
 
     public String getBreedName() {
-        return ((BreedBlock) myParent).plural();
+        // return ((BreedBlock) myParent).plural(); // Commented May 28, 2013 OOJH
+        return breedNameTMP;
+    }
+
+    public void setBreedName(String breedName) {
+        breedNameTMP = new String(breedName);
     }
 
     public void hideRemoveButton() {

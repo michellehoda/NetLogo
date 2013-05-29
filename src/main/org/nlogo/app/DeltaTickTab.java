@@ -484,13 +484,16 @@ public class DeltaTickTab
             speciesInspectorPanel.getMyFrame().setVisible(false);
 
             ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
-            for (Trait trait: speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
-                for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
-                    if (speciesInspectorPanel.getMyParent().plural().equalsIgnoreCase(tBlock.getBreedName())
-                            && (trait.getNameTrait().equalsIgnoreCase(tBlock.getName()))) {
-                        removeBlocks.add(tBlock);
-                    }
-                }
+//            for (Trait trait: speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
+//                for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
+//                    if (speciesInspectorPanel.getMyParent().plural().equalsIgnoreCase(tBlock.getBreedName())
+//                            && (trait.getNameTrait().equalsIgnoreCase(tBlock.getName()))) {
+//                        removeBlocks.add(tBlock);
+//                    }
+//                }
+//            }
+            for (TraitBlockNew tBlock : speciesInspectorPanel.getMyParent().getMyTraitBlocks()) {
+                removeBlocks.add(tBlock);
             }
 
             for (TraitBlockNew tBlock : removeBlocks) {
@@ -524,6 +527,7 @@ public class DeltaTickTab
     public void makeTraitBlock(BreedBlock bBlock, TraitState traitState) {
         TraitBlockNew traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
         traitBlock.setMyParent(bBlock);
+        traitBlock.setBreedName(bBlock.plural());
 
         speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
         userInput.addTraitAndVariations(bBlock.getName(), traitState.getNameTrait(), traitState.getVariationsList());

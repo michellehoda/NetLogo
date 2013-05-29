@@ -30,8 +30,9 @@ public class BehaviorDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
-                if ( !behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) ) {
-                    String message = "Oops! This variation does not belong to this species!";
+                //if ( !behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) ) {
+                if (! behBlock.getMyBreedBlock().plural().equalsIgnoreCase(((TraitBlockNew) o).getBreedName()) ) {
+                    String message = "Oops! This block does not belong to this species!";
                     JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
                     return false;
                 }
