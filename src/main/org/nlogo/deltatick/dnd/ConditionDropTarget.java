@@ -22,13 +22,18 @@ public class ConditionDropTarget
             if (o instanceof BehaviorBlock) {
                 System.out.println("Dropping behavior block");
 
+                // Set this behavior's parent BreedBlock
+                //((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
+                ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyBreedBlock()));
+
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    
-                    ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
-                    ((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
+
+                    //((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
+                    ((BreedBlock) (block).getMyBreedBlock()).setReproduceUsed(true);
                 }
                 // If breed has traits, and any trait is applicable to this behavior block then show a the panel
-                if (((BreedBlock) block.getMyParent()).numTraits() > 0) {
+                //if (((BreedBlock) block.getMyParent()).numTraits() > 0) {
+                if (((BreedBlock) block.getMyBreedBlock()).numTraits() > 0) {
                     boolean addPanel = false;
                     for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
                         if (((BreedBlock) block).hasTrait(traitName)) {

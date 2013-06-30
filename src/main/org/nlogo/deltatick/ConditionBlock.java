@@ -119,6 +119,15 @@ public strictfp class ConditionBlock
             String tmp = ((BehaviorBlock) block).getBehaviorInputName();
             addBehaviorInputToList(tmp);
         }
+        else if (block instanceof ConditionBlock) {
+            String tmp = ((ConditionBlock) block).getBehaviorInputName();
+            addBehaviorInputToList(tmp);
+            String s = ((ConditionBlock) block).getAgentInputName();
+            addAgentInputToList(s);
+            ((ConditionBlock) block).addRect();
+
+        }
+
         doLayout();
         validate();
         repaint();
