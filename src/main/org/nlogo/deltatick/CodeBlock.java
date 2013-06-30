@@ -401,6 +401,17 @@ public abstract class CodeBlock
         return null;
     }
 
+    public CodeBlock getMyBreedBlock() {
+        if (myParent != null) {
+            if (myParent instanceof BreedBlock) {
+                return myParent;
+            }
+            else {
+                return myParent.getMyBreedBlock();
+            }
+        }
+        return null;
+    }
 
     //perform all the methods defined later in this class to the CodeBlock block
     // List<CodeBlock> myBlocks = new LinkedList<CodeBlock>() [myBlocks is a linked list]

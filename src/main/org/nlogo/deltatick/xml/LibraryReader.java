@@ -2,7 +2,7 @@ package org.nlogo.deltatick.xml;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import javax.swing.*;
 import javax.xml.parsers.*;
 
@@ -19,10 +19,14 @@ import org.w3c.dom.*;
  */
 public class LibraryReader {
 
+    Frame frame;
     //FileDialog class displays a dialog window from which the user can select a file. -A. (sept 13)
     FileDialog fileLoader;
     DeltaTickTab deltaTickTab;
     public String fileName;
+
+    //java.<String> openLibraries = new ArrayList<String>();
+    HashSet<String> openLibraries = new HashSet<String>();
 
     CodeBlock block;
 
@@ -33,19 +37,63 @@ public class LibraryReader {
     //              This filename is passed as an argument to the constructor. This argument MUST NOT be ignored.
     //              Further, if libraryFileName is specified (i.e. NOT null), then FileDialog MUST NOT be opened because
     //              the library file name has alredy been specified.
-    public LibraryReader(Frame frame, DeltaTickTab deltaTickTab, String libraryFileName) {
-        fileName = new String();
+    public LibraryReader(Frame frame, DeltaTickTab deltaTickTab) {
+        ////fileName = new String();
     	this.deltaTickTab = deltaTickTab;
+        this.frame = frame;
+
+//        // clear out any existing blocks
+//       // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
+//        File file = null;
+//        if (libraryFileName == null) {
+//            // User has clicked "Load Library" button.
+//            // Explicit library open.
+//
+//            while (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")) {
+//                fileLoader = new FileDialog(frame);
+//                fileLoader.setVisible(true);
+//                file = new File(fileLoader.getDirectory() + fileLoader.getFile());
+//                fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
+//
+//                if (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")){
+//                    JOptionPane.showMessageDialog(deltaTickTab, "Oops! Please select a .xml file", "OOPS!", JOptionPane.ERROR_MESSAGE);
+//                }
+//            }
+//
+//            if(fileName.equals("nullnull")){
+//                return;
+//            }
+//        }
+//        else {
+//            // Library is opened implicity because user clicked "Open Model"
+//            // libraryFileName specifies the full path
+//            fileName = new String(libraryFileName);
+//            // Now open the library file
+//            file = new File(libraryFileName);
+//        }
+//
+//        String thisLibraryName = readLibraryName(file);
+//        if (!openLibraries.contains(thisLibraryName)) {
+//            readLibraryAndPopulate(file);
+//            openLibraries.add(thisLibraryName);
+//        }
+//        else {
+//            System.out.println("Library already open");
+//        }
+    }
+
+    public void openLibrary(String libraryFileName) {
+        fileName = new String();
 
         // clear out any existing blocks
-       // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
+        // this.deltaTickTab.clearLibrary(); // TODo commented out on feb 22, 2012- will need to re-think this, might have to bring it back
         File file = null;
         if (libraryFileName == null) {
             // User has clicked "Load Library" button.
             // Explicit library open.
-            //System.out.println(fileName);
+
             while (fileName.indexOf(".xml") < 0 && !fileName.equals("nullnull")) {
-                fileLoader = new FileDialog(frame);
+                fileLoader = new FileDialog(this.frame);
                 fileLoader.setVisible(true);
                 file = new File(fileLoader.getDirectory() + fileLoader.getFile());
                 fileName = new String (fileLoader.getDirectory() + fileLoader.getFile());
@@ -56,7 +104,7 @@ public class LibraryReader {
             }
 
             if(fileName.equals("nullnull")){
-                return;
+                return ;
             }
         }
         else {
@@ -67,12 +115,46 @@ public class LibraryReader {
             file = new File(libraryFileName);
         }
 
+//        // Check if this library is already open
+        String thisLibraryName = readLibraryName(file);
+//        if (!openLibraries.contains(thisLibraryName)) {
+//            If the library is not open then open it
+            readLibraryAndPopulate(file);
+            openLibraries.add(thisLibraryName);
+            return ;
+//        }
+//        else {
+//            // Already open. Display error message.
+//            String message = new String("Oops! This library is already open!");
+//            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+//            return ;
+//        }
 
+    }
+
+    public String readLibraryName(File libraryFile) {
+        String libraryName = new String();
+        try {
+            DocumentBuilder builder =
+                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document library = builder.parse(libraryFile);
+
+            libraryName = library.getElementsByTagName("library").item(0).getAttributes().getNamedItem("name").getTextContent();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return libraryName;
+    }
+
+    private void readLibraryAndPopulate(File libraryFile) {
         //DocumentBuilder converts XML file into Document -A. (sept 13)
         try {
             DocumentBuilder builder =
                     DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document library = builder.parse(file);
+            Document library = builder.parse(libraryFile);
 
             //needs to be in order as provided as parameters in populate() -A. (sept 13)
             deltaTickTab.getBuildPanel().getBgInfo().populate(
@@ -93,7 +175,7 @@ public class LibraryReader {
                 Node behavior = behaviors.item(i);
                 boolean b = false;
                 block = new BehaviorBlock(behavior.getAttributes().getNamedItem("name").getTextContent(),
-                                          behavior.getAttributes().getNamedItem("traits").getTextContent());
+                        behavior.getAttributes().getNamedItem("traits").getTextContent());
                 if (behavior.getAttributes().getNamedItem("mutate") != null) {
                     b = behavior.getAttributes().getNamedItem("mutate").getTextContent().equalsIgnoreCase("true");
                     if (b) {
@@ -168,6 +250,7 @@ public class LibraryReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public String reIntroduceLtGt(String input) {

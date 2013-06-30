@@ -111,7 +111,8 @@ public class DeltaTickTab
 
     LibraryHolder libraryHolder;
     LibraryReader libraryReader;
-    List<String> openLibraries = new ArrayList<String>();
+    HashSet<String> openLibraries = new HashSet<String>();
+
     DeltaTickModelReader deltaTickModelParser;
 
     public final SimpleJobOwner defaultOwner ;
@@ -149,6 +150,9 @@ public class DeltaTickTab
 
         //actually instantiates the object, declaration above does not instantiate until the constructor is executed
         //-A. (sept 8)
+
+        // Create the library reader. There should only be one library reader that opens/reads library files
+        libraryReader = new LibraryReader(workspace.getFrame(), deltaTickTab);
 
         libraryPanel = new JPanel();
         //libraryPanel.setLayout(new GridLayout(10,1));        // (int rows, int columns)
@@ -254,19 +258,30 @@ public class DeltaTickTab
 
     public void openLibrary(String  fileName) {
         String currentLibraryName = new String();
-    	if ( count == 0 ) {
+        String thisLibraryName = new String();
+        boolean libraryOpenSuccessful = false;
+
+        // Aditi: The library reader reference MUST be saved (Apr 16, 2013)
+        // this.libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
+        thisLibraryName = libraryReader.readLibraryName(new File(fileName));
+        if (openLibraries.contains(thisLibraryName)) {
+            // Already open. Display error message.
+            String message = new String("Oops! This library is already open!");
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        currentLibraryName = thisLibraryName;
+
+        if ( count == 0 ) {
           	libraryHolder = new LibraryHolder();
      		libraryHolder.makeNewTab();
-            // Aditi: The library reader reference MUST be saved (Apr 16, 2013)
-           	this.libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
 
-        	if(buildPanel.getBgInfo().getLibrary() != null){
+            libraryReader.openLibrary(fileName);
+
+        	// if(buildPanel.getBgInfo().getLibrary() != null){
         		libraryPanel.add(libraryHolder);
-        		currentLibraryName = buildPanel.getBgInfo().getLibrary();
         		libraryHolder.setTabName(currentLibraryName);
-
-        		System.out.println(buildPanel.getBgInfo().getLibrary());
-
 
         		addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
@@ -283,52 +298,30 @@ public class DeltaTickTab
 
         		deltaTickTab.contentPanel.validate();
         		count ++;
-        	}
-        	else{
-        		libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-        	}
+        	//}
+        	//else{
+        	//	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
+        	//}
         }
          else if (count > 0 ) {
 
             libraryHolder.makeNewTab();
+            libraryHolder.setTabName( currentLibraryName );
+
             // Aditi: Again, library reader MUST be saved (Apr 16, 2013)
-            this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
-            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
+            //this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
+            libraryReader.openLibrary(fileName);
 
-            if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
-            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-            }
+//            if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
+//            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
+//            }
 
-            currentLibraryName = buildPanel.getBgInfo().getLibrary();
+//            currentLibraryName = buildPanel.getBgInfo().getLibrary();
             deltaTickTab.contentPanel.validate();
          }
-    	//TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
-    	/*if ( count == 0 ) {
-            libraryHolder = new LibraryHolder();
-            libraryPanel.add(libraryHolder);
-            libraryHolder.makeNewTab();
 
-            libraryReader = new LibraryReader( workspace.getFrame() , deltaTickTab, fileName );
-            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-            addPlot.setEnabled(true);
-            addHisto.setEnabled(true);
-            addBreed.setEnabled(true);
-            buildPanel.removeRect();
-            if (buildPanel.getMyBreeds().size() == 0) {
-                buildPanel.addRect("Click Add species to start building your model!");
-                buildPanel.repaint();
-                buildPanel.validate();
-            }
-            deltaTickTab.contentPanel.validate();
-            count ++;
-        }
-        else if (count > 0 ) {
-            //TODO: Will eventually need a list of all libraries that are open (March 30, 2013)
-            libraryHolder.makeNewTab();
-            libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, null );
-            libraryHolder.setTabName( buildPanel.getBgInfo().getLibrary() );
-            deltaTickTab.contentPanel.validate();
-        }*/
+        // Add library name to openLibraries
+        openLibraries.add(thisLibraryName);
     }
 
 

@@ -21,6 +21,8 @@ public class ModelBackgroundInfo {
     ArrayList<Trait> traits = new ArrayList<Trait>();
     String setup;
     String go;
+
+    // TODO: Aditi: June 25, 2013. There need to be multiple libraries
     String library;
     String version;
     String draw;

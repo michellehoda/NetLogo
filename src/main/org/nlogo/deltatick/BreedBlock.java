@@ -137,6 +137,7 @@ public strictfp class BreedBlock
 
     public void addBlock(CodeBlock block) {
         if (block instanceof TraitBlockNew) {
+            // This is called when a traitblock is dropped in a behavior block
             addTraitBlock(block);
         }
         else {
