@@ -283,6 +283,7 @@ public class DeltaTickTab
         		libraryPanel.add(libraryHolder);
         		libraryHolder.setTabName(currentLibraryName);
 
+
         		addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
@@ -320,6 +321,8 @@ public class DeltaTickTab
             deltaTickTab.contentPanel.validate();
          }
 
+        libraryPanel.revalidate();
+        libraryHolder.revalidate();
         // Add library name to openLibraries
         openLibraries.add(thisLibraryName);
     }

@@ -55,6 +55,8 @@ public class LibraryHolder extends JPanel {
 
 
     public LibraryHolder() {
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.setPreferredSize(new Dimension(300, 0));
         tabbedPane = new JTabbedPane();
         add(tabbedPane);
         tabbedPane.addChangeListener(new ChangeListener() {
@@ -123,14 +125,15 @@ public class LibraryHolder extends JPanel {
         panel = (JComponent) new JPanel();
         panel.setLayout( new BoxLayout (panel, BoxLayout.Y_AXIS) );
         //JScrollPane sp = new JScrollPane(panel);
-        tabScrollPane = new JScrollPane(panel);
-        tabScrollPane.setPreferredSize(new Dimension (300, 600));
+        tabScrollPane = new JScrollPane();
+        tabScrollPane.setViewportView(panel);
+        //tabScrollPane.setPreferredSize(new Dimension (300, 600));
         tabScrollPane.setVisible(true);
-
-        tabbedPane.addTab( "name", panel );
+        tabScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        //tabbedPane.addTab( "name", panel );
         // somePanel.add(tabScrollPane);
         //tabbedPane.addTab( "name", somePanel );
-        //tabbedPane.addTab( "name", tabScrollPane );
+        tabbedPane.addTab( "name", tabScrollPane );
         panel.revalidate();
         tabScrollPane.revalidate();
         JButton close = new JButton();
@@ -140,11 +143,12 @@ public class LibraryHolder extends JPanel {
 
     public void addBlock ( CodeBlock block ) {
         panel.add ( block );
+        //tabScrollPane.add( block );
         //panel.setPreferredSize(new Dimension(block.getPreferredWidth() + 30, 600));
         //tabScrollPane.setPreferredSize(new Dimension(block.getPreferredWidth() + 30, 600));
         panel.revalidate();
         tabScrollPane.revalidate();
-
+        tabbedPane.revalidate();
     }
 
     public void setTabName( String name ) {
