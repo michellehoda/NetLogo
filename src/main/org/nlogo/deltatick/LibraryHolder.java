@@ -56,7 +56,7 @@ public class LibraryHolder extends JPanel {
 
     public LibraryHolder() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.setPreferredSize(new Dimension(300, 0));
+        this.setPreferredSize(new Dimension(260, 0));
         tabbedPane = new JTabbedPane();
         add(tabbedPane);
         tabbedPane.addChangeListener(new ChangeListener() {

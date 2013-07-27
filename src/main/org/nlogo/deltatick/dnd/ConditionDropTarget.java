@@ -6,6 +6,8 @@ import org.nlogo.deltatick.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.io.IOException;
 
 public class ConditionDropTarget
@@ -20,19 +22,19 @@ public class ConditionDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
-                System.out.println("Dropping behavior block");
+
+                if (((ConditionBlock) block).addedRectPanel) {
+                    ((ConditionBlock) block).hideRectPanel();
+                    ((ConditionBlock) block).addedRectPanel = false;
+                }
 
                 // Set this behavior's parent BreedBlock
-                //((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyParent()));
                 ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyBreedBlock()));
 
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-
-                    //((BreedBlock) (block).getMyParent()).setReproduceUsed(true);
                     ((BreedBlock) (block).getMyBreedBlock()).setReproduceUsed(true);
                 }
                 // If breed has traits, and any trait is applicable to this behavior block then show a the panel
-                //if (((BreedBlock) block.getMyParent()).numTraits() > 0) {
                 if (((BreedBlock) block.getMyBreedBlock()).numTraits() > 0) {
                     boolean addPanel = false;
                     for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
@@ -50,6 +52,12 @@ public class ConditionDropTarget
                 return true;
             }
             if (o instanceof ConditionBlock) {
+
+                if (((ConditionBlock) block).addedRectPanel) {
+                    ((ConditionBlock) block).hideRectPanel();
+                    ((ConditionBlock) block).addedRectPanel = false;
+                }
+
                 addCodeBlock((ConditionBlock) o);
                 new ConditionDropTarget((ConditionBlock) o);
                 return true;
@@ -63,4 +71,19 @@ public class ConditionDropTarget
         }
         return false;
     }
+    public void dragEnter(DropTargetDragEvent dtde) {
+        if ((dtde.isDataFlavorSupported(CodeBlock.behaviorBlockFlavor)) ||
+                (dtde.isDataFlavorSupported(CodeBlock.conditionBlockFlavor))) {
+            ((ConditionBlock) block).showRectPanel();
+            ((ConditionBlock) block).addedRectPanel = true;
+        }
+    }
+
+    public void dragExit(DropTargetEvent dte) {
+        if (((ConditionBlock) block).addedRectPanel) {
+            ((ConditionBlock) block).hideRectPanel();
+            ((ConditionBlock) block).addedRectPanel = false;
+        }
+    }
+
 }
