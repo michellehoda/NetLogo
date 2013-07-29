@@ -30,6 +30,7 @@ public abstract class CodeBlock
         extends javax.swing.JPanel
         implements Transferable {
 
+    private final int CODEBLOCK_HEIGHT = 27;
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
     //JLabel nameLabel;
@@ -95,7 +96,7 @@ public abstract class CodeBlock
     //this method overrides other default definition is out there to getMinimumSize -A. (sept 10)
     @Override
     public java.awt.Dimension getMinimumSize() {
-        return new java.awt.Dimension(getPreferredWidth(), 35);
+        return new java.awt.Dimension(getPreferredWidth(), CODEBLOCK_HEIGHT);
     }
 
     // same as above -A. (Sept 10)
@@ -106,7 +107,7 @@ public abstract class CodeBlock
             int y = myLayout.preferredLayoutSize(this).height;
             return new java.awt.Dimension(
                     getPreferredWidth(),
-                    java.lang.Math.max(35, y)
+                    java.lang.Math.max(CODEBLOCK_HEIGHT, y)
             );
         }
         return super.getPreferredSize();
@@ -527,7 +528,7 @@ public abstract class CodeBlock
     }
 
     public Insets getInsets() {
-        return new Insets(8, 8, 7, 7);
+        return new Insets(5, 5, 5, 5);
     }
 
     public Rectangle getBounds() {
