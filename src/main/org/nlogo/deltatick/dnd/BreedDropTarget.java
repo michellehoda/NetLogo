@@ -6,6 +6,8 @@ import org.nlogo.deltatick.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.io.IOException;
 
 public class BreedDropTarget
@@ -24,10 +26,18 @@ public class BreedDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof ConditionBlock) {
+                if (((BreedBlock) block).addedRectPanel) {
+                    ((BreedBlock) block).hideRectPanel();
+                    ((BreedBlock) block).addedRectPanel = false;
+                }
                 addCodeBlock((ConditionBlock) o);
                 deltaTickTab.addCondition((ConditionBlock) o);
                 return true;
             } else if (o instanceof BehaviorBlock) {
+                if (((BreedBlock) block).addedRectPanel) {
+                    ((BreedBlock) block).hideRectPanel();
+                    ((BreedBlock) block).addedRectPanel = false;
+                }
                 addCodeBlock((BehaviorBlock) o);
                 ((BehaviorBlock) o).setMyBreedBlock((BreedBlock) this.block);
                 //Inform buildPanel that a reproduce block is being used to make slider on interface
@@ -76,4 +86,20 @@ public class BreedDropTarget
         }
         return false;
     }
+
+    public void dragEnter(DropTargetDragEvent dtde) {
+        if ((dtde.isDataFlavorSupported(CodeBlock.behaviorBlockFlavor)) ||
+             (dtde.isDataFlavorSupported(CodeBlock.conditionBlockFlavor))) {
+            ((BreedBlock) block).showRectPanel();
+            ((BreedBlock) block).addedRectPanel = true;
+        }
+    }
+
+    public void dragExit(DropTargetEvent dte) {
+        if (((BreedBlock) block).addedRectPanel) {
+            ((BreedBlock) block).hideRectPanel();
+            ((BreedBlock) block).addedRectPanel = false;
+        }
+    }
+
 }

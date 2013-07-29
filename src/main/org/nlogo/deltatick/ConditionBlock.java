@@ -15,8 +15,9 @@ import java.util.*;
 public strictfp class ConditionBlock
         extends CodeBlock {
 
-    JPanel rectPanel;
+    JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
+    public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
 
     public ConditionBlock(String name) {
         super(name, ColorSchemer.getColor(1));
@@ -119,6 +120,15 @@ public strictfp class ConditionBlock
             String tmp = ((BehaviorBlock) block).getBehaviorInputName();
             addBehaviorInputToList(tmp);
         }
+        else if (block instanceof ConditionBlock) {
+            String tmp = ((ConditionBlock) block).getBehaviorInputName();
+            addBehaviorInputToList(tmp);
+            String s = ((ConditionBlock) block).getAgentInputName();
+            addAgentInputToList(s);
+            ((ConditionBlock) block).addRect();
+
+        }
+
         doLayout();
         validate();
         repaint();
@@ -140,15 +150,33 @@ public strictfp class ConditionBlock
     }
 
     public void addRect() {
-        rectPanel = new JPanel();
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        rectPanel.setBackground(getBackground());
         JLabel label = new JLabel();
         label.setText("Add blocks here");
         rectPanel.add(label);
         add(rectPanel);
+        validate();
     }
-
+    public void showRectPanel() {
+        if (removedRectPanel) {
+            //rectPanel.setVisible(true);
+            this.add(rectPanel);
+            this.validate();
+            this.repaint();
+            this.getMyBreedBlock().validate();
+        }
+    }
+    public void hideRectPanel() {
+        if (removedRectPanel) {
+            //rectPanel.setVisible(false);
+            this.remove(rectPanel);
+            this.validate();
+            this.repaint();
+            this.getMyBreedBlock().validate();
+        }
+    }
     public String getBehaviorInputName() {
         String behaviorInputName = new String();
         for ( String s : behaviorInputs.keySet()) {

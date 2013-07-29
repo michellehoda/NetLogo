@@ -83,6 +83,7 @@ public strictfp class BreedBlock
 
     JPanel rectPanel;
     boolean removedRectPanel = false;
+    public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
     boolean reproduceUsed = false;
     int curIconIndex;
     Color curColor;
@@ -137,6 +138,7 @@ public strictfp class BreedBlock
 
     public void addBlock(CodeBlock block) {
         if (block instanceof TraitBlockNew) {
+            // This is called when a traitblock is dropped in a behavior block
             addTraitBlock(block);
         }
         else {
@@ -529,6 +531,25 @@ public strictfp class BreedBlock
         label.setText("Add blocks here");
         rectPanel.add(label);
         rectPanel.validate();
+    }
+    public void showRectPanel() {
+        if (removedRectPanel) {
+        //rectPanel.setVisible(true);
+        this.add(rectPanel);
+        this.validate();
+        this.repaint();
+        }
+    }
+    public void hideRectPanel() {
+        if (removedRectPanel) {
+        //rectPanel.setVisible(false);
+        this.remove(rectPanel);
+        this.validate();
+        this.repaint();
+        }
+    }
+    public void setRemovedRectPanel(boolean flag) {
+        removedRectPanel = flag;
     }
 
     public String[] getTraitTypes() {
