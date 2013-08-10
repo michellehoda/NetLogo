@@ -26,6 +26,7 @@ public class TraitBlockNew
     ArrayList<String> varList;
     LinkedList<Variation> variationList = new LinkedList<Variation>();
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
+    BreedBlock myBreedBlock = null;
     String traitName;
     JLabel name = new JLabel();
 
@@ -54,6 +55,9 @@ public class TraitBlockNew
         this.variationHashMap.clear();
         this.variationHashMap.putAll(variationHashMap);
         //this.variationNamesValues = variationValues;
+
+        // Set my breed block
+        myBreedBlock = breedBlock;
 
         java.util.List<Component> componentList = new ArrayList<Component>();
         name.setText(" of " + breedBlock.plural());
@@ -150,12 +154,17 @@ public class TraitBlockNew
     }
 
     public String getBreedName() {
+        // 20130807 Not sure why the line below was commented
         // return ((BreedBlock) myParent).plural(); // Commented May 28, 2013 OOJH
-        return breedNameTMP;
+        return breedNameTMP; // Commented 20130807
+        // return myBreedBlock.plural();
     }
 
+    // This method is irrelevant if myBreedBlock is used to get breed name
     public void setBreedName(String breedName) {
         breedNameTMP = new String(breedName);
+        name.setText(" of " + breedName);
+        validate();
     }
 
     public void hideRemoveButton() {
