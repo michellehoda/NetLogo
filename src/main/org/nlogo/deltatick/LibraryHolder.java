@@ -99,12 +99,6 @@ public class LibraryHolder extends JPanel {
     public void removeTraitBlock ( TraitBlockNew tBlock ) {
         traits.remove(tBlock);
         panel.remove(tBlock);
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            int count = ((JPanel) tabbedPane.getComponentAt(i)).getComponentCount();
-            if (count == 0) {
-               tabbedPane.removeTabAt(i);
-            } // if
-        } // for
         panel.validate();
     }
 

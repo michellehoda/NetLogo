@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -132,6 +134,33 @@ public strictfp class BreedBlock
                 breedBlockFlavor,
                 //patchBlockFlavor
         };
+
+        // Add listener to plural()
+        this.plural.getDocument().addDocumentListener( new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                updateMyTraitBlocks();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                updateMyTraitBlocks();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                updateMyTraitBlocks();
+            }
+
+            public void updateMyTraitBlocks() {
+                for (TraitBlockNew traitBlockNew : myTraitBlocks) {
+                    traitBlockNew.setBreedName(plural());
+                }
+            }
+        });
     }
 
 

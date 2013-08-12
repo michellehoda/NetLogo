@@ -28,6 +28,7 @@ public class ConditionDropTarget
                     ((ConditionBlock) block).addedRectPanel = false;
                 }
 
+                addCodeBlock((BehaviorBlock) o);
                 // Set this behavior's parent BreedBlock
                 ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyBreedBlock()));
 
@@ -38,7 +39,7 @@ public class ConditionDropTarget
                 if (((BreedBlock) block.getMyBreedBlock()).numTraits() > 0) {
                     boolean addPanel = false;
                     for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
-                        if (((BreedBlock) block).hasTrait(traitName)) {
+                        if (((BreedBlock) block.getMyBreedBlock()).hasTrait(traitName)) {
                             addPanel = true;
                         }
                     }
@@ -47,7 +48,7 @@ public class ConditionDropTarget
                         ((BehaviorBlock) o).addTraitblockPanel();
                     }
                 }
-                addCodeBlock((BehaviorBlock) o);
+                
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
