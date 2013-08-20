@@ -48,7 +48,7 @@ public class ConditionDropTarget
                         ((BehaviorBlock) o).addTraitblockPanel();
                     }
                 }
-                
+
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }

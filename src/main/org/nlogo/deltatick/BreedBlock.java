@@ -71,6 +71,7 @@ public strictfp class BreedBlock
     // This list contains all defined trait(blocks) for this breed(block)
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
 
+    String maxNumber;
     String maxAge;
     String maxEnergy;
     String colorName = new String("gray");
@@ -111,6 +112,7 @@ public strictfp class BreedBlock
         this.breed = breed;
         this.maxAge = breed.getOwnVarMaxReporter("age");
         this.maxEnergy = breed.getOwnVarMaxReporter("energy");
+        this.maxNumber = breed.getMaxQuant();
         number.setText(breed.getStartQuant());
         String word = number.getText();
         System.out.println(word.length());
@@ -122,7 +124,7 @@ public strictfp class BreedBlock
         pluralDocument.setMaxChars(11);
         number.setDocument(numberDocument);
         this.plural.setDocument(pluralDocument);
-        number.setText("100");
+        number.setText(breed.getStartQuant().toString());
         this.plural.setText(getName());
 
         //myShapeSelector = new ShapeSelector( parentFrame , allShapes() , this );
@@ -460,6 +462,9 @@ public strictfp class BreedBlock
     }
     public String getMaxEnergy() {
         return maxEnergy;
+    }
+    public String getMaxNumber() {
+        return maxNumber;
     }
 
     public void setColorName(String color) {
