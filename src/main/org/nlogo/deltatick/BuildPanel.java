@@ -111,7 +111,12 @@ public class BuildPanel
 
         // begin function to go
         passBack += "to go\n";
+        // 20130819 Check maxNumber for each breed, stop of maxNumber is reached
+        for (BreedBlock breedBlock : myBreeds) {
+            passBack += "if count " + breedBlock.plural() + " > " + breedBlock.getMaxNumber() + " [ stop ] \n";
+        }
         passBack += bgInfo.updateBlock(myBreeds, myEnvts);
+
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.unPackAsCode();
         }

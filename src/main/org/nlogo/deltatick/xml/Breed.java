@@ -18,7 +18,8 @@ import java.util.LinkedList;
 
 public class Breed {
     ArrayList<OwnVar> vars = new ArrayList<OwnVar>();
-    String startQuant = "100";
+    String startQuant;
+    String maxQuant;
     String plural;
     String singular;
     String setupCommands;
@@ -37,6 +38,7 @@ public class Breed {
         singular = breedNode.getAttributes().getNamedItem("singular").getTextContent();
         plural = breedNode.getAttributes().getNamedItem("plural").getTextContent();
         startQuant = breedNode.getAttributes().getNamedItem("setupNumber").getTextContent();
+        maxQuant = breedNode.getAttributes().getNamedItem("maxNumber").getTextContent();
         this.id = id;
 
         // breed info: setup code, update code, own variables
@@ -159,5 +161,8 @@ public class Breed {
 
     public String getStartQuant() {
         return startQuant;
+    }
+    public String getMaxQuant() {
+        return maxQuant;
     }
 }
