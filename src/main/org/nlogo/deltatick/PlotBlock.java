@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -266,5 +268,9 @@ public strictfp class PlotBlock
 
     public void getPlotPen () {
         netLogoPlot.createPlotPen(plotNameField.getText(), false);
+    }
+
+    public JTextField getPlotNameField() {
+        return plotNameField;
     }
 }

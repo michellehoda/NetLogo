@@ -22,7 +22,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -108,6 +107,7 @@ public class DeltaTickTab
 
     DeltaTickTab deltaTickTab = this;
     PlotManager plotManager;
+    PlotNameFieldListener plotNameFieldListener = new PlotNameFieldListener();
 
     LibraryHolder libraryHolder;
     LibraryReader libraryReader;
@@ -573,6 +573,7 @@ public class DeltaTickTab
         else {
             new PlotDropTarget(newPlotBlock);
         }
+        newPlotBlock.getPlotNameField().addFocusListener(plotNameFieldListener);
         newPlotBlock.validate();
         contentPanel.validate();
         getParent().repaint();
@@ -593,6 +594,38 @@ public class DeltaTickTab
                     makePlotBlock(true);
                 }
             };
+
+    public class PlotNameFieldListener implements FocusListener {
+        boolean messageDisplayed = false;
+        public void focusLost(FocusEvent e) {
+            if (!messageDisplayed) {
+                checkAndDisplayMessage(e);
+            }
+            messageDisplayed = false;
+        }
+        public void focusGained(FocusEvent e) {
+        }
+
+        void checkAndDisplayMessage(FocusEvent e) {
+            messageDisplayed = true;
+            for (int i = 0; i < buildPanel.getMyPlots().size(); i++) {
+                PlotBlock plotBlock = buildPanel.getMyPlots().get(i);
+                for (int j = 0; j < buildPanel.getMyPlots().size(); j++) {
+                    PlotBlock histogramBlock = buildPanel.getMyPlots().get(j);
+                    if ((i != j) &&
+                        histogramBlock.isHistogram() &&
+                        !plotBlock.isHistogram()) {
+                        if (plotBlock.getPlotName().equalsIgnoreCase(histogramBlock.getPlotName())) {
+                            String message = new String("Oops! You have a Plot and a Histogram with the same name.");
+                            ((JTextField) e.getSource()).selectAll();
+                            ((JTextField) e.getSource()).requestFocus();
+                            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private final javax.swing.Action clearAction =
 		new javax.swing.AbstractAction( "Clear" ) {
@@ -1020,7 +1053,7 @@ public class DeltaTickTab
             for (HistogramBlock hBlock : buildPanel.getMyHisto().subList(interfaceHistoCount, buildPanel.getMyHisto().size())) {
                 org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
                 interfacePanel.addWidget(plotWidget, 5, 50, true, false);
-                plotWidget.displayName(hBlock.getName());
+                plotWidget.displayName(hBlock.getHistogramName());
 
                 org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot 1");
                 PlotPen plotPen = newPlot.getPen("default").get();
