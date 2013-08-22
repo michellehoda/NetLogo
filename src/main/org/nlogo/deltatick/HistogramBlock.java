@@ -19,6 +19,7 @@ import java.util.Map;
  * Time: 1:54 PM
  * To change this template use File | Settings | File Templates.
  */
+// THIS CLASS MAY BE UNNECESSARY. PlotBlock with isHisto=true is a histogram block
 public class HistogramBlock
         extends CodeBlock
         implements MouseMotionListener,
@@ -104,15 +105,15 @@ public class HistogramBlock
         label.setBackground(getBackground());
     }
 
-    public String getName() {
+    public String getHistogramName() {
         return histoNameField.getText();
     }
 
     public String unPackAsCode() {
         String passBack = " ";
         //System.out.println("HistoBlock ");
-        passBack += "  set-current-plot \"" + getName() + "\"\n";
-        //passBack += "  set-current-plot \"" + getName() + "\"\n";
+        passBack += "  set-current-plot \"" + getHistogramName() + "\"\n";
+        //passBack += "  set-current-plot \"" + getHistogramName() + "\"\n";
         //passBack += "  histogram [ \"" + variable + " ] of " + population + "\n";
         /*
         for (QuantityBlock quantBlock : getMyBlocks()) {
