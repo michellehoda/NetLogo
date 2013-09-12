@@ -7,14 +7,21 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.DefaultCategoryItemRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
+import org.jfree.data.DefaultKeyedValues;
+import org.jfree.data.KeyedValues;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DatasetUtilities;
 import org.nlogo.deltatick.TraitDisplay;
 
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -30,7 +37,7 @@ public class Barchart extends JPanel {
     String trait;
     ChartPanel chartPanel;
     JFreeChart chart;
-    DefaultCategoryDataset dataset;
+    CategoryDataset dataset;
     TreeMap<String, Double> selectedVariationsPerc;
     TraitDisplay.PaintSupplier paintSupplier;
 
@@ -60,11 +67,11 @@ public class Barchart extends JPanel {
     }
 
     private CategoryDataset createDataset() {
-
-        this.dataset.clear();
+        DefaultKeyedValues keyedValues = new DefaultKeyedValues();
         for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
-            this.dataset.addValue((Double) entry.getValue(), (String) entry.getKey(), (String) entry.getKey());
-        } // for
+            keyedValues.addValue((String) entry.getKey(), (Double) entry.getValue());
+        }
+        this.dataset = DatasetUtilities.createCategoryDataset("Series", keyedValues);
         return this.dataset;
     }
 
@@ -86,37 +93,26 @@ public class Barchart extends JPanel {
         chart.setBackgroundPaint(null);
 
         // Get reference to plot for further customizaiton
-
         final CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setBackgroundPaint(null);
         plot.setDomainGridlinePaint(Color.GRAY);
-
+        plot.getDomainAxis().setCategoryMargin(0.0);
 
         // set the range axis to display integers only...
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         rangeAxis.setRange(0, 100);
 
-        // disable bar outlines...
-        final BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setDrawBarOutline(false);
-        renderer.setMaximumBarWidth(0.25); // 25% of total width
-        renderer.setShadowVisible(false);
-        renderer.setBarPainter(new StandardBarPainter());
-        if( dataset.getColumnCount() > 2) {
-            renderer.setItemMargin(-2);
-        }
-        else {
-            renderer.setItemMargin(-1);
-        }
+        // Customize bars
+        final BarRenderer customBarRenderer = new CustomBarRenderer(paintSupplier);
+        customBarRenderer.setDrawBarOutline(false);
+        customBarRenderer.setMaximumBarWidth(1.0);
+        customBarRenderer.setShadowVisible(false);
+        customBarRenderer.setItemMargin(0.0);
+        customBarRenderer.setBarPainter(new StandardBarPainter());
+        plot.setRenderer(customBarRenderer);
 
-        int i = 0;
         paintSupplier.reset();
-        for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
-            renderer.setSeriesPaint(i, paintSupplier.getNextPaint());
-            i++;
-        }
-
 
         return chart;
     }
@@ -133,9 +129,6 @@ public class Barchart extends JPanel {
         this.trait = trait;
         CategoryDataset dataset = createDataset();
         chart = createChart(dataset);
-
-        //chart.setTitle(this.trait);
-        //((CategoryPlot) chart.getPlot()).setDataset(dataset);
 
         chartPanel.setChart(chart);
         chartPanel.setPreferredSize(new Dimension(BARCHART_WIDTH, BARCHART_HEIGHT));
@@ -155,6 +148,21 @@ public class Barchart extends JPanel {
 
     public JPanel getChartPanel() {
         return chartPanel;
+    }
+
+    public class CustomBarRenderer extends BarRenderer {
+        TraitDisplay.PaintSupplier paintSupplier;
+
+        /**
+         * Creates a new Bar Renderer
+         * @param paintSupplier
+         */
+        public CustomBarRenderer(TraitDisplay.PaintSupplier paintSupplier) {
+            this.paintSupplier = paintSupplier;
+        }
+        public Paint getItemPaint(final int row, final int column) {
+            return paintSupplier.getNextPaint();
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package org.nlogo.deltatick;
 
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.nlogo.deltatick.reps.Barchart;
 import org.nlogo.deltatick.reps.Piechart;
 
@@ -196,8 +197,6 @@ public class TraitDisplay extends JPanel {
         }
 
     } // Paint Supplier
-
-
 
 } // class TraitDisplay
 
