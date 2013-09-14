@@ -71,17 +71,17 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
   private final Container pane;
   private final ButtonGroup swatchesGroup = new ButtonGroup();
-  private final Container swatchesContainer = new Container();
+  private final Container swatchesContainer = new Container();     //commented out so don't see all the swatches of color (Aug22, 2013)
   private final Container leftNameContainer = new Container();
   private final Container topNameContainer = new Container();
-  private final Container rightPreviewContainer = new Container();
+  //private final Container rightPreviewContainer = new Container();
 
-  private JRadioButton oneStep;
-  private JRadioButton pointFiveStep;
-  private JRadioButton pointOneStep;
+  //private JRadioButton oneStep;
+  //private JRadioButton pointFiveStep;
+  //private JRadioButton pointOneStep;
 
   private ImageIcon turtleIcon;
-  private JCheckBox checkboxHideNumbers;
+  //private JCheckBox checkboxHideNumbers;
   private JLabel selectedColorLabel;
   private JLabel[] turtleLabel = new JLabel[16];
 
@@ -159,11 +159,11 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     Color closestColor = new Color(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(closest));
 
     if (closest % 1 == 0 || closest >= 9.9) {
-      oneStep.doClick();
+      //oneStep.doClick();
     } else if (closest % 5 == 0) {
-      pointOneStep.doClick();
+      //pointOneStep.doClick();
     } else {
-      pointFiveStep.doClick();
+      //pointFiveStep.doClick();
     }
 
     for (Enumeration<javax.swing.AbstractButton> e = swatchesGroup.getElements(); e.hasMoreElements();) {
@@ -200,7 +200,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     swatchesGroup.add(blackName);
     blackButtonContainer.add(blackName);
     blackButtonContainer.add(new JLabel(""));
-    topNameContainer.add(blackButtonContainer);
+    //topNameContainer.add(blackButtonContainer);
     topNameContainer.add(selectColor);
     selectColor.setAction(getSelectedColorName);
     selectColor.setText("Set Color");
@@ -225,7 +225,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     turtleLabel[15].setBackground(new java.awt.Color(255, 255, 255));
     turtleLabel[15].setOpaque(true);
     whiteButtonContainer.add(turtleLabel[15]);
-    topNameContainer.add(whiteButtonContainer);
+    //topNameContainer.add(whiteButtonContainer);
 
     // Add the container to the GridBag
     GridBagConstraints c = new GridBagConstraints();
@@ -261,7 +261,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   }
 
   private void createRightPreview(ImageIcon turtleIcon) {
-    rightPreviewContainer.setLayout(new GridLayout(14, 1));
+    //rightPreviewContainer.setLayout(new GridLayout(14, 1));
 
     int turtleIconindex = 0;
     for (int i = 5; i < 140; i += 10) {
@@ -269,7 +269,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       turtleLabel[turtleIconindex] = new JLabel(turtleIcon, javax.swing.SwingConstants.CENTER);
       turtleLabel[turtleIconindex].setBackground(new Color(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(i)));
       turtleLabel[turtleIconindex].setOpaque(true);
-      rightPreviewContainer.add(turtleLabel[turtleIconindex]);
+      //rightPreviewContainer.add(turtleLabel[turtleIconindex]);
       turtleIconindex++;
     }
     getContentPane().invalidate();
@@ -279,7 +279,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     c.gridy = 1;
     c.fill = GridBagConstraints.BOTH;
     c.insets = new Insets(5, 0, 0, 0);
-    pane.add(rightPreviewContainer, c);
+    //pane.add(rightPreviewContainer, c);
   }
 
   private void createTopLeftLabel() {
@@ -379,7 +379,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       JButton copyButton = new JButton(I18N.guiJ().get("tools.colorswatch.copy"));
       copyButton.setActionCommand("Copy");
       copyButton.addActionListener(this);
-      controlsContainer.add(copyButton);
+      //controlsContainer.add(copyButton);
     } else {
       controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
       okButton = new JButton(I18N.guiJ().get("common.buttons.ok"));
@@ -407,9 +407,9 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     controlsContainer.add(Box.createHorizontalGlue());
 
     // Hide numbers checkbox
-    checkboxHideNumbers = new JCheckBox(I18N.guiJ().get("tools.colorswatch.numbers"), true);
-    controlsContainer.add(checkboxHideNumbers);
-    checkboxHideNumbers.addItemListener(this);
+    //checkboxHideNumbers = new JCheckBox(I18N.guiJ().get("tools.colorswatch.numbers"), true);
+    //controlsContainer.add(checkboxHideNumbers);
+    //checkboxHideNumbers.addItemListener(this);
 
     controlsContainer.add(Box.createHorizontalGlue());
 
@@ -419,6 +419,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     stepJpanel.setLayout(new BoxLayout(stepJpanel, BoxLayout.LINE_AXIS));
     stepJpanel.setBorder(BorderFactory.createLineBorder(Color.gray));
 
+      /* commented out to make the color dialog box smaller with fewer options
     oneStep = new JRadioButton("1");
     oneStep.setActionCommand("oneStep");
     stepJpanel.add(oneStep);
@@ -440,11 +441,12 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     oneStep.addActionListener(this);
     pointFiveStep.addActionListener(this);
     pointOneStep.addActionListener(this);
+    */
 
     controlsContainer.add(stepJpanel);
 
     JLabel gradationLabel = new JLabel(" " + I18N.guiJ().get("tools.colorswatch.increment"));
-    controlsContainer.add(gradationLabel);
+    //controlsContainer.add(gradationLabel);
 
     controlsContainer.add(Box.createRigidArea(new Dimension(10, 0)));
     controlsContainer.add(new JLabel("  "));
@@ -514,16 +516,16 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
       if (actionCommand.equals("oneStep")) {
         step = 1;
         pointOneStepflag = false;
-        checkboxHideNumbers.setEnabled(true);
+        //checkboxHideNumbers.setEnabled(true);
       } else if (actionCommand.equals("pointFiveStep")) {
         step = .5;
         pointOneStepflag = false;
-        checkboxHideNumbers.setEnabled(true);
+        //checkboxHideNumbers.setEnabled(true);
 
       } else if (actionCommand.equals("pointOneStep")) {
         step = .1;
         pointOneStepflag = true;
-        checkboxHideNumbers.setEnabled(false);
+        //checkboxHideNumbers.setEnabled(false);
       }
       swatchesContainer.setVisible(false);
       swatchesContainer.removeAll();
