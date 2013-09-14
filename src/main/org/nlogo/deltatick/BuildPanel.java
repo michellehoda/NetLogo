@@ -107,13 +107,14 @@ public class BuildPanel
 
         //TraitBlock's setup code doesn't come from here at all. It comes from breeds -A. (Aug 8, 2012)
         passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots);
+        System.out.println("envt buildPnael " + myEnvts.size());
         passBack += "\n";
 
         // begin function to go
         passBack += "to go\n";
         // 20130819 Check maxNumber for each breed, stop of maxNumber is reached
         for (BreedBlock breedBlock : myBreeds) {
-            passBack += "if count " + breedBlock.plural() + " > " + breedBlock.getMaxNumber() + " [ stop ] \n";
+            passBack += "if count " + breedBlock.plural() + " >= " + breedBlock.getMaxNumber() + " [ stop ] \n";
         }
         passBack += bgInfo.updateBlock(myBreeds, myEnvts);
 
