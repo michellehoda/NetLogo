@@ -651,7 +651,7 @@ public strictfp class BreedBlock
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         ShapeSelector myShapeSelector = new ShapeSelector(parentFrame, allShapes(), this, curIconIndex, curColor);
         myShapeSelector.setVisible(true);
-        System.out.println(myShapeSelector.getChosenValue());
+        //System.out.println(myShapeSelector.getChosenValue());
         if (myShapeSelector.getChosenValue() >= 0) {
             ShapeIcon shapeIcon = new ShapeIcon(myShapeSelector.getShape());
             shapeIcon.setColor(myShapeSelector.getSelectedColor());
