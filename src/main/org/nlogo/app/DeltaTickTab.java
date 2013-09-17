@@ -505,6 +505,9 @@ public class DeltaTickTab
                 makeTraitBlock(myParent, traitState);
             }
 
+            // Update existing behavior blocks
+            myParent.updateMyBehaviorBlocks();
+
             myParent.getTraitLabels().clear();
             for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
                 myParent.addToTraitLabels(traitLabel);

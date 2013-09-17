@@ -70,7 +70,8 @@ public strictfp class BreedBlock
 
     // This list contains all defined trait(blocks) for this breed(block)
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
-
+    // This is a list of all behavior blocks for this breedblock
+    List<BehaviorBlock> myBehaviorBlocks = new ArrayList<BehaviorBlock>();
     String maxNumber;
     String maxAge;
     String maxEnergy;
@@ -165,7 +166,40 @@ public strictfp class BreedBlock
         });
     }
 
+    // This method should be called from SpeciesPanelOkayListener whenever a trait is added/removed/modified
+    public void updateMyBehaviorBlocks() {
+        List<BehaviorBlock> removeTheseBlocks = new ArrayList<BehaviorBlock>();
 
+        // After traits are defined *after* applicable behavior blocks are added
+        // Then update the behavior block to accept the corresponding trait blocks
+        for (BehaviorBlock behaviorBlock : getMyBehaviorBlocks()) {
+            for (TraitBlockNew traitBlock : getMyTraitBlocks()) {
+                // Check if this behavior block already has a trait associated with it
+                if (!behaviorBlock.getIsTrait() &&
+                     behaviorBlock.isTraitApplicable(traitBlock.getTraitName())) {
+                    // This trait applies to this behavior block, but hasn't been applied to the block yet
+                    // Remove behavior input and add the traitpanel
+                    behaviorBlock.removeBehaviorInput();
+                    behaviorBlock.addTraitblockPanel();
+                }
+            }
+            // If traits are removed but there are behavior blocks that depend of the (removed) traits,
+            // these blocks must be removed. Add them to a remove list -- they cannot be removed in this loop.
+            // Removing them in this loop results in concurrent modification exception
+            for (String traitName : behaviorBlock.getApplicableTraits()) {
+                if (!hasTrait(traitName)) {
+                    removeTheseBlocks.add(behaviorBlock);
+                }
+            }
+        }
+        // Remove any blocks that need to be removed
+        for (BehaviorBlock behaviorBlock : removeTheseBlocks) {
+            behaviorBlock.die();
+        }
+        validate();
+        doLayout();
+        repaint();
+    }
 
     public void addBlock(CodeBlock block) {
         if (block instanceof TraitBlockNew) {
@@ -192,6 +226,8 @@ public strictfp class BreedBlock
 //            addTraitBlock(block);
 //        }
             if (block instanceof BehaviorBlock) {
+                // Add to list of behavior blocks
+                myBehaviorBlocks.add((BehaviorBlock)block);
                 String tmp = ((BehaviorBlock) block).getBehaviorInputName();
                 addBehaviorInputToList(tmp);
                 String s = ((BehaviorBlock) block).getAgentInputName();
@@ -216,6 +252,12 @@ public strictfp class BreedBlock
         }
     }
 
+    public void removeBlock(CodeBlock block) {
+        super.removeBlock(block);
+        if (block instanceof BehaviorBlock) {
+            myBehaviorBlocks.remove(block);
+        }
+    }
 
     public void addTraitBlock(CodeBlock block) {
         if (((TraitBlockNew) block).getBreedName().equalsIgnoreCase(this.plural()) == false) {// if traitBlock is put in a breedBlock that it's not defined for
@@ -801,6 +843,10 @@ public strictfp class BreedBlock
 
     public List<TraitBlockNew> getMyTraitBlocks() {
         return myTraitBlocks;
+    }
+
+    public List<BehaviorBlock> getMyBehaviorBlocks() {
+        return myBehaviorBlocks;
     }
 
     public void setReproduceUsed (boolean value) {

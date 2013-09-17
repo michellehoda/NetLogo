@@ -352,6 +352,10 @@ public strictfp class BehaviorBlock
         return applicableTraits;
     }
 
+    public boolean isTraitApplicable(String traitName) {
+        return applicableTraits.contains(traitName);
+    }
+
     public JToolTip createToolTip() {
         toolTip = super.createToolTip();
         toolTip.setBackground(Color.white);
