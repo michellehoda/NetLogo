@@ -62,7 +62,7 @@ public class DeltaTickTab
 
     JButton loadLibrary;
     JButton addBreed;
-    JButton addDiveIn;
+    //JButton addDiveIn;
     JButton addPlot;
     JButton addHisto;
     JButton addTrackSpecies;
@@ -74,8 +74,6 @@ public class DeltaTickTab
     //JButton addEnvt;
     JButton buildBlock;
     JButton Not;
-
-    //JFileChooser jFileChooser;
 
     boolean plotsAlive = false;
 
@@ -285,7 +283,7 @@ public class DeltaTickTab
         		libraryHolder.setTabName(currentLibraryName);
 
 
-        		addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
+        		//addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
                 addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
@@ -1139,9 +1137,11 @@ public class DeltaTickTab
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
 
+                /*
                 addDiveIn = new JButton(diveInAction);
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
+                */
 
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
