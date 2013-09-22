@@ -136,7 +136,7 @@ public strictfp class PlotBlock
     }                  */
 
     public void addBlock (CodeBlock block) {
-        System.out.println(myBlocks.size());
+
         if (isHisto &&
             (myBlocks.size() > 0)) {
             String message = "You can only use one block here";

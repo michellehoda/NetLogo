@@ -66,8 +66,8 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   //private String selectedColorName;
   public String selectedColorName;
 
-  private static final int SIZE_X = 600;
-  private static final int SIZE_Y = 400;
+  private static final int SIZE_X = 175; //original value was 600 (Aditi, Sept 21, 2013)
+  private static final int SIZE_Y = 400; //original value was 400
 
   private final Container pane;
   private final ButtonGroup swatchesGroup = new ButtonGroup();
@@ -101,7 +101,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
     addWindowListener(this);
 
-    createLeftNames();
+    //createLeftNames();   //commented out to simplify color dialog (Aditi, Sept 21, 2013)
     createTopNames(turtleIcon);
     createRightPreview(turtleIcon);
     createTopLeftLabel();
@@ -203,7 +203,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     //topNameContainer.add(blackButtonContainer);
     topNameContainer.add(selectColor);
     selectColor.setAction(getSelectedColorName);
-    selectColor.setText("Set Color");
+    selectColor.setText("Use this color");
     
     // Create the white button
     Container whiteButtonContainer = new Container();
@@ -298,7 +298,8 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
   private void createSwatches() {
     final int rows = 14;
     double colorNumber = 0;
-    int columnlength = 10;
+    //int columnlength = 10;    // commented out because want students to only see middle column for color (Aditi, Sept 21, 2013)
+    int columnlength = 1;
     int swatchPerRow = (int) (StrictMath.round(columnlength / step));
 
 
@@ -308,13 +309,16 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
     for (int i = 0; i < rows; i++) {
       colorNumber = i * 10;
-      for (int j = 0; j < (swatchPerRow + 1); j++) {
-        JToggleButton swatch = new JToggleButton();
-        if (j >= swatchPerRow) {
-          colorNumber = (i * 10) + 9.9;
-        } else {
-          swatch.setForeground(Color.BLACK);
-        }
+      //for (int j = 0; j < (swatchPerRow + 1); j++) {
+      for (int j = 0; j < 1; j++) {
+          JToggleButton swatch = new JToggleButton();
+          colorNumber = (i * 10) + 5;
+          //commented out this if block to show only one the middle column of color (Aditi, Sept 21, 2013)
+//        if (j >= swatchPerRow) {
+//          colorNumber = (i * 10) + 9.9;
+//        } else {
+//          swatch.setForeground(Color.BLACK);
+//        }
         swatch.setRolloverEnabled(true);
         swatch.setBorderPainted(true);
         swatch.setOpaque(true);
@@ -344,7 +348,7 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
           if (colorNumber % 10 < 3.5) {
             label.setForeground(Color.LIGHT_GRAY);
           }
-          s.add(label);
+          //s.add(label);       commented out so the color number doesn't show on swatch (Aditi, Sept 21, 2013)
         }
         swatch.add(s);
         swatch.setActionCommand(String.valueOf(colorNumber));

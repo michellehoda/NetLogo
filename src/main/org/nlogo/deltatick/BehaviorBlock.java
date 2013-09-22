@@ -53,7 +53,12 @@ public strictfp class BehaviorBlock
     @Override
     public void processCodePlaceholders() {
         // Replace all %breed% with breed name
-        processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
+        if (myBreedBlock != null) {
+            processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), myBreedBlock.plural());
+        }
+        else {
+            processedCode = code.replaceAll(Matcher.quoteReplacement("%breed%"), "");
+        }
     }
 
     public String unPackAsCode() {
@@ -62,6 +67,7 @@ public strictfp class BehaviorBlock
         }
         return unPackAsCommand();
     }
+
     //TODO: Box bracket appears when it need not (March 9)
     //extracting the argument to be passed after name of procedure (March 2)
     public String unPackAsProcedure() {
@@ -179,7 +185,6 @@ public strictfp class BehaviorBlock
             passBack += getMyBreedBlock().plural() + " ";
         }
         // Fix done
-
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }

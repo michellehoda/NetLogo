@@ -218,9 +218,10 @@ public class DeltaTickModelReader {
                                         Node variationNode = variationNodes.item(k);
                                         String varName = variationNode.getAttributes().getNamedItem("name").getTextContent();
                                         String varValue = variationNode.getAttributes().getNamedItem("value").getTextContent();
+                                        String varColor = variationNode.getAttributes().getNamedItem("color").getTextContent();
                                         String percentage = variationNode.getAttributes().getNamedItem("percent").getTextContent();
                                         int percent = Integer.parseInt(percentage);
-                                        Variation variation = new Variation(traitName, varName, varValue, percent);
+                                        Variation variation = new Variation(traitName, varName, varValue, varColor, percent);
                                         selectedVariationsHashMap.put(varName, variation);
                                         selectedVariationsPercent.put(varName, percentage);
                                     }

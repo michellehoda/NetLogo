@@ -19,6 +19,7 @@ public class ModelBackgroundInfo {
     ArrayList<Global> globals = new ArrayList<Global>();
     ArrayList<Envt> envts = new ArrayList<Envt>();
     ArrayList<Trait> traits = new ArrayList<Trait>();
+    ArrayList<DiveIn> diveIns = new ArrayList<DiveIn>();
     String setup;
     String go;
 
@@ -42,7 +43,7 @@ public class ModelBackgroundInfo {
         traits.clear();
     }
 
-    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw, NodeList behavior) throws Exception {
+    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw, NodeList behavior, NodeList diveInNodes) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
@@ -69,7 +70,6 @@ public class ModelBackgroundInfo {
             for (Breed breed : breeds) {
                 breed.setTraitsArrayList(traits);
             }
-
 
             for (int i = 0; i < envtNodes.getLength(); i++) {
                 Node envtNode = envtNodes.item(i);
@@ -99,6 +99,10 @@ public class ModelBackgroundInfo {
                 }
             }
 
+            for (int i = 0; i < diveInNodes.getLength(); i++) {
+                Node diveInNode = diveInNodes.item(i);
+                diveIns.add(new DiveIn(diveInNode));
+            }
 
             this.library = library.item(0).getAttributes().getNamedItem("name").getTextContent();
             this.version = library.item(0).getAttributes().getNamedItem("version").getTextContent();
@@ -123,7 +127,7 @@ public class ModelBackgroundInfo {
     }
 
     //will have to insert setup code for patches here as well -A. (sept 13)
-    public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlockNew> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots) {
+    public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlockNew> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots, List<DiveInBlock> usedDiveIns) {
         String code = "to setup\n";
         code += "  clear-all\n";
         //code += "ask patches [set pcolor white]\n";
@@ -134,6 +138,10 @@ public class ModelBackgroundInfo {
         for (BreedBlock breedBlock : usedBreeds) {
             //code += breedBlock.setBreedShape();
             code += breedBlock.setup();
+        }
+
+        for (DiveInBlock dBlock : usedDiveIns ) {
+            code += dBlock.setup();
         }
 
         for (Global global : globals) {
@@ -171,6 +179,8 @@ public class ModelBackgroundInfo {
 
         return code;
     }
+
+
 
     public String drawCode() {
         String code = "";
@@ -223,6 +233,10 @@ public class ModelBackgroundInfo {
 
     public ArrayList<Envt> getEnvts() {
         return envts;
+    }
+
+    public ArrayList<DiveIn> getDiveIns() {
+        return diveIns;
     }
 
     public String[] getTraitTypes() {

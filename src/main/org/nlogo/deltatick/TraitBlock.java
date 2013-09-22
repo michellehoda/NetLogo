@@ -102,7 +102,6 @@ public strictfp class TraitBlock
 
     public TraitBlock (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
         super (traitState.getNameTrait(), Color.lightGray);
-        System.out.println("Making a traitBlock! (regular constructor)");
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 traitBlockFlavor,

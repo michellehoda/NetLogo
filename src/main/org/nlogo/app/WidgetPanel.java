@@ -370,7 +370,13 @@ public strictfp class WidgetPanel
     menu.show(this, e.getX(), e.getY());
   }
 
-  protected class WidgetCreationMenuItem
+    //added this procedure with Jason so that widgets weren't sticky when user goes to Interface tab (Aditi, Sept 19, 2013)
+    public void clearNewWidget() {
+        newWidget = null;
+
+    }
+
+    protected class WidgetCreationMenuItem
       extends javax.swing.JMenuItem {
     WidgetCreationMenuItem(final String displayName, final String name, final int x, final int y) {
       super(displayName);

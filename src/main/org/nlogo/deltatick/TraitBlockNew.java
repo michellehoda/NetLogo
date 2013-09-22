@@ -28,6 +28,7 @@ public class TraitBlockNew
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     BreedBlock myBreedBlock = null;
     String traitName;
+    String varColor;
     JLabel name = new JLabel();
 
     transient Trait trait;
@@ -54,6 +55,7 @@ public class TraitBlockNew
         //this.variationHashMap = variationHashMap;
         this.variationHashMap.clear();
         this.variationHashMap.putAll(variationHashMap);
+        this.varColor = traitState.getColor();
         //this.variationNamesValues = variationValues;
 
         // Set my breed block
@@ -173,6 +175,10 @@ public class TraitBlockNew
 
     public String getMutateCode() {
         return traitState.getMutateCode();
+    }
+
+    public String getVarColor() {
+        return varColor;
     }
 
 }

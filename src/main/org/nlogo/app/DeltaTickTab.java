@@ -62,6 +62,7 @@ public class DeltaTickTab
 
     JButton loadLibrary;
     JButton addBreed;
+    JButton addDiveIn;
     JButton addPlot;
     JButton addHisto;
     JButton addTrackSpecies;
@@ -284,7 +285,8 @@ public class DeltaTickTab
         		libraryHolder.setTabName(currentLibraryName);
 
 
-        		addPlot.setEnabled(true);
+        		addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
+                addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
         		addBreed.setEnabled(true);
         		addClear.setEnabled(true);
@@ -644,6 +646,27 @@ public class DeltaTickTab
         }
     };
 
+
+    private final Action diveInAction =
+            new AbstractAction( "Step in") {
+                public void actionPerformed( java.awt.event.ActionEvent e ) {
+                    makeDiveInBlock();
+                }
+            };
+
+    public DiveInBlock makeDiveInBlock() {
+        DiveInBlock diveInBlock = new DiveInBlock(buildPanel.getBgInfo().getDiveIns().get(0), workspace.getFrame());
+        DiveInDropTarget diveInDropTarget = new DiveInDropTarget(diveInBlock);
+        buildPanel.addDiveIn( diveInBlock );
+        buildPanel.removeRect();
+        //newPlotBlock.getParent().setComponentZOrder(newPlotBlock, 0 );
+
+        diveInBlock.validate();
+        contentPanel.validate();
+        getParent().repaint();
+        return diveInBlock;
+    }
+
     private final javax.swing.Action chgEnvtAction =
 		new javax.swing.AbstractAction( "Add environment" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
@@ -808,9 +831,12 @@ public class DeltaTickTab
 //            chooser.setChoices(choicesList.toLogoList());
 //
 //        }
+            interfacePanel.clearNewWidget();
             interfaceCount++;
         }
     }
+
+
 
 
     public void populateMutationSlider() {
@@ -835,6 +861,7 @@ public class DeltaTickTab
                     WidgetWrapper ww = interfacePanel.addWidget(sliderWidget, 0, (120 + interfaceSliderCount * 40), true, false);
 
                     mutationSliderWidgets.put(sliderName, ww);
+                    interfacePanel.clearNewWidget();
                     interfaceSliderCount++;
                 }
 
@@ -954,6 +981,7 @@ public class DeltaTickTab
             }
 
         }
+        interfacePanel.clearNewWidget();
     }
 
     public void populatePlots() {
@@ -1110,6 +1138,11 @@ public class DeltaTickTab
                 addBreed = new JButton( addBreedAction );
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
+
+                addDiveIn = new JButton(diveInAction);
+                addDiveIn.setEnabled(false);
+                this.add(addDiveIn);
+
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
                 this.add(addPlot) ;

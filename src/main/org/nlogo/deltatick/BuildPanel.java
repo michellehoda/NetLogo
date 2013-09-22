@@ -39,6 +39,7 @@ public class BuildPanel
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
+    List<DiveInBlock> myDiveIns = new LinkedList<DiveInBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
     //ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
     JLabel label;
@@ -73,8 +74,12 @@ public class BuildPanel
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.declareBreed();
         }
-
         passBack += "\n";
+        //TODO Allow students to give this name (Sept 20, 2013)
+        for (DiveInBlock block : myDiveIns) {
+            passBack += "breed [predators predator] \n";
+        }
+
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
             // traitBlock declared as breed variable here -A. (Aug 8, 2012)
@@ -106,8 +111,7 @@ public class BuildPanel
         passBack += "\n";
 
         //TraitBlock's setup code doesn't come from here at all. It comes from breeds -A. (Aug 8, 2012)
-        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots);
-        System.out.println("envt buildPnael " + myEnvts.size());
+        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots, myDiveIns);
         passBack += "\n";
 
         // begin function to go
@@ -127,6 +131,10 @@ public class BuildPanel
         for (EnvtBlock envtBlock : myEnvts) {
             passBack += envtBlock.unPackAsCode();
         }
+        for (DiveInBlock block : myDiveIns) {
+            passBack += block.unPackAsCode();
+        }
+
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
@@ -136,6 +144,13 @@ public class BuildPanel
         }
         passBack += "end\n";
         passBack += "\n";
+
+        for (DiveInBlock block : myDiveIns) {
+
+            passBack += "to-report student-in\n";
+            passBack += block.getDiveInCode();
+            passBack += "\nend\n";
+        }
 
         //new function: to draw - Aditi (jan 17, 2013)
         passBack += "to draw\n";
@@ -243,6 +258,8 @@ public String newSaveAsXML() {
             passBack += breedBlock.declareBreed();
         }
 
+
+
         passBack += "\n";
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
@@ -257,7 +274,7 @@ public String newSaveAsXML() {
         passBack += bgInfo.declareGlobals();
         passBack += "\n";
 
-        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots);
+        passBack += bgInfo.setupBlock(myBreeds, myTraitsNew, myEnvts, myPlots, myDiveIns);
         passBack += "\n";
 
         passBack += "to go\n";
@@ -379,6 +396,19 @@ public String newSaveAsXML() {
         this.validate();
     }
 
+    public void addDiveIn (DiveInBlock block) {
+        block.setBounds(200,
+                0,
+                block.getPreferredSize().width,
+                block.getPreferredSize().height);
+        myDiveIns.add(block);
+        add(block);
+        block.doLayout();
+        block.validate();
+        block.repaint();
+        this.validate();
+    }
+
 
     //make linked list for envt? -A. (sept 8)
     public void addEnvt(EnvtBlock block) {
@@ -479,6 +509,12 @@ public String newSaveAsXML() {
         for (HistogramBlock histoBlock : myHisto) {
             if (histoBlock.children() != null) {
                 procedureCollection.putAll(histoBlock.children());
+            }
+        }
+
+        for (DiveInBlock diveInBlock : myDiveIns) {
+            if (diveInBlock.children() != null) {
+                procedureCollection.putAll(diveInBlock.children());
             }
         }
 
@@ -627,6 +663,11 @@ public String newSaveAsXML() {
     public void removeTrait(TraitBlockNew traitBlock) {
         myTraitsNew.remove(traitBlock);
         remove(traitBlock);
+    }
+
+    public void removeDiveIn (DiveInBlock dBlock) {
+        myDiveIns.remove(dBlock);
+        remove(dBlock);
     }
 
     public String library() {

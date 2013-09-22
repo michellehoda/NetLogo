@@ -33,7 +33,6 @@ public abstract class CodeBlock
     private final int CODEBLOCK_HEIGHT = 27;
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
-    //JLabel nameLabel;
     String code; // From XML
     String processedCode = new String(""); // After replacing placeholders XML
     //private JButton exitButton = new JButton();
@@ -45,6 +44,7 @@ public abstract class CodeBlock
     Map<String, PrettyInput> behaviorInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, PrettyInput> agentInputs = new LinkedHashMap<String, PrettyInput>();
     Map<String, PrettyInput> percentInputs = new LinkedHashMap<String, PrettyInput>();
+    JCharNumberNoSpaceFieldFilter textFilter = new JCharNumberNoSpaceFieldFilter();
     JLabel percentLabel;
     List<CodeBlock> myBlocks = new LinkedList<CodeBlock>();
 
@@ -71,6 +71,8 @@ public abstract class CodeBlock
         removeButtonPanel.add(removeButton);
         removeButton.setBackground(color);
         removeButton.setVisible(false);
+
+        textFilter.setMaxChars(8);
 
         myLayout = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(myLayout);
@@ -326,6 +328,7 @@ public abstract class CodeBlock
 
     public void addInputEnergy(String inputName, String defaultValue) {
         EnergyInput energyInput = new EnergyInput(this);
+        energyInput.setDocument(textFilter);
         energyInput.setName(inputName);
         energyInput.setText(defaultValue);
         energyInputs.put(inputName, energyInput);
@@ -335,6 +338,7 @@ public abstract class CodeBlock
 
     public void addBehaviorInput(String inputName, String defaultValue, String toolTipString) {
         BehaviorInput behaviorInput = new BehaviorInput(this);
+        behaviorInput.setDocument(textFilter);
         behaviorInput.setName(inputName);
         behaviorInput.setText(defaultValue);
         behaviorInput.setToolTipText("<html><font size=\"4\">" + toolTipString + "</font></html>");
@@ -344,6 +348,7 @@ public abstract class CodeBlock
 
     public void addAgentInput(String inputName, String defaultValue) {
         AgentInput agentInput = new AgentInput(this);
+        agentInput.setDocument(textFilter);
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
         agentInputs.put(inputName, agentInput);
@@ -688,6 +693,9 @@ public abstract class CodeBlock
             }
             if (this instanceof EnvtBlock) {
                 ((BuildPanel) parent).removeEnvt((EnvtBlock) this);
+            }
+            if (this instanceof DiveInBlock) {
+                ((BuildPanel) parent).removeDiveIn((DiveInBlock) this);
             }
         }
 

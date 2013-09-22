@@ -31,7 +31,6 @@ public class Envt {
     public Envt(Node envtNode) {
         nameEnvt = envtNode.getAttributes().getNamedItem("envtName").getTextContent();
 
-
         NodeList setupNodes = envtNode.getChildNodes();
         for (int i = 0; i < setupNodes.getLength(); i++) {
             if (setupNodes.item(i).getNodeName() == "ownVar") {

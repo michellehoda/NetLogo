@@ -2,10 +2,7 @@ package org.nlogo.deltatick;
 
 import org.nlogo.api.Shape;
 import org.nlogo.deltatick.dialogs.ShapeSelector;
-import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
-import org.nlogo.deltatick.dnd.JNumberFieldFilter;
-import org.nlogo.deltatick.dnd.PrettierInput;
-import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.OwnVar;
 import org.nlogo.deltatick.xml.Trait;
@@ -92,7 +89,7 @@ public strictfp class BreedBlock
     int curIconIndex;
     Color curColor;
     JNumberFieldFilter numberDocument;
-    JCharNumberFieldFilter pluralDocument;
+    JCharNumberNoSpaceFieldFilter pluralDocument;
 
     // Each breedblock has a species inspector panel
     // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
@@ -120,9 +117,9 @@ public strictfp class BreedBlock
         curIconIndex = 0;
         curColor = Color.GRAY;
         numberDocument = new JNumberFieldFilter();
-        pluralDocument = new JCharNumberFieldFilter();
+        pluralDocument = new JCharNumberNoSpaceFieldFilter();
         numberDocument.setMaxChars(5);
-        pluralDocument.setMaxChars(11);
+        pluralDocument.setMaxChars(8);
         number.setDocument(numberDocument);
         this.plural.setDocument(pluralDocument);
         number.setText(breed.getStartQuant().toString());
@@ -379,6 +376,8 @@ public strictfp class BreedBlock
                                 " " + startValue + " " + endValue + "\n";
 
                         code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
+                        code += "set color " + colorName + variation.color;
+                        System.out.println("BreedBLock " + block.getVarColor());
                         if (traitName.equalsIgnoreCase("body-size")) {
                             code += "set size body-size\n";
                         }
@@ -393,7 +392,6 @@ public strictfp class BreedBlock
             }// if
         }
         return code;
-
     }
 
     public String setupTraitLabels() {
@@ -407,7 +405,6 @@ public strictfp class BreedBlock
 //            code += setTraitLabelCode();
 //            code += "]\n";
 //        }
-
         return code;
     }
 
@@ -441,8 +438,6 @@ public strictfp class BreedBlock
                 }
             }
             for (TraitBlockNew tBlock : myTraitBlocks) {    // setting size of turtles if "body-size" is a trait (April 11, 2013)
-                System.out.println(tBlock.getTraitName());
-                System.out.println(tBlock.getMyTraitName());
                 if (tBlock.getMyTraitName().equalsIgnoreCase("body-size")) {
                     code += "set size body-size\n";
                 }
@@ -608,6 +603,7 @@ public strictfp class BreedBlock
         rectPanel.add(label);
         rectPanel.validate();
     }
+
     public void showRectPanel() {
         if (removedRectPanel) {
         //rectPanel.setVisible(true);
@@ -669,31 +665,11 @@ public strictfp class BreedBlock
         return breedShapeButton;
     }
 
-    public class InspectSpeciesButton extends JButton {
-        BreedBlock myParent;
-
-        public InspectSpeciesButton(BreedBlock bBlock) {
-            this.myParent = bBlock;
-            setPreferredSize(new Dimension(30, 30));
-            try {
-            Image img = ImageIO.read(getClass().getResource("/images/magnify.gif"));
-            setIcon(new ImageIcon(img));
-            }
-            catch (IOException ex) {
-             }
-            setForeground(java.awt.Color.gray);
-            setBackground(color);
-            //setBorderPainted(true);
-            setMargin(new java.awt.Insets(1, 1, 1, 1));
-            setToolTipText("Edit species");
-        }
-    }
 
     // when clicks on shape selection -a.
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         ShapeSelector myShapeSelector = new ShapeSelector(parentFrame, allShapes(), this, curIconIndex, curColor);
         myShapeSelector.setVisible(true);
-        //System.out.println(myShapeSelector.getChosenValue());
         if (myShapeSelector.getChosenValue() >= 0) {
             ShapeIcon shapeIcon = new ShapeIcon(myShapeSelector.getShape());
             shapeIcon.setColor(myShapeSelector.getSelectedColor());
@@ -708,7 +684,8 @@ public strictfp class BreedBlock
     String[] allShapes() {
         String[] defaultShapes =
                 org.nlogo.util.Utils.getResourceAsStringArray
-                        ("/system/defaultShapes.txt");
+                        ("/system/defaultShapes.txt");  //default NetLogo shapes shapes (Sept 19, 2013)
+                        //("/system/deltatickShapes.txt");      //DeltaTick shapes with animate objects (Sept 19, 2013)
         String[] libraryShapes =
                 org.nlogo.util.Utils.getResourceAsStringArray
                         ("/system/libraryShapes.txt");
@@ -734,6 +711,27 @@ public strictfp class BreedBlock
         }
         return "";
     }
+
+    public class InspectSpeciesButton extends JButton {
+        BreedBlock myParent;
+
+        public InspectSpeciesButton(BreedBlock bBlock) {
+            this.myParent = bBlock;
+            setPreferredSize(new Dimension(30, 30));
+            try {
+            Image img = ImageIO.read(getClass().getResource("/images/magnify.gif"));
+            setIcon(new ImageIcon(img));
+            }
+            catch (IOException ex) {
+             }
+            setForeground(java.awt.Color.gray);
+            setBackground(color);
+            //setBorderPainted(true);
+            setMargin(new java.awt.Insets(1, 1, 1, 1));
+            setToolTipText("Edit species");
+        }
+    }
+
 
     public Breed myBreed() {
         return breed;

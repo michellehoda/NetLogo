@@ -20,6 +20,7 @@ public class Trait {
     String traitName = new String();
     String setupCode = new String();
     String setupReporter = new String();
+    String color = new String();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
     String message = new String();
     String mutateCode = new String();
@@ -34,6 +35,7 @@ public class Trait {
     public Trait(Trait trait) {
         traitName = new String(trait.traitName);
         setupCode = new String(trait.setupCode);
+        color = new String(trait.color);
         setupReporter = new String(trait.setupReporter);
         message = new String(trait.message);
         variationHashMap.clear();
@@ -56,8 +58,9 @@ public class Trait {
                 Node variationNode = traitNodes.item(i);
                 String name = variationNode.getAttributes().getNamedItem("name").getTextContent();
                 String value = variationNode.getAttributes().getNamedItem("value").getTextContent();
+                String color = variationNode.getAttributes().getNamedItem("color").getTextContent();
                 String setupNumber = variationNode.getAttributes().getNamedItem("setupNumber").getTextContent();
-                Variation variation = new Variation(traitName, name, value, Integer.parseInt(setupNumber));
+                Variation variation = new Variation(traitName, name, value, color, Integer.parseInt(setupNumber));
                 variationHashMap.put(name, variation);
             }
             if (traitNodes.item(i).getNodeName() == "setupCode") {
@@ -78,6 +81,10 @@ public class Trait {
 
     public String getSetupCode() {
         return setupCode;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public String getSetupReporter() {
