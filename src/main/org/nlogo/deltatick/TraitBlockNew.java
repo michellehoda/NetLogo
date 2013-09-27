@@ -24,7 +24,7 @@ public class TraitBlockNew
 {
     JTextField textName;
     ArrayList<String> varList;
-    LinkedList<Variation> variationList = new LinkedList<Variation>();
+    //LinkedList<Variation> variationList = new LinkedList<Variation>();
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     BreedBlock myBreedBlock = null;
     String traitName;
@@ -34,14 +34,14 @@ public class TraitBlockNew
     transient Trait trait;
     transient TraitState traitState;
     transient Frame parentFrame;
-    Variation variation;
-    JList TraitsList;
+    //Variation variation;
+    //JList TraitsList;
     HashMap<String, String> varPercentage;
-    HashMap<String, String> traitNumVar = new HashMap<String, String>();
+    //HashMap<String, String> traitNumVar = new HashMap<String, String>();
     HashMap<String, Integer> varNum = new HashMap<String, Integer>();
 
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
-    HashMap<String, String> variationNamesValues = new HashMap<String, String>();
+    //HashMap<String, String> variationNamesValues = new HashMap<String, String>();
 
     public TraitBlockNew (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
         super (traitState.getNameTrait(), ColorSchemer.getColor(4));

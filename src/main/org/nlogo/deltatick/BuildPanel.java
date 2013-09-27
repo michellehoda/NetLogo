@@ -34,14 +34,13 @@ public class BuildPanel
     // uniformly named methods to get, remove and insert an element at the beginning and end of the list. -a.
 
     List<BreedBlock> myBreeds = new LinkedList<BreedBlock>();
-    //List<TraitBlock> myTraits = new LinkedList<TraitBlock>();
     List<TraitBlockNew> myTraitsNew = new LinkedList<TraitBlockNew>();
     List<PlotBlock> myPlots = new LinkedList<PlotBlock>();
     List<HistogramBlock> myHisto = new LinkedList<HistogramBlock>();
+    List<MonitorBlock> myMonitors = new LinkedList<MonitorBlock>();
     List<EnvtBlock> myEnvts = new LinkedList<EnvtBlock>();
     List<DiveInBlock> myDiveIns = new LinkedList<DiveInBlock>();
     ModelBackgroundInfo bgInfo = new ModelBackgroundInfo();
-    //ModelBackgroundInfo2 bgInfo2 = new ModelBackgroundInfo2();
     JLabel label;
 
     static int plotNumber = 0;
@@ -88,7 +87,6 @@ public class BuildPanel
             if ( myTraitsNew.size() > 0 ) {
                 for ( TraitBlockNew traitBlock : myTraitsNew ) {
                     if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {      // TODO check if works March 8, 2013
-                        //allTraits.add(breedBlock.plural() + "-" + traitBlock.getName());
                         allTraits.add(traitBlock.getName());
                     }
                 }
@@ -135,13 +133,12 @@ public class BuildPanel
             passBack += block.unPackAsCode();
         }
 
+
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
         }
         passBack += "tick\n";
-        if (myHisto.size() > 0) {
-            passBack += "make-histo\n";
-        }
+
         passBack += "end\n";
         passBack += "\n";
 
@@ -170,20 +167,6 @@ public class BuildPanel
             passBack += "end\n";
         }
 
-        if (myHisto.size() > 0) {
-            passBack += "\n\n";
-
-            for (HistogramBlock hblock : myHisto) {
-                passBack += "to make-histo\n";
-                passBack += hblock.unPackAsCode();
-                for (QuantityBlock qBlock : hblock.getMyBlocks()) {
-                    passBack += qBlock.unPackAsCommand();
-                }
-                //passBack += hblock.getMyBlocks().
-            }
-            passBack += "end\n";
-        }
-
         return passBack;
     }
 
@@ -200,51 +183,6 @@ public String newSaveAsXML() {
 
     }
 
-//        passBack += "\n";
-//        for (BreedBlock breedBlock : myBreeds) {
-//            passBack += breedBlock.breedVars();
-//        }
-//
-//        for (TraitBlock traitBlock : myTraits) {
-//            passBack += traitBlock.getTraitName();
-//        }
-//
-//        passBack += "\n";
-//
-//        passBack += bgInfo.declareGlobals();
-//        passBack += "\n";
-//
-//        passBack += bgInfo.setupBlock(myBreeds, myTraits, myEnvts, myPlots);
-//        passBack += "\n";
-//
-//        passBack += "to go\n";
-//        passBack += bgInfo.updateBlock(myBreeds, myEnvts);
-//
-//        for (BreedBlock breedBlock : myBreeds) {
-//            passBack += breedBlock.unPackAsCode();
-//        }
-//        passBack += "tick\n";
-//        if (myPlots.size() > 0) {
-//            passBack += "do-plotting\n";
-//        }
-//        passBack += "end\n";
-//        passBack += "\n";
-//
-//        passBack += "to draw\n";
-//        passBack += bgInfo.drawCode() + "\n";
-//        passBack += "end\n";
-//
-//        passBack += unPackProcedures();
-//        passBack += "\n";
-//
-//        if (myPlots.size() > 0) {
-//            passBack += "\n\n";
-//            passBack += "to do-plotting\n";
-//            for (PlotBlock plot : myPlots) {
-//                passBack += plot.unPackAsCode();
-//            }
-//            passBack += "end\n";
-//        }
     passBack += "\n</model>";
     return passBack;
     }
@@ -378,6 +316,20 @@ public String newSaveAsXML() {
         // do I need a list of OperatorBlocks myOperators.add(oBlock);
     }
 
+    public void addMonitor(MonitorBlock mBlock) {
+        //mBlock.setPlotName("plot " + plotNumber);
+        myMonitors.add(mBlock);
+        mBlock.setBounds(200,
+                0,
+                mBlock.getPreferredSize().width,
+                mBlock.getPreferredSize().height);
+        add(mBlock);
+        mBlock.doLayout();
+        mBlock.validate();
+        mBlock.repaint();
+        this.validate();
+    }
+
 
     public void addPlot(PlotBlock block) {
         plotNumber++;
@@ -424,21 +376,7 @@ public String newSaveAsXML() {
 
 
     }
-//    //UNUSED
-//    public void addPlot(String name, int x, int y) {
-//        PlotBlock newPlot = new PlotBlock();
-//        myPlots.add(newPlot);
-//        newPlot.setPlotName(name);
-//        newPlot.setBounds(400,
-//                0,
-//                newPlot.getPreferredSize().width,
-//                newPlot.getPreferredSize().height);
-//        newPlot.setLocation(x, y);
-//        add(newPlot);
-//        newPlot.doLayout();
-//        newPlot.validate();
-//        newPlot.repaint();
-//    }
+
 
 
     // Collection<typeObject> object that groups multiple elements into a single unit -A. (sept 8)
@@ -460,16 +398,19 @@ public String newSaveAsXML() {
         return check;
     }
 
-//    public PlotBlock getMyPlotBlock(String name) {
-//        for (PlotBlock plotBlock : this.getMyPlots()) {
-//            if (plotBlock.getName().equalsIgnoreCase(name)) {
-//                return plotBlock;
-//            }
-//        }
-//    }
+    public boolean monitorExists(String name) {
+        boolean check = false;
+        return check;
+    }
+
+
 
     public List<HistogramBlock> getMyHisto() {
         return myHisto;
+    }
+
+    public List<MonitorBlock> getMyMonitors() {
+        return myMonitors;
     }
 
     public TraitBlockNew getMyTrait(String traitName) {
@@ -509,6 +450,12 @@ public String newSaveAsXML() {
         for (HistogramBlock histoBlock : myHisto) {
             if (histoBlock.children() != null) {
                 procedureCollection.putAll(histoBlock.children());
+            }
+        }
+
+        for (MonitorBlock mBlock : myMonitors) {
+            if (mBlock.children() != null) {
+                procedureCollection.putAll(mBlock.children());
             }
         }
 
@@ -572,6 +519,7 @@ public String newSaveAsXML() {
         myBreeds.clear();
         myPlots.clear();
         myHisto.clear();
+        myMonitors.clear();
         //myTraits.clear();
         myTraitsNew.clear();
         myEnvts.clear();

@@ -29,7 +29,9 @@ object Splash {
   class MyIconHolder extends org.nlogo.swing.IconHolder(icon) {
     val message = {
       val date = Version.buildDate
-      val version = "Version " + Version.versionNumberOnly
+      val version = Version.versionNumberOnly
+      //Aditi: commented out (Sept 25, 2013)
+      //val version = "Version " + Version.versionNumberOnly
       // hopefully avoid confusion where semi-devel people report bugs in versions that aren't
       // finished yet -- don't foreground the version number to them - ST 2/27/06
       if(date.startsWith("INTERIM DEVEL BUILD"))

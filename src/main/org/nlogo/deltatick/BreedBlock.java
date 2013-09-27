@@ -377,7 +377,6 @@ public strictfp class BreedBlock
 
                         code += "foreach " + traitName + i + " [ ask ? [ set " + traitName + " " + variation.value + " \n";
                         code += "set color " + colorName + variation.color;
-                        System.out.println("BreedBLock " + block.getVarColor());
                         if (traitName.equalsIgnoreCase("body-size")) {
                             code += "set size body-size\n";
                         }

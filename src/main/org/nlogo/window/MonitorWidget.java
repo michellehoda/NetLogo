@@ -235,7 +235,8 @@ public strictfp class MonitorWidget
     chooseDisplayName();
   }
 
-  public void wrapSource(String innerSource) {
+    //code for reporter in monitor (Aditi Sept 25, 2013)
+    public void wrapSource(String innerSource) {
     if (innerSource.trim().equals("")) {
       source(null, "", null);
       halt();

@@ -36,16 +36,15 @@ public class HistoDropTarget
                     return false;
                 }
                 else {
-
                 ((PlotBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
+                ((QuantityBlock) o).showColorButton();
                 ((QuantityBlock) o).validate();
                 block.validate();
                 return true;
                 }
             }
             else {
-                // String message = new String(((QuantityBlock) o).getName() + " is a block for line graphs, not histograms.");
                 String message = new String("Oops! You dragged a block for line graphs. You can only add bar graphs here.");
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
             }

@@ -33,8 +33,8 @@ public strictfp class FileMenu
     this.app = app;
     this.modelSaver = modelSaver;
     this.appletSaver = appletSaver;
-    addMenuItem('N', new NewAction());
-    addMenuItem('O', new OpenAction());
+    addMenuItem("To save model, click on Save Model");
+    /*addMenuItem('O', new OpenAction());
     addMenuItem('M', new ModelsLibraryAction());
     addSeparator();
     addMenuItem('S', new SaveAction());
@@ -67,11 +67,15 @@ public strictfp class FileMenu
     if (!System.getProperty("os.name").startsWith("Mac")) {
       addSeparator();
       addMenuItem('Q', new QuitAction());
+
     }
+    */
+
     // initialize here, unless there's a big problem early on in the
     // initial load process it'll get initialize properly below
     // maybe this fixes Nigel Gilbert's bug. maybe. ev 1/30/07
     savedVersion = org.nlogo.api.Version.version();
+
   }
 
   ///

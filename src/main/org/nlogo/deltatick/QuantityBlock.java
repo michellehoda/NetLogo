@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.window.MonitorWidget;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,12 +12,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Map;
-//import org.nlogo.deltatick.xml.Breed;
 
 public strictfp class QuantityBlock
         extends CodeBlock {
 
-    transient JPanel penColorButton;
+    //transient JPanel penColorButton;
     transient JFrame parent;
     Color penColor = Color.black;
     boolean histo = false;
@@ -39,9 +39,7 @@ public strictfp class QuantityBlock
     boolean isRunResult = false;
 
     JLabel image;
-    //Image histoImage;
     ImageIcon histoImageIcon;
-    //Image lineImage;
     ImageIcon lineImageIcon;
 
 
@@ -60,9 +58,7 @@ public strictfp class QuantityBlock
 
         colorButton = new ColorButton(parent, this);  //commented out for interviewing Gabriel (March 9, 2013)
         colorButton.setBackground(color);
-        //label.add(colorButton);
         makeQuantityBlockLabel();
-        //updateLabelImage();
         validate();
     }
 
@@ -105,9 +101,7 @@ public strictfp class QuantityBlock
                 label.add(byLabel);
             }
         }
-
         label.add(input);
-
     }
 
     // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
@@ -147,16 +141,23 @@ public strictfp class QuantityBlock
             }
             passBack += "]";
         }
-        passBack += "\n";
-        passBack += "report " + code;
-        passBack += "\n";
-        passBack += "end";
-        passBack += "\n";
-        passBack += "\n";
+        passBack += "\nreport " + code + "\nend\n";
         }
 
         if (parent instanceof HistogramBlock) {
             passBack = "" ;
+        }
+
+        if (parent instanceof MonitorBlock) {
+            passBack += "to-report " + getName();
+            if (inputs.size() > 0) {
+                passBack += " [ ";
+                for (String input : inputs.keySet()) {
+                    passBack += input + " ";
+                }
+                passBack += "]";
+            }
+            passBack += "\nreport " + code + "\nend\n";
         }
 
         return passBack;
@@ -167,33 +168,12 @@ public strictfp class QuantityBlock
         String passBack = "";
         Container parent = getParent();
 
-        /* not being used because HistogramBlock is not used any more -Aditi (Jan 15, 2013)
-        if (parent instanceof HistogramBlock) {
-            passBack += "set-plot-pen-mode 1 \n";
-
-            for (Map.Entry<String, JTextField> entry : inputs.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("breed-type")) {
-                    population = entry.getValue().getText().toString();
-                }
-                if (entry.getKey().equalsIgnoreCase("trait")) {
-                    variable = entry.getValue().getText().toString();
-                }
-            }
-            //passBack += "set-histogram-num-bars " + bars + "\n";
-            //passBack += "set-plot-x-range 0 max " + getName() + " ";
-            //passBack += "plotxy" + x + y + "\n";
-            passBack += "histogram [ " + variable + " ] of " + population ;
-            passBack += "\n";
-        }
-        */
-
         if (parent instanceof PlotBlock) {
             //passBack += "  set-current-plot-pen \"" + this.getName() + "\" \n"; // commented 20130319
             passBack += "\tset-current-plot-pen \"" + this.getPenName() + "\" \n";
             if (colorButton.gotColor() == true) {
                 passBack += "\tset-plot-pen-color " + colorButton.getSelectedColorName() + "\n";
             }
-
             if (((PlotBlock) parent).isHisto == true) {
                 passBack += "\tset-plot-pen-mode 1 \n";
                 for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
@@ -236,6 +216,22 @@ public strictfp class QuantityBlock
         return passBack;
     }
 
+    public String getMonitorCode() {
+        String code = new String();
+        if (getHisto() == false) {
+            code += getName() + " ";
+            if (inputs.size() > 0) {
+                for (JTextField input : inputs.values()) {
+                    code += input.getText() + " ";
+                }
+            }
+        }
+        else if (getHisto() == true) {
+            //insert code
+        }
+
+        return code;
+    }
 
     public Map<String, PrettyInput> getInputs() {
         return inputs;
@@ -244,7 +240,7 @@ public strictfp class QuantityBlock
     public void setLabelImage() {
         try {
             image = new JLabel();
-              //trying new stuff here to make this work
+
             image.setTransferHandler(new TransferHandler("button"));
             image.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent evt) {
@@ -273,22 +269,14 @@ public strictfp class QuantityBlock
              }
     }
 
-    public void updateLabelImage() {
-        try {
-            histoImageIcon = new ImageIcon(ImageIO.read(getClass().getResource("/images/deltatick/bar-graph.png")));
-        if (histo == true) {
-            image.setIcon(histoImageIcon);
-            image.revalidate();
-            }
-        }
-        catch (IOException ex) {
-        }
+    public void addColorButton() {
+        label.add(colorButton);
+        colorButton.setVisible(false);
         validate();
     }
 
-    public void addColorButton() {
-        label.add(colorButton);
-        validate();
+    public void showColorButton() {
+        colorButton.setVisible(true);
     }
 
     public void setRunResult(boolean runResult) {
@@ -330,6 +318,14 @@ public strictfp class QuantityBlock
     }
     public String getYLabel() {
         return yLabel;
+    }
+
+    public String getHistoTrait() {
+        return inputs.get("trait").getText();
+    }
+
+    public String getHistoBreed() {
+        return inputs.get("breed-type").getText();
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {

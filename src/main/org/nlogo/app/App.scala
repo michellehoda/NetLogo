@@ -282,6 +282,7 @@ class App extends
   def tabs = _tabs
   var dirtyMonitor:DirtyMonitor = null // accessed from FileMenu - ST 2/26/04
   var helpMenu:HelpMenu = null
+  //Aditi (Sept 26, 2013)
   var fileMenu: FileMenu = null
   var monitorManager:AgentMonitorManager = null
   var aggregateManager: AggregateManagerInterface = null
@@ -410,14 +411,16 @@ class App extends
 
     fileMenu = pico.getComponent(classOf[FileMenu])
     val menuBar = new JMenuBar(){
+      //Commented out options on file menu (Aditi, Sept 26, 2013)
       add(fileMenu)
-      add(new EditMenu(App.this))
+      /*add(new EditMenu(App.this))
       add(pico.getComponent(classOf[ToolsMenu]))
       add(new ZoomMenu(App.this))
       add(tabs.tabsMenu)
+      */
     }
     // a little ugly we have to typecast here, but oh well - ST 10/11/05
-    helpMenu = new MenuBarFactory().addHelpMenu(menuBar).asInstanceOf[HelpMenu]
+    //helpMenu = new MenuBarFactory().addHelpMenu(menuBar).asInstanceOf[HelpMenu]
     frame.setJMenuBar(menuBar)
 
     org.nlogo.window.RuntimeErrorDialog.init(frame)

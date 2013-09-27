@@ -139,9 +139,9 @@ public strictfp class BehaviorBlock
         // Checking carryingCapacitySlider
         if (isMutate) {
             // This is a reproduce behavior block
-            String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
+            //String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
             passBack += "\n";
-            passBack += "\tif count breedname  < runresult (word breedname \"-carrying-capacity\") [\n";
+            passBack += "\tif count breedname  < runresult (word \"max-number-of-\" breedname) [\n";
             //passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
 // Commented May 27, 2013 for OOJH Activity1
 //            passBack += "\t\thatch 1 [ " + "set age 0 fd 1 rt random-float 360\n";

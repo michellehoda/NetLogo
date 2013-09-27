@@ -1,19 +1,26 @@
 package org.nlogo.deltatick.dnd;
 
-import org.nlogo.deltatick.*;
+import org.nlogo.deltatick.CodeBlock;
+import org.nlogo.deltatick.MonitorBlock;
+import org.nlogo.deltatick.PlotBlock;
+import org.nlogo.deltatick.QuantityBlock;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.*;
 import java.io.IOException;
 
-public class PlotDropTarget
+/**
+ * Created by IntelliJ IDEA.
+ * User: aditiwagh
+ * Date: 9/25/13
+ * Time: 1:45 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class MonitorDropTarget
         extends DropTarget {
 
-    public PlotDropTarget(PlotBlock block) {
+    public MonitorDropTarget(MonitorBlock block) {
         super(block);
     }
 
@@ -22,10 +29,18 @@ public class PlotDropTarget
         Object o = transferable.getTransferData(CodeBlock.quantityBlockFlavor);
 
         if (o instanceof QuantityBlock) {
+            ((MonitorBlock) block).removeQuantityblockPanel();
+                addCodeBlock((QuantityBlock) o);
+                ((QuantityBlock) o).validate();
+                ((QuantityBlock) o).repaint();
+                block.validate();
+                return true;
+        }
+        //don't need to distinguish whether histoblock or plotblock here -Aditi (Sept, 25, 2013)
+        /*if (o instanceof QuantityBlock) {
             if (((QuantityBlock) o).getHisto() == false) {
                 ((PlotBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
-                ((QuantityBlock) o).showColorButton();
                 ((QuantityBlock) o).validate();
                 ((QuantityBlock) o).repaint();
                 block.validate();
@@ -37,7 +52,7 @@ public class PlotDropTarget
                 JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
-        }
+        }*/
         else {
             String message = new String("Oops! You can only add orange blocks here!");
             JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);

@@ -62,10 +62,12 @@ public class DeltaTickTab
 
     JButton loadLibrary;
     JButton addBreed;
-    //JButton addDiveIn;
+    JButton addDiveIn;
     JButton addPlot;
     JButton addHisto;
+    JButton addMonitor;
     JButton addTrackSpecies;
+    JMenuBar addTrackSpeciesMenu;
     JButton saveModelButton;
     JButton openModelButton;
     JButton addClear;
@@ -89,6 +91,7 @@ public class DeltaTickTab
     HashMap<String, WidgetWrapper> carryingCapacitySliderWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> chooserWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> monitorWidgets = new HashMap<String, WidgetWrapper>();
 
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
     private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
@@ -248,11 +251,10 @@ public class DeltaTickTab
                         openLibrary(fileName);
                     }
                 }
-
-//		new javax.swing.AbstractAction( "Load Behavior Library" ) {
-//            public void actionPerformed( java.awt.event.ActionEvent e ) {
-//                openLibrary(null);
-//            }
+		/*new javax.swing.AbstractAction( "Load Behavior Library" ) {
+            public void actionPerformed( java.awt.event.ActionEvent e ) {
+                openLibrary(null);
+            }*/
         };
 
     public void openLibrary(String  fileName) {
@@ -283,9 +285,10 @@ public class DeltaTickTab
         		libraryHolder.setTabName(currentLibraryName);
 
 
-        		//addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
+        		addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
                 addPlot.setEnabled(true);
         		addHisto.setEnabled(true);
+                addMonitor.setEnabled(true);
         		addBreed.setEnabled(true);
         		addClear.setEnabled(true);
                 saveModelButton.setEnabled(true);
@@ -299,10 +302,10 @@ public class DeltaTickTab
 
         		deltaTickTab.contentPanel.validate();
         		count ++;
-        	//}
+        	/*//}
         	//else{
         	//	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-        	//}
+        	//}*/
         }
          else if (count > 0 ) {
 
@@ -313,11 +316,11 @@ public class DeltaTickTab
             //this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
             libraryReader.openLibrary(fileName);
 
-//            if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
-//            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-//            }
+           /* if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
+            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
+            }
 
-//            currentLibraryName = buildPanel.getBgInfo().getLibrary();
+            currentLibraryName = buildPanel.getBgInfo().getLibrary();*/
             deltaTickTab.contentPanel.validate();
          }
 
@@ -335,34 +338,32 @@ public class DeltaTickTab
 
                 // if more than 1 breed available in XML -A. (oct 5)
                 //Commented this out because I'm not using breedTypeSelector anymore -Aditi (March 31, 2013)
-//                if( buildPanel.availBreeds().size() > 1 ) {
-//                    breedTypeSelector.showMe(buildPanel.getBgInfo());
-//                    if (breedTypeSelector.typedBreedType() != null) {
-//                        Breed breed = buildPanel.getBgInfo().getBreeds().get(0);
-//                        newBreed = new BreedBlock( breed, breedTypeSelector.typedBreedType(), workspace.getFrame() );
-//                        buildPanel.addBreed(newBreed);
-//                        userInput.addBreed(newBreed.plural());
-//                        newBreed.getParent().setComponentZOrder(newBreed, 0 );
-//                        new BreedDropTarget(newBreed, deltaTickTab);
-//                        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-//                    }
-//                }
-//                    else if( breedTypeSelector.selectedBreedType() != null ) {
-//
-//                        for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
-//                            if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
-//                                newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
-//
-//                                buildPanel.addBreed(newBreed);
-//                                userInput.addBreed(newBreed.plural());
-//                                newBreed.getParent().setComponentZOrder(newBreed, 0 );
-//                                new BreedDropTarget(newBreed, deltaTickTab);
-//                                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
-//                            }
-//                        }
-//                } else {
+/*                if( buildPanel.availBreeds().size() > 1 ) {
+                    breedTypeSelector.showMe(buildPanel.getBgInfo());
+                    if (breedTypeSelector.typedBreedType() != null) {
+                        Breed breed = buildPanel.getBgInfo().getBreeds().get(0);
+                        newBreed = new BreedBlock( breed, breedTypeSelector.typedBreedType(), workspace.getFrame() );
+                        buildPanel.addBreed(newBreed);
+                        userInput.addBreed(newBreed.plural());
+                        newBreed.getParent().setComponentZOrder(newBreed, 0 );
+                        new BreedDropTarget(newBreed, deltaTickTab);
+                        newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+                    }
+                }
+                    else if( breedTypeSelector.selectedBreedType() != null ) {
 
+                        for( Breed breed : buildPanel.getBgInfo().getBreeds() ) {
+                            if (breed.plural()  == breedTypeSelector.selectedBreedType()) {
+                                newBreed = new BreedBlock( breed, breed.plural(), workspace.getFrame() );
 
+                                buildPanel.addBreed(newBreed);
+                                userInput.addBreed(newBreed.plural());
+                                newBreed.getParent().setComponentZOrder(newBreed, 0 );
+                                new BreedDropTarget(newBreed, deltaTickTab);
+                                newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
+                            }
+                        }
+                } else {*/
             }
                 //newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
             //}
@@ -583,6 +584,17 @@ public class DeltaTickTab
         return newPlotBlock;
     }
 
+    public MonitorBlock makeMonitorBlock() {
+        MonitorBlock monitorBlock = new MonitorBlock();
+        buildPanel.addMonitor(monitorBlock);
+        new MonitorDropTarget(monitorBlock);
+        monitorBlock.getParent().setComponentZOrder(monitorBlock, 0);
+        monitorBlock.validate();
+        contentPanel.validate();
+        getParent().repaint();
+        return monitorBlock;
+    }
+
     private final javax.swing.Action addPlotAction =
             new javax.swing.AbstractAction( "Add Line Graph" ) {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
@@ -595,6 +607,13 @@ public class DeltaTickTab
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     // histogram, so parameter is true
                     makePlotBlock(true);
+                }
+            };
+
+    private final Action addMonitorAction =
+            new AbstractAction( "Add Monitor") {
+                public void actionPerformed ( ActionEvent e ) {
+                    makeMonitorBlock();
                 }
             };
 
@@ -657,7 +676,6 @@ public class DeltaTickTab
         DiveInDropTarget diveInDropTarget = new DiveInDropTarget(diveInBlock);
         buildPanel.addDiveIn( diveInBlock );
         buildPanel.removeRect();
-        //newPlotBlock.getParent().setComponentZOrder(newPlotBlock, 0 );
 
         diveInBlock.validate();
         contentPanel.validate();
@@ -764,9 +782,7 @@ public class DeltaTickTab
     };
 
     public void saveModel(File modelFile) {
-        //System.out.println("del " + buildPanel.newSaveAsXML());
         deltaTickModelParser.saveModel(modelFile);
-
     }
 
     public void openModel(File modelFile) {
@@ -790,7 +806,6 @@ public class DeltaTickTab
             button.displayName("setup");
             button.wrapSource("setup");
         }
-
         org.nlogo.window.Widget goWidget = interfacePanel.makeWidget("BUTTON",false);
         interfacePanel.addWidget(goWidget, 60, 0, true, false);
 
@@ -802,33 +817,31 @@ public class DeltaTickTab
             button.setForeverOn();
         }
 
-
+      /*
             //Commented out because I don't want "draw" and "envtChooser" any more -Aditi (March 9, 2013)
-//        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-//            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
-//            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
-//                org.nlogo.window.ButtonWidget button =
-//                    (org.nlogo.window.ButtonWidget) drawWidget;
-//                button.displayName("draw");
-//                button.wrapSource("draw");
-//                button.setForeverOn();
-//
-//        }
-//
-//        org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
-//        interfacePanel.addWidget(envtChooserWidget, 0, 100, true, false);
-//        //org.nlogo.window.ButtonWidget buttonWidget = interface
-//        if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
-//          org.nlogo.window.ChooserWidget chooser =
-//              (org.nlogo.window.ChooserWidget) envtChooserWidget;
-//            chooser.displayName("environment");
-//            chooser.nameWrapper("environment");
-//            LogoListBuilder choicesList = new LogoListBuilder();
-//            choicesList.add("grass");
-//            choicesList.add("water");
-//            chooser.setChoices(choicesList.toLogoList());
-//
-//        }
+        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
+            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
+            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
+                org.nlogo.window.ButtonWidget button =
+                    (org.nlogo.window.ButtonWidget) drawWidget;
+                button.displayName("draw");
+                button.wrapSource("draw");
+                button.setForeverOn();
+        }
+        org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
+        interfacePanel.addWidget(envtChooserWidget, 0, 100, true, false);
+        //org.nlogo.window.ButtonWidget buttonWidget = interface
+        if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
+          org.nlogo.window.ChooserWidget chooser =
+              (org.nlogo.window.ChooserWidget) envtChooserWidget;
+            chooser.displayName("environment");
+            chooser.nameWrapper("environment");
+            LogoListBuilder choicesList = new LogoListBuilder();
+            choicesList.add("grass");
+            choicesList.add("water");
+            chooser.setChoices(choicesList.toLogoList());
+        }
+      */
             interfacePanel.clearNewWidget();
             interfaceCount++;
         }
@@ -838,11 +851,9 @@ public class DeltaTickTab
 
 
     public void populateMutationSlider() {
-        //System.out.println("populateMutationSlider()");
         boolean putNoteWidget = false;
-        //interfaceSliderCount = 0;
+
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            //System.out.println("Breedblock: " + bBlock.getName());
             if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
@@ -862,9 +873,7 @@ public class DeltaTickTab
                     interfacePanel.clearNewWidget();
                     interfaceSliderCount++;
                 }
-
             }
-
             revalidate();
         }
         // Clear the sliderValuesHashMap
@@ -880,7 +889,6 @@ public class DeltaTickTab
             //noteWidget.validate();
             noteWidgets.put("MutationNote", widgetw);
         }
-        //System.out.println("interfaceSliderCount = " + interfaceSliderCount);
     }
 
     public void removeMutationSlider() {
@@ -907,7 +915,6 @@ public class DeltaTickTab
     }
 
     public void populateCarryingCapacitySlider() {
-
         // First remove carrying capacity sliders
         for (Map.Entry<String, WidgetWrapper> entry : carryingCapacitySliderWidgets.entrySet()) {
             String p = entry.getKey();
@@ -926,7 +933,7 @@ public class DeltaTickTab
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
             if (bBlock.getReproduceUsed()) {
                 // Put the slider
-                String sliderName = bBlock.plural() + "-" + "carrying-capacity";
+                String sliderName = "max-number-of-" + bBlock.plural();
                 SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));
 
                 sliderWidget.minimumCode_$eq(CARRYING_CAPACITY_SLIDER_MIN_VALUE.toString());
@@ -950,7 +957,6 @@ public class DeltaTickTab
     }
 
     public void populateLabelChooser() {
-
         // Remove chooserWidget
         for (WidgetWrapper w : chooserWidgets.values()) {
             interfacePanel.remove(w);
@@ -965,7 +971,6 @@ public class DeltaTickTab
                 labelOptions += "\"" + tBlock.getTraitName() + "\"";
                 putChooser = true;
             }
-
             if (putChooser) {
                 ChooserWidget chooserWidget = ((ChooserWidget) interfacePanel.makeWidget("CHOOSER", false));
                 String chooserWidgetName = new String(bBlock.plural() + "-label");
@@ -977,37 +982,78 @@ public class DeltaTickTab
 
                 chooserWidgets.put(chooserWidgetName, ww);
             }
-
         }
         interfacePanel.clearNewWidget();
+    }
+
+    public void populateMonitors() {
+        int MonitorCount = 0;
+        try {
+            for (MonitorBlock mBlock : buildPanel.getMyMonitors()) {
+                int x = 100;
+                int y = 200;
+                for (QuantityBlock qBlock : mBlock.getMyBlocks()) {
+
+                    if (qBlock.getHisto() == true) {
+                        String trait = qBlock.getHistoTrait();
+                        String breed = qBlock.getHistoBreed();
+                        ArrayList<String> variations = new ArrayList<String>();
+                        for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
+                            if (tBlock.getName().equalsIgnoreCase(trait)) {
+                                for (Variation var : tBlock.getVariationHashMap().values()) {
+                                    String code = "";
+                                    code += "count " + breed + " with [" + trait + " = " + var.value + "]";
+                                    org.nlogo.window.MonitorWidget monitorWidget = ((MonitorWidget) interfacePanel.makeWidget("MONITOR", false));
+                                    String monitorWidgetName = new String("name");
+                                    monitorWidget.name(monitorWidgetName);
+                                    monitorWidget.wrapSource(code);
+
+
+                                    WidgetWrapper ww = interfacePanel.addWidget(monitorWidget, x, y, true, false);
+                                    y = y + 10;
+                                }
+                            }
+                        }
+                    }
+                    else if (qBlock.getHisto() == false) {
+                        org.nlogo.window.MonitorWidget monitorWidget = ((MonitorWidget) interfacePanel.makeWidget("MONITOR", false));
+                        String monitorWidgetName = new String("name");
+                        monitorWidget.name(monitorWidgetName);
+                        String code = qBlock.getMonitorCode();
+                        monitorWidget.wrapSource(code);
+
+                        WidgetWrapper ww = interfacePanel.addWidget(monitorWidget, 40, 80, true, false);
+
+                    }
+                }
+            }
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        interfacePanel.clearNewWidget();
+        revalidate();
+
     }
 
     public void populatePlots() {
         int plotCount = 0;
         try {
-            ////for (PlotBlock plotBlock : buildPanel.getMyPlots().subList(interfacePlotCount, buildPanel.getMyPlots().size())) {
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
                 if (plotWrappers.containsKey(plotBlock.getPlotName()) == false) {
                     // Plot not previously present ==> new plot must be created
-
-                    ////org.nlogo.window.Widget plotWidget = interfacePanel.makeWidget("Plot", false);
                     org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
 
-                    ////WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((interfacePlotCount/3) * 200), 10 + ((interfacePlotCount%3)*160), true, false);
                     WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160), true, false);
 
                     plotWidget.displayName(plotBlock.getPlotName());
 
-
-                    ////org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot("plot " + (interfacePlotCount + 1));
                     org.nlogo.plot.Plot newPlot = workspace.plotManager().getPlot(plotBlock.getPlotName());
 
                     plotBlock.setNetLogoPlot(newPlot);
 
-                    ////plotWrappers.put("plot " + (interfacePlotCount + 1), ww);
                     plotWrappers.put(plotBlock.getPlotName(), ww);
 
-                    ////interfacePlotCount++;
                     // First time creating plot.
                     // Save pen names
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
@@ -1020,14 +1066,12 @@ public class DeltaTickTab
                     // Create new pens
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         if (newPlot.getPen(quantBlock.getPenName()).toString().equals("None")) {
-                            // PlotPen plotPen = newPlot.createPlotPen(quantBlock.getName(), false); // commented 20130319
                             PlotPen plotPen = newPlot.createPlotPen(quantBlock.getPenName(), false);
                             plotPen.updateCode(quantBlock.getPenUpdateCode());
                             ((PlotWidget) plotWidget).xLabel(quantBlock.getXLabel());
                             ((PlotWidget) plotWidget).yLabel(quantBlock.getYLabel());
                         }
                     }
-                    ////interfacePlotCount++;
                 }
                 else {
                     // Plot already exists, just recalculate its position
@@ -1040,7 +1084,6 @@ public class DeltaTickTab
                             // Previous pen name had been saved
                             if (!quantBlock.getSavedPenName().equalsIgnoreCase(quantBlock.getPenName())) {
                                 // Name has changed
-                                // System.out.println("populatePlots(): removing pen " + quantBlock.getSavedPenName());
                                 plotBlock.removePen(quantBlock.getSavedPenName());
                             }
                         }
@@ -1063,20 +1106,9 @@ public class DeltaTickTab
                         }
                     }
                 }
-
                 // Proceed to next plot
                 plotCount++;
             }
-
-//            for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
-//                for (QuantityBlock qBlock : plotBlock.getMyBlocks()) {
-//                    if (workspace.plotManager().getPlot(plotBlock.getName()).getPen(qBlock.getName()).toString().equals("None")) {
-//                        PlotPen newPlotPen = workspace.plotManager().getPlot(plotBlock.getName()).createPlotPen(qBlock.getName(), false);
-//                        newPlotPen.updateCode(qBlock.getPenUpdateCode());
-//                        //newPlotPen._hidden = true;
-//                    }
-//                }
-//            }
 
             // The following code may be unnecessary because histograms are contained in builPanel.getMyPlots()
             for (HistogramBlock hBlock : buildPanel.getMyHisto().subList(interfaceHistoCount, buildPanel.getMyHisto().size())) {
@@ -1107,7 +1139,6 @@ public class DeltaTickTab
                 WidgetWrapper w = entry.getValue();
                 if (buildPanel.plotExists(p) == false) {
                     interfacePanel.removeWidget(w);
-                    ////interfacePlotCount--;
                     plotWrappers.remove(p);
                     workspace.plotManager().forgetPlot(workspace.plotManager().getPlot(p));
                 }
@@ -1137,19 +1168,26 @@ public class DeltaTickTab
                 addBreed.setEnabled(false);
                 this.add(addBreed) ;
 
-                /*
+
                 addDiveIn = new JButton(diveInAction);
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
-                */
+
+                addTrackSpeciesMenu = new JMenuBar();
+
 
                 addPlot = new JButton( addPlotAction );
                 addPlot.setEnabled(false);
                 this.add(addPlot) ;
                 addHisto = new JButton( addHistoAction );
                 addHisto.setEnabled(false);
+                addMonitor = new JButton ( addMonitorAction );
+                addMonitor.setEnabled(false);
+
 
                 this.add(addHisto) ;
+
+                this.add(addMonitor);
                 //addEnvt = new JButton ( chgEnvtAction );
                 //addEnvt.setEnabled(false);
                 //this.add(addEnvt) ;
@@ -1213,6 +1251,7 @@ public class DeltaTickTab
             //populateMutationSlider();
             populateCarryingCapacitySlider();
             populateLabelChooser();
+            populateMonitors();
             new org.nlogo.window.Events.CompileAllEvent()
 				.raise( DeltaTickTab.this ) ;
         }

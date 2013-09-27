@@ -29,24 +29,24 @@ public strictfp class PlotBlock
     JCharNumberFieldFilter textFilter;
 
     JPanel quantityblockLabelPanel;
+/*
+    // UNUSED
+    public PlotBlock() {
+        super("plot", ColorSchemer.getColor(3));
+        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        this.isHisto = false;
+//        textFilter = new JCharNumberFieldFilter();
+//        textFilter.setMaxChars(10);
+//        plotNameField.setDocument(textFilter);
 
-//    // UNUSED
-//    public PlotBlock() {
-//        super("plot", ColorSchemer.getColor(3));
-//        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
-//        this.isHisto = false;
-////        textFilter = new JCharNumberFieldFilter();
-////        textFilter.setMaxChars(10);
-////        plotNameField.setDocument(textFilter);
-//
-//        addMouseMotionListener(this);
-//        addMouseListener(this);
-//
-//        flavors = new DataFlavor[]{
-//                DataFlavor.stringFlavor,
-//                plotBlockFlavor
-//        };
-//    }
+        addMouseMotionListener(this);
+        addMouseListener(this);
+
+        flavors = new DataFlavor[]{
+                DataFlavor.stringFlavor,
+                plotBlockFlavor
+        };
+    }*/
 
 
     //constructor is for histograms if argument is true- not sure -A. (jan 15, 2013)
@@ -57,16 +57,6 @@ public strictfp class PlotBlock
         makePlotLabel();
         add(label);
         addQuantityblockPanel();
-
-        //label.add(removeButton);
-
-//        if (this.isHisto == true) {
-//            label.add(new JLabel("Histogram of "));
-//        }
-//        else {
-//            label.add(new JLabel("Graph of "));
-//        }
-//        label.add(plotNameField);
 
         setBorder(org.nlogo.swing.Utils.createWidgetBorder());
 
@@ -172,7 +162,6 @@ public strictfp class PlotBlock
                 blocks.add((QuantityBlock) block);
             }
         }
-
         return blocks;
     }
 

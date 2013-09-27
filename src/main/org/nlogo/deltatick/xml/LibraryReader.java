@@ -233,7 +233,9 @@ public class LibraryReader {
                 }
                 if (quantity.getAttributes().getNamedItem("runresult") != null) {
                     isRunResult = quantity.getAttributes().getNamedItem("runresult").getTextContent().equalsIgnoreCase("true");
+
                 }
+
 
 
                 block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel);
