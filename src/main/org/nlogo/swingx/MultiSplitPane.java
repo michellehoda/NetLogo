@@ -160,6 +160,7 @@ public class MultiSplitPane extends JPanel {
 
             BufferedImage in = null;
             BufferedImage in_plain = null;
+            BufferedImage in_mac = null;
             BufferedImage in_selected = null;
 //            try {
 //                in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
@@ -173,6 +174,7 @@ public class MultiSplitPane extends JPanel {
                 try {
                     in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
                     in_plain = ImageIO.read(getClass().getResource("/images/slider_plain.png"));
+                    in_mac = ImageIO.read(getClass().getResource("/images/deltatick/slidermac.png"));
                     in_selected = ImageIO.read(getClass().getResource("/images/slider_selected.png"));
                 }
                 catch (IOException ex) {
@@ -192,6 +194,7 @@ public class MultiSplitPane extends JPanel {
                 //The divider starts out gray
                 else if((divider != activeDivider())&&(divider.getBounds().width!=0)){
                     g2d.drawImage(in_plain, null, divider.getBounds().x, divider.getBounds().y);
+                    //g2d.drawImage(in_mac, null, divider.getBounds().x, divider.getBounds().y);
                     repaint();
                 }
 

@@ -67,7 +67,7 @@ public class DeltaTickTab
     JButton addHisto;
     JButton addMonitor;
     JButton addTrackSpecies;
-    JMenuBar addTrackSpeciesMenu;
+    JMenu addTrackSpeciesMenu;
     JButton saveModelButton;
     JButton openModelButton;
     JButton addClear;
@@ -1173,7 +1173,8 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
 
-                addTrackSpeciesMenu = new JMenuBar();
+                addTrackSpeciesMenu = new JMenu("Track species");
+                this.add(addTrackSpeciesMenu);
 
 
                 addPlot = new JButton( addPlotAction );
@@ -1184,10 +1185,13 @@ public class DeltaTickTab
                 addMonitor = new JButton ( addMonitorAction );
                 addMonitor.setEnabled(false);
 
+                JMenuItem trail = new JMenuItem("trail");
+                addTrackSpeciesMenu.add(trail);
 
-                this.add(addHisto) ;
 
-                this.add(addMonitor);
+                //this.add(addHisto) ;
+
+                //this.add(addMonitor);
                 //addEnvt = new JButton ( chgEnvtAction );
                 //addEnvt.setEnabled(false);
                 //this.add(addEnvt) ;

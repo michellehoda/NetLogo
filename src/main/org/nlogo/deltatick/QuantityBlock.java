@@ -2,6 +2,7 @@ package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dialogs.ColorButton;
 import org.nlogo.deltatick.dnd.PrettyInput;
+import org.nlogo.deltatick.dnd.QuantityDropTarget;
 import org.nlogo.window.MonitorWidget;
 
 import javax.imageio.ImageIO;
@@ -42,6 +43,7 @@ public strictfp class QuantityBlock
     ImageIcon histoImageIcon;
     ImageIcon lineImageIcon;
 
+    TraitBlockNew tBlock;
 
 
     public QuantityBlock(String name, boolean histo, String bars, String trait, String xLabel, String yLabel) {
@@ -104,6 +106,16 @@ public strictfp class QuantityBlock
         label.add(input);
     }
 
+    public void removeInput() {
+        for (PrettyInput input : inputs.values()) {
+            input.setVisible(false);
+        }
+    }
+
+    public void setHistoTrait (TraitBlockNew tBlock) {
+        this.tBlock = tBlock;
+    }
+
     // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
     @Override
     public void die() {
@@ -132,20 +144,16 @@ public strictfp class QuantityBlock
 
         String passBack = "";
         Container parent = getParent();
-        if (parent instanceof PlotBlock) {
-        passBack += "to-report " + getName();
-        if (inputs.size() > 0) {
-            passBack += " [ ";
-            for (String input : inputs.keySet()) {
-                passBack += input + " ";
+        if ((parent instanceof PlotBlock) && ((PlotBlock) parent).isHisto == false) {
+            passBack += "to-report " + getName();
+            if (inputs.size() > 0) {
+                passBack += " [ ";
+                for (String input : inputs.keySet()) {
+                    passBack += input + " ";
+                }
+                passBack += "]";
             }
-            passBack += "]";
-        }
-        passBack += "\nreport " + code + "\nend\n";
-        }
-
-        if (parent instanceof HistogramBlock) {
-            passBack = "" ;
+            passBack += "\nreport " + code + "\nend\n";
         }
 
         if (parent instanceof MonitorBlock) {
@@ -184,7 +192,9 @@ public strictfp class QuantityBlock
                         variable = entry.getValue().getText().toString();
                     }
                 }
-                passBack += "\thistogram [ " + variable + " ] of " + population ;
+
+                //passBack += "\thistogram [ " + variable + " ] of " + population ;
+                passBack += "histogram [ " + tBlock.getName() + " ] of " + tBlock.getBreedName();
                 passBack += "\n";
             }
 

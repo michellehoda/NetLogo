@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 
 
+//This file is not being used (Aditi - sept 27, 2013)
 public class TraitDropTarget
         extends DropTarget {
 
@@ -35,6 +36,10 @@ public class TraitDropTarget
             if (o instanceof ConditionBlock) {
                 addCodeBlock((ConditionBlock) o);
                 new ConditionDropTarget((ConditionBlock) o);
+                return true;
+            }
+            if ((o instanceof QuantityBlock) && ((QuantityBlock) o).getHisto() == true) {
+                addCodeBlock((QuantityBlock) o);
                 return true;
             }
             //return false; - commented out by A. (nov 27)

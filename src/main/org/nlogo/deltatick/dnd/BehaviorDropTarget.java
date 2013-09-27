@@ -30,20 +30,20 @@ public class BehaviorDropTarget
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
             if (o instanceof TraitBlockNew) {
-                //if ( !behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) ) {
+
                 if (! behBlock.getMyBreedBlock().plural().equalsIgnoreCase(((TraitBlockNew) o).getBreedName()) ) {
                     String message = "Oops! This block does not belong to this species!";
                     JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
                     return false;
                 }
-                else if ( // behBlock.getMyBreedBlock().hasTrait(((TraitBlockNew) o).getTraitName()) &&
+                else if (
                       !behBlock.getIsTrait() &&
                       behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) ) {
 
                     addCodeBlock((TraitBlockNew) o);
                     ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
                     ((TraitBlockNew) o).hideRemoveButton();
-                    //behBlock.setIsTrait(true); // behBlock.setTrait will set isTrait to true. Explicitly and separately setting it is unnecessary
+
                     behBlock.removeTraitblockPanel();
                     behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
                     behBlock.setTrait((TraitBlockNew) o);

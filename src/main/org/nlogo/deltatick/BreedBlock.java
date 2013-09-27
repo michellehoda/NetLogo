@@ -322,15 +322,9 @@ public strictfp class BreedBlock
             }
             for (OwnVar var : breed.getOwnVars()) {
                 if (var.setupReporter != null) {
-                    if (var.name.equalsIgnoreCase("energy")) {
-                        code += "set " + var.name + " " + "random" + " " + maxEnergy + "\n";
-                    }
-                    if (var.name.equalsIgnoreCase("age")) {
-                        code += "set " + var.name + " " + "random" + " " + maxAge + "\n";
-                    }
+                    code += "set " + var.name + " " + var.setupReporter + "\n";
                 }
             }
-
             code += "set color " + colorName + '\n';
             code += setupTrait();
             code += "]\n";
@@ -598,7 +592,7 @@ public strictfp class BreedBlock
         rectPanel.setBackground(getBackground());
         JLabel label = new JLabel();
         label.setBackground(getBackground());
-        label.setText("Add blocks here");
+        label.setText("What do you want " + this.getName() + " to do?");
         rectPanel.add(label);
         rectPanel.validate();
     }
