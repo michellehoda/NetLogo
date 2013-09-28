@@ -51,29 +51,26 @@ public class DeltaTickTab
     UserInput userInput = new UserInput();
 
     JSeparator separator = new JSeparator();
-    //JSeparator librarySeparator = new JSeparator();
     JPanel contentPanel = new JPanel();
     JPanel libraryPanel;
     BuildPanel buildPanel;
     SpeciesInspectorPanel speciesInspectorPanel;
     HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
 
-
-
     JButton loadLibrary;
     JButton addBreed;
     JButton addDiveIn;
-    JButton addPlot;
-    JButton addHisto;
-    JButton addMonitor;
-    JButton addTrackSpecies;
-    //JMenu addTrackSpeciesMenu;
+
     JButton saveModelButton;
     JButton openModelButton;
     JButton addClear;
-    JPopupMenu trackSpeciesPopUp;
 
-    //JButton addEnvt;
+    JButton addTrackSpecies;
+    JPopupMenu trackSpeciesPopUp;
+    JMenuItem addHisto;
+    JMenuItem addPlot;
+    JMenuItem addMonitor;
+
     JButton buildBlock;
     JButton Not;
 
@@ -284,12 +281,9 @@ public class DeltaTickTab
         		libraryPanel.add(libraryHolder);
         		libraryHolder.setTabName(currentLibraryName);
 
-
-        		addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
-                addPlot.setEnabled(true);
-        		addHisto.setEnabled(true);
-                addMonitor.setEnabled(true);
         		addBreed.setEnabled(true);
+                addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
+                addTrackSpecies.setEnabled(true);
         		addClear.setEnabled(true);
                 saveModelButton.setEnabled(true);
         	    buildPanel.removeRect();
@@ -302,10 +296,7 @@ public class DeltaTickTab
 
         		deltaTickTab.contentPanel.validate();
         		count ++;
-        	/*//}
-        	//else{
-        	//	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-        	//}*/
+
         }
          else if (count > 0 ) {
 
@@ -315,12 +306,6 @@ public class DeltaTickTab
             // Aditi: Again, library reader MUST be saved (Apr 16, 2013)
             //this.libraryReader = new LibraryReader( workspace.getFrame(), deltaTickTab, fileName);
             libraryReader.openLibrary(fileName);
-
-           /* if(buildPanel.getBgInfo().getLibrary().equals(currentLibraryName)){
-            	libraryHolder.removeTab(libraryHolder.getCountTabs() - 1);
-            }
-
-            currentLibraryName = buildPanel.getBgInfo().getLibrary();*/
             deltaTickTab.contentPanel.validate();
          }
 
@@ -498,7 +483,6 @@ public class DeltaTickTab
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
                 speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
-                //myParent.removeTraitBlockFromList(tBlock);
                 myParent.removeAllTraitBlocks();
             }
 
@@ -513,13 +497,7 @@ public class DeltaTickTab
             for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
                 myParent.addToTraitLabels(traitLabel);
             }
-//            for (Map.Entry<String, JCheckBox> map : speciesInspectorPanel.getTraitPreview().getLabelPanel().getCheckBoxes().entrySet()) {
-//                String trait = map.getKey();
-//                JCheckBox checkBox = map.getValue();
-//                if (checkBox.isSelected()) {
-//                    myParent.addToTraitLabels(trait);
-//                }
-//            }
+
                 //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
     }
@@ -559,22 +537,10 @@ public class DeltaTickTab
         }
     }
 
-//    private final javax.swing.Action addTrackSpeciesAction =
-//		new javax.swing.AbstractAction( "Track change in species" ) {
-//            public void actionPerformed( java.awt.event.ActionEvent e ) {
-//                trackSpeciesPopUp = new JPopupMenu();
-//                trackSpeciesPopUp.setVisible(true);
-//                JMenuItem gah = new JMenuItem("1");
-//                trackSpeciesPopUp.add(gah);
-//                trackSpeciesPopUp.show(addTrackSpecies, addTrackSpecies.getWidth()/2, addTrackSpecies.getHeight()/2);
-//            }
-//        };
-//
-
-
 
     public PlotBlock makePlotBlock(boolean isHisto) {
         PlotBlock newPlotBlock = new PlotBlock(isHisto);
+        buildPanel.removeRect();
         buildPanel.addPlot( newPlotBlock );
         newPlotBlock.getParent().setComponentZOrder(newPlotBlock, 0 );
         if (isHisto) {
@@ -592,7 +558,9 @@ public class DeltaTickTab
 
     public MonitorBlock makeMonitorBlock() {
         MonitorBlock monitorBlock = new MonitorBlock();
+        buildPanel.removeRect();
         buildPanel.addMonitor(monitorBlock);
+        monitorBlock.showRemoveButton();
         new MonitorDropTarget(monitorBlock);
         monitorBlock.getParent().setComponentZOrder(monitorBlock, 0);
         monitorBlock.validate();
@@ -631,6 +599,7 @@ public class DeltaTickTab
             }
             messageDisplayed = false;
         }
+
         public void focusGained(FocusEvent e) {
         }
 
@@ -1177,27 +1146,20 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
 
-//                addTrackSpeciesMenu = new JMenu("Track species");
-//                this.add(addTrackSpeciesMenu);
-
-
-                addPlot = new JButton( addPlotAction );
-                addPlot.setEnabled(false);
-                this.add(addPlot) ;
-                addHisto = new JButton( addHistoAction );
-                addHisto.setEnabled(false);
-                addMonitor = new JButton ( addMonitorAction );
-                addMonitor.setEnabled(false);
-
-                //JMenuItem trail = new JMenuItem("trail");
-                addTrackSpecies = new JButton("tr");
+                addTrackSpecies = new JButton("Track Species");
                 addTrackSpecies.addMouseListener(new TrackSpeciesListener());
                 this.add(addTrackSpecies);
-
-
-                //this.add(addHisto) ;
+                addTrackSpecies.setEnabled(false);
 
                 trackSpeciesPopUp = new JPopupMenu();
+                addHisto = new JMenuItem( addHistoAction );
+                trackSpeciesPopUp.add(addHisto);
+
+                addPlot = new JMenuItem( addPlotAction );
+                trackSpeciesPopUp.add(addPlot);
+
+                addMonitor = new JMenuItem ( addMonitorAction );
+                trackSpeciesPopUp.add(addMonitor);
 
                 //this.add(addMonitor);
                 //addEnvt = new JButton ( chgEnvtAction );
@@ -1324,6 +1286,7 @@ public class DeltaTickTab
     class TrackSpeciesListener implements MouseListener {
         public void mouseReleased (MouseEvent e) {
             trackSpeciesPopUp.show(e.getComponent(), e.getX(), e.getY());
+
         }
         public void mouseExited (MouseEvent e) {
         }

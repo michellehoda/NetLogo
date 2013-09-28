@@ -174,7 +174,7 @@ public class MultiSplitPane extends JPanel {
                 try {
                     in = ImageIO.read(getClass().getResource("/images/arrowhead.gif"));
                     in_plain = ImageIO.read(getClass().getResource("/images/slider_plain.png"));
-                    in_mac = ImageIO.read(getClass().getResource("/images/deltatick/slidermac.png"));
+                    in_mac = ImageIO.read(getClass().getResource("/images/deltatick/arrows.png"));
                     in_selected = ImageIO.read(getClass().getResource("/images/slider_selected.png"));
                 }
                 catch (IOException ex) {
@@ -183,18 +183,20 @@ public class MultiSplitPane extends JPanel {
 
 
                 if ((divider == activeDivider()) && !isContinuousLayout()) {
-                    g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    //g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    g2d.drawImage(in_mac, null, divider.getBounds().x, divider.getBounds().y);
                     repaint();
                 }
                 //The divider turns blue on click
                 else if((divider == activeDivider())){
-                    g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    //g2d.drawImage(in_selected, null, divider.getBounds().x, divider.getBounds().y);
+                    g2d.drawImage(in_mac, null, divider.getBounds().x, divider.getBounds().y);
                     repaint();
                 }
                 //The divider starts out gray
                 else if((divider != activeDivider())&&(divider.getBounds().width!=0)){
-                    g2d.drawImage(in_plain, null, divider.getBounds().x, divider.getBounds().y);
-                    //g2d.drawImage(in_mac, null, divider.getBounds().x, divider.getBounds().y);
+                    //g2d.drawImage(in_plain, null, divider.getBounds().x, divider.getBounds().y);
+                    g2d.drawImage(in_mac, null, divider.getBounds().x, divider.getBounds().y);
                     repaint();
                 }
 

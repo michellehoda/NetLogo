@@ -43,7 +43,6 @@ public strictfp class BehaviorBlock
 
         if (!aTraits.isEmpty()) {
             applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
-            //applicableTraits.addAll(Arrays.asList(aTraits.split(",")));
         }
     }
 
