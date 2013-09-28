@@ -4,7 +4,7 @@ import org.nlogo.agent.Observer;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
-import org.nlogo.deltatick.PopupMenu;
+//import org.nlogo.deltatick.PopupMenu;
 import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
@@ -67,11 +67,11 @@ public class DeltaTickTab
     JButton addHisto;
     JButton addMonitor;
     JButton addTrackSpecies;
-    JMenu addTrackSpeciesMenu;
+    //JMenu addTrackSpeciesMenu;
     JButton saveModelButton;
     JButton openModelButton;
     JButton addClear;
-    PopupMenu popup;
+    JPopupMenu trackSpeciesPopUp;
 
     //JButton addEnvt;
     JButton buildBlock;
@@ -559,13 +559,19 @@ public class DeltaTickTab
         }
     }
 
-    private final javax.swing.Action addTrackSpeciesAction =
-		new javax.swing.AbstractAction( "Track change in species" ) {
-            public void actionPerformed( java.awt.event.ActionEvent e ) {
-                popup = new PopupMenu();
+//    private final javax.swing.Action addTrackSpeciesAction =
+//		new javax.swing.AbstractAction( "Track change in species" ) {
+//            public void actionPerformed( java.awt.event.ActionEvent e ) {
+//                trackSpeciesPopUp = new JPopupMenu();
+//                trackSpeciesPopUp.setVisible(true);
+//                JMenuItem gah = new JMenuItem("1");
+//                trackSpeciesPopUp.add(gah);
+//                trackSpeciesPopUp.show(addTrackSpecies, addTrackSpecies.getWidth()/2, addTrackSpecies.getHeight()/2);
+//            }
+//        };
+//
 
-            }
-        };
+
 
     public PlotBlock makePlotBlock(boolean isHisto) {
         PlotBlock newPlotBlock = new PlotBlock(isHisto);
@@ -700,8 +706,6 @@ public class DeltaTickTab
                 };
             }
         };
-
-
 
     private final Action toBuildBlock =
             new javax.swing.AbstractAction( "Build operator block" ) {
@@ -1173,8 +1177,8 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
 
-                addTrackSpeciesMenu = new JMenu("Track species");
-                this.add(addTrackSpeciesMenu);
+//                addTrackSpeciesMenu = new JMenu("Track species");
+//                this.add(addTrackSpeciesMenu);
 
 
                 addPlot = new JButton( addPlotAction );
@@ -1185,11 +1189,15 @@ public class DeltaTickTab
                 addMonitor = new JButton ( addMonitorAction );
                 addMonitor.setEnabled(false);
 
-                JMenuItem trail = new JMenuItem("trail");
-                addTrackSpeciesMenu.add(trail);
+                //JMenuItem trail = new JMenuItem("trail");
+                addTrackSpecies = new JButton("tr");
+                addTrackSpecies.addMouseListener(new TrackSpeciesListener());
+                this.add(addTrackSpecies);
 
 
                 //this.add(addHisto) ;
+
+                trackSpeciesPopUp = new JPopupMenu();
 
                 //this.add(addMonitor);
                 //addEnvt = new JButton ( chgEnvtAction );
@@ -1313,36 +1321,52 @@ public class DeltaTickTab
         return this.libraryReader;
     }
 
+    class TrackSpeciesListener implements MouseListener {
+        public void mouseReleased (MouseEvent e) {
+            trackSpeciesPopUp.show(e.getComponent(), e.getX(), e.getY());
+        }
+        public void mouseExited (MouseEvent e) {
+        }
+        public void mouseClicked (MouseEvent e) {
+        }
+        public void mousePressed (MouseEvent e) {
 
-
-class PopupListener extends MouseAdapter {
-    JPopupMenu popup;
-    JMenuItem menuItem;
-
-    PopupListener(JPopupMenu popupMenu) {
-        popup = popupMenu;
-        menuItem = new JMenuItem("ice");
-        popup.add(menuItem);
-        JPanel panel = new JPanel();
-        panel.add(popup);
-
+        }
+        public void mouseEntered (MouseEvent e) {
+        }
     }
 
-      public void mousePressed(MouseEvent ev) {
-        if (ev.isPopupTrigger()) {
-          popup.show(ev.getComponent(), ev.getX(), ev.getY());
-        }
-      }
 
-      public void mouseReleased(MouseEvent ev) {
-        if (ev.isPopupTrigger()) {
-          popup.show(ev.getComponent(), ev.getX(), ev.getY());
-        }
-      }
 
-      public void mouseClicked(MouseEvent ev) {
-      }
-    }
+
+//class PopupListener extends MouseAdapter {
+//    JPopupMenu trackSpeciesPopUp;
+//    JMenuItem menuItem;
+//
+//    PopupListener(JPopupMenu popupMenu) {
+//        trackSpeciesPopUp = popupMenu;
+//        menuItem = new JMenuItem("ice");
+//        trackSpeciesPopUp.add(menuItem);
+//        JPanel panel = new JPanel();
+//        panel.add(trackSpeciesPopUp);
+//
+//    }
+//
+//      public void mousePressed(MouseEvent ev) {
+//        if (ev.isPopupTrigger()) {
+//          trackSpeciesPopUp.show(ev.getComponent(), ev.getX(), ev.getY());
+//        }
+//      }
+//
+//      public void mouseReleased(MouseEvent ev) {
+//        if (ev.isPopupTrigger()) {
+//          trackSpeciesPopUp.show(ev.getComponent(), ev.getX(), ev.getY());
+//        }
+//      }
+//
+//      public void mouseClicked(MouseEvent ev) {
+//      }
+//    }
 }
 
 
