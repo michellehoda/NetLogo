@@ -61,6 +61,8 @@ public class DeltaTickTab
     JButton addBreed;
     JButton addDiveIn;
 
+    JButton speciesTry;
+
     JButton saveModelButton;
     JButton openModelButton;
     JButton addClear;
@@ -497,10 +499,16 @@ public class DeltaTickTab
             for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
                 myParent.addToTraitLabels(traitLabel);
             }
-
                 //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
     }
+
+    private final javax.swing.Action speciesTryAction =
+		new javax.swing.AbstractAction( "Try Species" ) {
+            public void actionPerformed( java.awt.event.ActionEvent e ) {
+                makeBreedBlock(null, null);
+            }
+        };
 
     public void makeTraitBlock(BreedBlock bBlock, TraitState traitState) {
         TraitBlockNew traitBlock = new TraitBlockNew(bBlock, traitState, traitState.getVariationHashMap(), traitState.getVariationsValuesList());
@@ -536,6 +544,8 @@ public class DeltaTickTab
             speciesInspectorPanel.getMyFrame().setVisible(false);
         }
     }
+
+
 
 
     public PlotBlock makePlotBlock(boolean isHisto) {
@@ -1145,6 +1155,10 @@ public class DeltaTickTab
                 addDiveIn = new JButton(diveInAction);
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
+
+                speciesTry = new JButton( speciesTryAction );
+                speciesTry.setEnabled(true);
+                this.add(speciesTry);
 
                 addTrackSpecies = new JButton("Track Species");
                 addTrackSpecies.addMouseListener(new TrackSpeciesListener());

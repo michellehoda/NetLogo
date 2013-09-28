@@ -192,7 +192,8 @@ public class LibraryReader {
             NodeList conditions = library.getElementsByTagName("condition");
             for (int i = 0; i < conditions.getLength(); i++) {
                 Node condition = conditions.item(i);
-                block = new ConditionBlock(condition.getAttributes().getNamedItem("name").getTextContent());
+                block = new ConditionBlock(condition.getAttributes().getNamedItem("name").getTextContent(),
+                        condition.getAttributes().getNamedItem("traits").getTextContent());
 
                 seekAndAttachInfo(condition);
                 deltaTickTab.getLibraryHolder().addToConditionBlocksList((ConditionBlock) block);

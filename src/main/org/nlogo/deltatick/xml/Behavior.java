@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
  * Time: 12:52 AM
  * To change this template use File | Settings | File Templates.
  */
+//This class is not used (Aditi, sept 27, 2013)
 public class Behavior {
     BehaviorBlock block;
 

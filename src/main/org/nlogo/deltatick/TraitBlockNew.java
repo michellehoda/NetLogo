@@ -169,9 +169,25 @@ public class TraitBlockNew
         validate();
     }
 
+    public void lookBetter() {
+        hideRemoveButton();
+        removeBreedLabel();
+        setSmallSize();
+    }
+
     public void hideRemoveButton() {
         removeButton.setVisible(false);
     }
+
+    private void removeBreedLabel() {
+        label.remove(name);
+    }
+
+    private void setSmallSize() {
+        this.setSize(73, 14);
+    }
+
+
 
     public String getMutateCode() {
         return traitState.getMutateCode();

@@ -42,7 +42,8 @@ public class BehaviorDropTarget
 
                     addCodeBlock((TraitBlockNew) o);
                     ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
-                    ((TraitBlockNew) o).hideRemoveButton();
+                    ((TraitBlockNew) o).lookBetter();
+                    System.out.println("behdroptarget " + ((TraitBlockNew) o).getSize().toString());
 
                     behBlock.removeTraitblockPanel();
                     behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)

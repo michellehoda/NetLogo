@@ -68,6 +68,10 @@ public class ConditionDropTarget
                 //new ConditionDropTarget((PatchBlock) o);
                 return true;
             }
+            if (o instanceof TraitBlockNew) {
+                addCodeBlock((TraitBlockNew) o);
+                return true;
+            }
             //return false; - commented out by A. (nov 27)
         }
         return false;

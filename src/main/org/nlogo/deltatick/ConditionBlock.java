@@ -18,8 +18,9 @@ public strictfp class ConditionBlock
     JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
+    Set<String> applicableTraits;// = new HashSet<String>();
 
-    public ConditionBlock(String name) {
+    public ConditionBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(1));
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
@@ -28,6 +29,9 @@ public strictfp class ConditionBlock
                 CodeBlock.patchBlockFlavor,
                 CodeBlock.envtBlockFlavor
         };
+        if (!aTraits.isEmpty()) {
+            applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
+        }
     }
     //codeBlockFlavor is what makes Condition Blocks valid for Breed Block -a. (Sept 6)
 
@@ -195,5 +199,13 @@ public strictfp class ConditionBlock
 
     public java.util.List<CodeBlock> getMyBlocks() {
         return myBlocks;
+    }
+
+    public Set<String> getApplicableTraits() {
+        return applicableTraits;
+    }
+
+    public boolean isTraitApplicable(String traitName) {
+        return applicableTraits.contains(traitName);
     }
 }
