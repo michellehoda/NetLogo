@@ -3,6 +3,7 @@ package org.nlogo.deltatick;
 
 //import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.deltatick.dnd.*;
+import org.picocontainer.Behavior;
 
 //swing is for GUI components -A. (sept 10)
 import javax.imageio.ImageIO;
@@ -31,6 +32,8 @@ public abstract class CodeBlock
         implements Transferable {
 
     private final int CODEBLOCK_HEIGHT = 27;
+    int DEFAULT_CODEBLOCK_WIDTH = 250;
+
     //flavors is an array initialized with codeBlockFlavor -A. (sept 10)
     DataFlavor[] flavors = new DataFlavor[]{codeBlockFlavor};
     String code; // From XML
@@ -534,13 +537,18 @@ public abstract class CodeBlock
     public int getPreferredWidth() {
         // find out how many levels down I am
         if (getParent() instanceof BuildPanel) {
-            return 250;
+            return DEFAULT_CODEBLOCK_WIDTH;
+        }
+        // This is a test hack to set the width of traitblock
+        // This is a bad hack and should be removed/fixed asap
+        else if (getParent() instanceof BehaviorBlock) {
+            return 50;
         }
         if (getParent() instanceof CodeBlock) {
             return ((CodeBlock) getParent()).getPreferredWidth() - 10;
         }
 
-        return 250;
+        return DEFAULT_CODEBLOCK_WIDTH;
     }
 
     public Insets getInsets() {

@@ -1,9 +1,6 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.deltatick.xml.Breed;
-import org.nlogo.deltatick.xml.Envt;
-import org.nlogo.deltatick.xml.ModelBackgroundInfo;
-import org.nlogo.deltatick.xml.ModelBackgroundInfo2;
+import org.nlogo.deltatick.xml.*;
 import org.nlogo.window.GUIWorkspace;
 
 import javax.swing.*;
@@ -146,7 +143,24 @@ public class BuildPanel
 
             passBack += "to-report student-in\n";
             passBack += block.getDiveInCode();
-            passBack += "\nend\n";
+            passBack += "\nend\n\n";
+        }
+
+        for (MonitorBlock block : myMonitors) {
+            for (QuantityBlock qBlock : block.getMyBlocks()) {   // will be just one here -Aditi (Sept 30, 2013)
+                if (qBlock.histo == true) {
+                    int i = qBlock.getHistoVariation().size();
+                    for (Variation var : qBlock.getHistoVariation().values()) {
+                        String breed = qBlock.getHistoBreed();
+                        String trait = qBlock.getHistoTrait();
+                        String variation = var.value;
+                        passBack += "to-report " + qBlock.getName() + i + " [" + breed + variation + "]\n";
+                        passBack += "report count " + breed + " with [" + trait + " = " + variation + "]";
+                        passBack += "\nend\n";
+                        i = i - 1;
+                    }
+                }
+            }
         }
 
         //new function: to draw - Aditi (jan 17, 2013)
@@ -455,7 +469,11 @@ public String newSaveAsXML() {
 
         for (MonitorBlock mBlock : myMonitors) {
             if (mBlock.children() != null) {
-                procedureCollection.putAll(mBlock.children());
+                for (QuantityBlock qBlock : mBlock.getMyBlocks()) {   //if it's a histo, code coming from above (Aditi, Sept 30, 2013)
+                    if (qBlock.getHisto() == false) {
+                        procedureCollection.putAll(mBlock.children());
+                    }
+                }
             }
         }
 

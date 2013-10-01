@@ -1,6 +1,5 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.deltatick.dnd.VariationDropDown;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -24,24 +22,19 @@ public class TraitBlockNew
 {
     JTextField textName;
     ArrayList<String> varList;
-    //LinkedList<Variation> variationList = new LinkedList<Variation>();
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     BreedBlock myBreedBlock = null;
     String traitName;
     String varColor;
-    JLabel name = new JLabel();
+    JLabel breedName = new JLabel();
 
     transient Trait trait;
     transient TraitState traitState;
     transient Frame parentFrame;
-    //Variation variation;
-    //JList TraitsList;
-    HashMap<String, String> varPercentage;
-    //HashMap<String, String> traitNumVar = new HashMap<String, String>();
-    HashMap<String, Integer> varNum = new HashMap<String, Integer>();
 
+    HashMap<String, String> varPercentage;
+    HashMap<String, Integer> varNum = new HashMap<String, Integer>();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
-    //HashMap<String, String> variationNamesValues = new HashMap<String, String>();
 
     public TraitBlockNew (BreedBlock breedBlock, TraitState traitState, HashMap<String, Variation> variationHashMap, HashMap<String, String> variationValues ) {
         super (traitState.getNameTrait(), ColorSchemer.getColor(4));
@@ -49,21 +42,18 @@ public class TraitBlockNew
                 DataFlavor.stringFlavor,
                 CodeBlock.traitBlockFlavor,
                 CodeBlock.codeBlockFlavor};
-        //this.breedName = breedBlock.plural();
+
         this.traitState = new TraitState(traitState);
         this.traitName = this.traitState.getNameTrait();
-        //this.variationHashMap = variationHashMap;
         this.variationHashMap.clear();
         this.variationHashMap.putAll(variationHashMap);
         this.varColor = traitState.getColor();
-        //this.variationNamesValues = variationValues;
 
-        // Set my breed block
         myBreedBlock = breedBlock;
 
         java.util.List<Component> componentList = new ArrayList<Component>();
-        name.setText(" of " + breedBlock.plural());
-        componentList.add(name);
+        breedName.setText(" of " + breedBlock.plural());
+        componentList.add(breedName);
 
         //int y = 0;
         for (Component c : componentList) {
@@ -132,13 +122,7 @@ public class TraitBlockNew
 
     public String unPackAsCommand() {
         String passBack = "";
-        //String value = variationNamesValues.get(variation);
 
-        //passBack += "if " + this.getMyParent().plural() + "-" + this.getTraitName() + " = " + value + " [\n";
-//        for (CodeBlock block : myBlocks) {
-//            passBack += block.unPackAsCode();
-//        }
-        //passBack += "] \n";
         return passBack;
     }
 
@@ -165,7 +149,7 @@ public class TraitBlockNew
     // This method is irrelevant if myBreedBlock is used to get breed name
     public void setBreedName(String breedName) {
         breedNameTMP = new String(breedName);
-        name.setText(" of " + breedName);
+        this.breedName.setText(" of " + breedName);
         validate();
     }
 
@@ -173,18 +157,40 @@ public class TraitBlockNew
         hideRemoveButton();
         removeBreedLabel();
         setSmallSize();
+        repaint();
+        revalidate();
+    }
+    public int getPreferredWidth() {
+        if (getParent() instanceof BuildPanel) {
+            return DEFAULT_CODEBLOCK_WIDTH;
+        }
+        else if (getParent() instanceof BehaviorBlock) {
+            System.out.println("TraitBlockNew.getPreferredWidth()");
+            return 50;
+        }
+        return DEFAULT_CODEBLOCK_WIDTH;
     }
 
+    public java.awt.Dimension getMinimumSize() {
+        return new java.awt.Dimension(getPreferredWidth(), 20);
+    }
     public void hideRemoveButton() {
         removeButton.setVisible(false);
+        revalidate();
     }
 
     private void removeBreedLabel() {
-        label.remove(name);
+        label.remove(breedName);
     }
 
     private void setSmallSize() {
-        this.setSize(73, 14);
+        this.setSize(50, 20);
+        this.setPreferredSize(new Dimension(50, 20));
+        label.setBorder(BorderFactory.createLineBorder(Color.black));
+        //this.label.setMinimumSize(new Dimension(30, 20));
+        //this.label.setMaximumSize(new Dimension(30,20));
+        revalidate();
+        repaint();
     }
 
 

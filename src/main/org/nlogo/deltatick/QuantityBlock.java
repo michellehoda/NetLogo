@@ -3,6 +3,7 @@ package org.nlogo.deltatick;
 import org.nlogo.deltatick.dialogs.ColorButton;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.dnd.QuantityDropTarget;
+import org.nlogo.deltatick.xml.Variation;
 import org.nlogo.window.MonitorWidget;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public strictfp class QuantityBlock
@@ -115,6 +117,8 @@ public strictfp class QuantityBlock
     public void setHistoTrait (TraitBlockNew tBlock) {
         this.tBlock = tBlock;
     }
+
+
 
     // Trying to remove pen from parent plotblock when a quantity block is removed (aditi Apr 10, 2013)
     @Override
@@ -331,11 +335,17 @@ public strictfp class QuantityBlock
     }
 
     public String getHistoTrait() {
-        return inputs.get("trait").getText();
+        return tBlock.getTraitName();
+        //return inputs.get("trait").getText();
     }
 
     public String getHistoBreed() {
-        return inputs.get("breed-type").getText();
+        return tBlock.getBreedName();
+        //return inputs.get("breed-type").getText();
+    }
+
+    public HashMap<String, Variation> getHistoVariation() {
+        return tBlock.getVariationHashMap();
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {
