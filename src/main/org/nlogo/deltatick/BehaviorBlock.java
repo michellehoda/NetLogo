@@ -21,15 +21,17 @@ import javax.swing.border.EtchedBorder;
 public strictfp class BehaviorBlock
         extends CodeBlock {
 
-    boolean isTrait;
+    boolean isTrait = false;
+    boolean waitingForTrait = false;
     boolean isMutate;
     TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
+                                    // Do we really need a full trait block or just the trait name? (09/30/2013)
     //CodeBlock container = null;
     BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
 
     // Set of acceptable traits
-    Set<String> applicableTraits;// = new HashSet<String>();
+    Set<String> applicableTraits = new HashSet<String>();
     JPanel traitblockLabelPanel = null;
 
 
@@ -249,6 +251,8 @@ public strictfp class BehaviorBlock
             repaint();
             //behaviorInputs.remove(s);  // need the behavior input to generate code esp when trait blocks are used (March 29,2013)
         }
+        // Mark this block to indicate that it is waiting for a trait block to be dropped in
+        waitingForTrait = true;
     }
 
     // will work only for one behaviorInput per block -A. (Aug 10, 2012)
@@ -279,14 +283,19 @@ public strictfp class BehaviorBlock
     public boolean getIsTrait() {
         return isTrait;
     }
-
+    public boolean getIsWaitingForTrait() {
+        return waitingForTrait;
+    }
 //    public void setIsTrait(boolean value) {
 //        isTrait = value;
 //    }
 
     public void setTrait(TraitBlockNew traitBlockNew) {
         tBlockNew = traitBlockNew;
+        // This block now HAS a trait block
         isTrait = true;
+        // It is no longer waiting for a trait block
+        waitingForTrait = false;
     }
 
     public String getTrait() {
