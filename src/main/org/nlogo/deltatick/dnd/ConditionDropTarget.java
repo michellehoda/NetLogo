@@ -13,8 +13,11 @@ import java.io.IOException;
 public class ConditionDropTarget
         extends DropTarget {
 
+    ConditionBlock cBlock;
+
     public ConditionDropTarget(ConditionBlock cBlock) {
         super(cBlock);
+        this.cBlock = cBlock;
     }
 
     protected boolean dropComponent(Transferable transferable)
@@ -70,6 +73,10 @@ public class ConditionDropTarget
             }
             if (o instanceof TraitBlockNew) {
                 addCodeBlock((TraitBlockNew) o);
+                cBlock.setTrait(((TraitBlockNew) o).getTraitName());
+                cBlock.removeBehaviorInput();
+                ((TraitBlockNew) o).hideRemoveButton();
+
                 return true;
             }
             //return false; - commented out by A. (nov 27)

@@ -991,7 +991,6 @@ public class DeltaTickTab
                                     monitorWidget.name(monitorWidgetName);
                                     monitorWidget.wrapSource(code);
 
-
                                     WidgetWrapper ww = interfacePanel.addWidget(monitorWidget, x, y, true, false);
                                     y = y + 10;
                                 }

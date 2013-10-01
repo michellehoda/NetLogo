@@ -323,6 +323,30 @@ public strictfp class BehaviorBlock
         validate();
     }
 
+    public void addBlock(CodeBlock block) {
+        super.addBlock(block);
+        this.remove(block);
+
+        JPanel traitBlockPanel = new JPanel();
+        traitBlockPanel.setPreferredSize(new Dimension(70, 30));
+        traitBlockPanel.setLayout(new BoxLayout(traitBlockPanel, BoxLayout.X_AXIS));
+        traitBlockPanel.add(block);
+
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 10, 0);
+        label.setLayout(flowLayout);
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        label.setPreferredSize(new Dimension(label.getWidth(), 30));
+
+        //System.out.println("label size " + label.getSize().toString());
+        //System.out.println("block size " + block.getSize().toString());
+        label.add(traitBlockPanel);
+
+        block.repaint();
+
+        repaint();
+        validate();
+    }
+
     public void removeTraitblockPanel() {
         if (traitblockLabelPanel != null) {
             remove(traitblockLabelPanel);

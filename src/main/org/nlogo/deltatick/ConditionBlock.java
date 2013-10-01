@@ -19,6 +19,8 @@ public strictfp class ConditionBlock
     Boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
     Set<String> applicableTraits;// = new HashSet<String>();
+    boolean isTrait; // When trait block is dropped in this condition block, isTrait is set
+    String traitName;
 
     public ConditionBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(1));
@@ -59,7 +61,20 @@ public strictfp class ConditionBlock
         for (PrettyInput agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
-        passBack += "[\n";
+        if (isTrait) {
+            passBack += traitName;
+        }
+        else {
+            for (PrettyInput behaviorInput : behaviorInputs.values()) {
+                passBack += behaviorInput.getText() + " ";
+            }
+        }
+//        for (CodeBlock codeBlock : myBlocks) {
+//            if (codeBlock instanceof TraitBlockNew) {
+//                passBack += ((TraitBlockNew) codeBlock).getTraitName();
+//            }
+//        }
+        passBack += " [\n";
         for (CodeBlock block : myBlocks) {
             passBack += block.unPackAsCode();
         }
@@ -85,6 +100,16 @@ public strictfp class ConditionBlock
             for (String agentInput : agentInputs.keySet()) {
                 passBack += agentInput + " ";
             }
+            for (String behaviorInput : behaviorInputs.keySet()) {
+                passBack += behaviorInput + " ";
+            }
+
+
+//            for (CodeBlock cBlock : myBlocks) {
+//                if (cBlock instanceof TraitBlockNew) {
+//                    passBack += ((TraitBlockNew) cBlock).getTraitName();
+//                }
+//            }
             passBack += "]";
         }
 
@@ -163,6 +188,25 @@ public strictfp class ConditionBlock
         add(rectPanel);
         validate();
     }
+
+    public void setTrait(String traitName) {
+        this.traitName = new String(traitName);
+        isTrait = true;
+    }
+    public void removeBehaviorInput() {
+        for ( Map.Entry<String, PrettyInput> map : behaviorInputs.entrySet()) {
+            String s = map.getKey();
+            PrettyInput j = map.getValue();
+            remove(j);
+            //remove(j); // TODO: prefer that it is removed entirely because it can't be used alone again (March 25, 2013)
+            j.setVisible(false);
+            revalidate();
+            repaint();
+            //behaviorInputs.remove(s);  // need the behavior input to generate code esp when trait blocks are used (March 29,2013)
+        }
+
+    }
+
     public void showRectPanel() {
         if (removedRectPanel) {
             //rectPanel.setVisible(true);
@@ -181,6 +225,7 @@ public strictfp class ConditionBlock
             this.getMyBreedBlock().validate();
         }
     }
+
     public String getBehaviorInputName() {
         String behaviorInputName = new String();
         for ( String s : behaviorInputs.keySet()) {
