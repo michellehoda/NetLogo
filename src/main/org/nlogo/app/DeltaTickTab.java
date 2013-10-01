@@ -76,6 +76,7 @@ public class DeltaTickTab
     JButton buildBlock;
     JButton Not;
 
+    boolean checkForErrors = true; //!< Flag that indicates if error checking needs to be done
     boolean plotsAlive = false;
 
     int count;   // to make sure tabbedpane doesn't get created more than once (Feb 23, 2012)
@@ -1225,6 +1226,11 @@ public class DeltaTickTab
     // this procedure might be the one responsible to updating code everytime tab is switched - A (May 4)
     public void handle( Events.SwitchedTabsEvent event ) {
         if( event.oldTab == this ) {
+            boolean error = checkErrors();
+            if (error) {
+                //event.oldTab.requestFocus();
+                return;
+            }
             populateProcedures();
             pt.setIndenter(true);
             pt.select(0, pt.innerSource().length() );
@@ -1295,6 +1301,26 @@ public class DeltaTickTab
     public LibraryReader getLibraryReader() {
         return this.libraryReader;
     }
+    private boolean checkErrors() {
+        if (checkForErrors) {
+            // Check 1:
+            // Check if a trait block that should be added to a behavior block, isn't added
+            // For each breed
+            for (BreedBlock breedBlock : buildPanel.getMyBreeds()) {
+                for (BehaviorBlock behaviorBlock : breedBlock.getMyBehaviorBlocks()) {
+                    for (String traitName: behaviorBlock.getApplicableTraits()) {
+                        if (breedBlock.hasTrait(traitName) &&
+                                !behaviorBlock.getIsTrait()) {
+                            String message = new String("Behavior block " + behaviorBlock.getName() + " needs a trait block.");
+                            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     class TrackSpeciesListener implements MouseListener {
         public void mouseReleased (MouseEvent e) {
@@ -1306,7 +1332,6 @@ public class DeltaTickTab
         public void mouseClicked (MouseEvent e) {
         }
         public void mousePressed (MouseEvent e) {
-
         }
         public void mouseEntered (MouseEvent e) {
         }
