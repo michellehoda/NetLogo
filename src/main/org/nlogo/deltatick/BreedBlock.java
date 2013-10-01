@@ -605,6 +605,7 @@ public strictfp class BreedBlock
         this.repaint();
         }
     }
+
     public void hideRectPanel() {
         if (removedRectPanel) {
         //rectPanel.setVisible(false);
@@ -613,6 +614,7 @@ public strictfp class BreedBlock
         this.repaint();
         }
     }
+
     public void setRemovedRectPanel(boolean flag) {
         removedRectPanel = flag;
     }

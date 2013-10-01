@@ -48,6 +48,7 @@ public strictfp class QuantityBlock
     TraitBlockNew tBlock;
 
 
+
     public QuantityBlock(String name, boolean histo, String bars, String trait, String xLabel, String yLabel) {
         super(name, ColorSchemer.getColor(2));
         this.histo = histo;
@@ -280,7 +281,7 @@ public strictfp class QuantityBlock
         }
         catch (IOException ex) {
             System.err.println("Could not set label image for quantity block " + getName());
-             }
+        }
     }
 
     public void addColorButton() {
@@ -359,6 +360,7 @@ public strictfp class QuantityBlock
 
     public void mousePressed(java.awt.event.MouseEvent event) {
     }
+
 
         /*
 

@@ -58,7 +58,6 @@ public class BreedDropTarget
                         ((BehaviorBlock) o).addTraitblockPanel();
                     }
                 }
-
 //                addCodeBlock((BehaviorBlock) o);
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;

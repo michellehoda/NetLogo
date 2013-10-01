@@ -43,7 +43,6 @@ public class BehaviorDropTarget
                     addCodeBlock((TraitBlockNew) o);
                     ((TraitBlockNew) o).setMyParent(behBlock.getMyBreedBlock());
                     ((TraitBlockNew) o).lookBetter();
-                    System.out.println("behdroptarget " + ((TraitBlockNew) o).getSize().toString());
 
                     behBlock.removeTraitblockPanel();
                     behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
@@ -54,6 +53,14 @@ public class BehaviorDropTarget
                     ((TraitBlockNew) o).validate();
 
                     return true;
+                }
+                else if (
+                        !behBlock.getIsTrait() &&
+                                behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) == false) {
+                    String message = "";
+                    message += "Oops, " + ((TraitBlockNew) o).getTraitName() +
+                            " does not make sense in " + behBlock.getName() + "!";
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else {
                     return false;

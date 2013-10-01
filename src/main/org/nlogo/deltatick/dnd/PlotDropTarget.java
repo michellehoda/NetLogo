@@ -45,4 +45,18 @@ public class PlotDropTarget
         }
 
     }
+
+    public void dragEnter(DropTargetDragEvent dtde) {
+        if ((dtde.isDataFlavorSupported(CodeBlock.quantityBlockFlavor))) {
+            ((PlotBlock) block).showRectPanel();
+            ((PlotBlock) block).addedRectPanel = true;
+        }
+    }
+
+    public void dragExit(DropTargetEvent dte) {
+        if (((PlotBlock) block).addedRectPanel) {
+            ((PlotBlock) block).hideRectPanel();
+            ((PlotBlock) block).addedRectPanel = false;
+        }
+    }
 }

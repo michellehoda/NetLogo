@@ -29,6 +29,10 @@ public strictfp class PlotBlock
     JCharNumberFieldFilter textFilter;
 
     JPanel quantityblockLabelPanel;
+
+    JPanel rectPanel;
+    boolean removedRectPanel = false;
+    public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over plotblock
 /*
     // UNUSED
     public PlotBlock() {
@@ -164,10 +168,10 @@ public strictfp class PlotBlock
 
     public void makePlotLabel() {
         if (this.isHisto == true) {
-            label.add(new JLabel("Bar Graph of "));
+            label.add(new JLabel("Name of Bar Graph of"));
         }
         else {
-            label.add(new JLabel("Line Graph of "));
+            label.add(new JLabel("Name of Line Graph"));
         }
         textFilter = new JCharNumberFieldFilter();
         textFilter.setMaxChars(10);
@@ -254,4 +258,25 @@ public strictfp class PlotBlock
     public JTextField getPlotNameField() {
         return plotNameField;
     }
+
+    public void showRectPanel() {
+        if (removedRectPanel) {
+        this.add(rectPanel);
+        this.validate();
+        this.repaint();
+        }
+    }
+
+    public void hideRectPanel() {
+        if (removedRectPanel) {
+        this.remove(rectPanel);
+        this.validate();
+        this.repaint();
+        }
+    }
+
+    public void setRemovedRectPanel(boolean flag) {
+        removedRectPanel = flag;
+    }
+
 }
