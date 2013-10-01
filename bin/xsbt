@@ -4,10 +4,11 @@ LAUNCH=`dirname $0`/sbt-launch-0.11.2.jar
 URL='http://repo.typesafe.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/sbt-launch.jar'
 
 if [ ! -f $LAUNCH ] ; then
+  echo "here"
   curl -f $URL -o $LAUNCH || exit
 fi
 
-if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+if [ `uname -s` = CYGWIN_NT-6.1 ]; then
     export JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
 else
 if [ `uname -s` = Linux ] ; then
