@@ -102,7 +102,7 @@ public class Piechart extends JPanel {
         plot.setOutlineVisible(false);
 
         paintSupplier.reset();
-        for (Map.Entry entry: selectedVariationsPerc.entrySet()) {
+        for (Map.Entry<String, Double> entry: selectedVariationsPerc.entrySet()) {
             plot.setSectionPaint((String) entry.getKey(), paintSupplier.getNextPaint());
         }
         // Set Colors
@@ -118,9 +118,9 @@ public class Piechart extends JPanel {
 
         this.selectedVariationsPerc.clear();
         for(Map.Entry entry: varPercent.entrySet()) {
-            if ((int) Math.round(Double.parseDouble((String) entry.getValue())) > 0) {
+            //if ((int) Math.round(Double.parseDouble((String) entry.getValue())) > 0) {
                 selectedVariationsPerc.put((String) entry.getKey(), Double.parseDouble((String) entry.getValue()));
-            }
+            //}
         } // for
 
 

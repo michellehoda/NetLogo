@@ -274,9 +274,12 @@ public class TraitPreview extends JPanel {
         // In order to make bar chart look like NetLogo histogram (i.e. blanks for variations not selected)
         // All the variations must be passed to the charts. The variations that are not selected will have
         // 0.0 as their percentage. The charts should be able to handle the zero values.
-        for (String variationValue : getTrait(getSelectedTraitName()).getVariationsValuesList().values()) {
-            if (!tmpHashMap.containsKey(variationValue)) {
-                tmpHashMap.put(variationValue, "0.0");
+        if (tmpHashMap.size() > 0) {
+            // Charts need to show gaps for non-selected variations only if at least one variation is selected.
+            for (String variationValue : getTrait(getSelectedTraitName()).getVariationsValuesList().values()) {
+                if (!tmpHashMap.containsKey(variationValue)) {
+                    tmpHashMap.put(variationValue, "0.0");
+                }
             }
         }
 
