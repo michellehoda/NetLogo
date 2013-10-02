@@ -119,9 +119,9 @@ public class Barchart extends JPanel {
 
         this.selectedVariationsPerc.clear();
         for(Map.Entry entry: varPercent.entrySet()) {
-            if ((int) Math.round(Double.parseDouble((String) entry.getValue())) > 0) {
+            //if ((int) Math.round(Double.parseDouble((String) entry.getValue())) > 0) {
                 selectedVariationsPerc.put((String) entry.getKey(), Double.parseDouble((String) entry.getValue()));
-            }
+            //}
         } // for
 
         this.trait = trait;

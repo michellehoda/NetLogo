@@ -265,11 +265,21 @@ public class TraitPreview extends JPanel {
         HashMap<String, String> tmpHashMap = new HashMap<String, String>();
         // Create a hashmap of values and percent
         for (Map.Entry<String, String> entry: traitDistribution.getSelectedVariationsPercent().entrySet()) {
+            // Make sure "dummy" isn't included in tmpHashMap
             if (selectedTraitsMap.get(selectedTraitName).getVariationHashMap().containsKey(entry.getKey())) {
                 tmpHashMap.put(selectedTraitsMap.get(selectedTraitName).getVariationHashMap().get(entry.getKey()).value, entry.getValue());
             }
         }
-        //traitDisplay.updateChart(selectedTraitName, traitDistribution.getSelectedVariationsPercent());
+
+        // In order to make bar chart look like NetLogo histogram (i.e. blanks for variations not selected)
+        // All the variations must be passed to the charts. The variations that are not selected will have
+        // 0.0 as their percentage. The charts should be able to handle the zero values.
+        for (String variationValue : getTrait(getSelectedTraitName()).getVariationsValuesList().values()) {
+            if (!tmpHashMap.containsKey(variationValue)) {
+                tmpHashMap.put(variationValue, "0.0");
+            }
+        }
+
         // Pass values+percent hashmap to charts
         traitDisplay.updateChart(selectedTraitName, tmpHashMap);
         traitDisplay.revalidate();
@@ -296,14 +306,20 @@ public class TraitPreview extends JPanel {
         return variations;
     }
 
+    private Trait getTrait(String traitName) {
+        Trait returnTrait = null;
+        for (Trait trait : traitsList) {
+            if (trait.getNameTrait().equalsIgnoreCase(traitName)) {
+                returnTrait = trait;
+                break;
+            }
+        }
+        return returnTrait;
+    }
 
     public String getSelectedTraitName() {
         selectedTraitName = myTraitsList.getSelectedValue().toString();
         return selectedTraitName;
-    }
-
-    public Trait getSelectedTrait() {
-        return selectedTrait;
     }
 
     public void setSelectedTrait(String traitName) {
