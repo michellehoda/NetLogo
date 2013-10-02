@@ -184,7 +184,9 @@ public strictfp class BreedBlock
             // these blocks must be removed. Add them to a remove list -- they cannot be removed in this loop.
             // Removing them in this loop results in concurrent modification exception
             for (String traitName : behaviorBlock.getApplicableTraits()) {
-                if (!hasTrait(traitName)) {
+                if (!this.hasTrait(traitName) &&
+                    (behaviorBlock.getIsTrait() ||
+                     behaviorBlock.getIsWaitingForTrait())) {
                     removeTheseBlocks.add(behaviorBlock);
                 }
             }

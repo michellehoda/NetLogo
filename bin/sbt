@@ -2,9 +2,9 @@
 
 NETLOGO_ROOT=.
 CLASSPATH=
-if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+if [ `uname -s` = CYGWIN_NT-6.1 ]; then
     export JAVA_HOME=/cygdrive/c/Java/jdk1.6.0_31
-    NETLOGO_ROOT=/cygdrive/c/Users/salil/Documents/MISC/NetLogo
+    NETLOGO_ROOT=/cygdrive/c/Users/salilw/MISC/NetLogo.Code/NetLogo
 else
     if [ `uname -s` = Linux ] ; then
 	export JAVA_HOME=/usr/lib/jvm/java-6-sun
@@ -17,7 +17,7 @@ else
     fi
 fi
 
-if [ `uname -s` = CYGWIN_NT-6.1-WOW64 ]; then
+if [ `uname -s` = CYGWIN_NT-6.1 ]; then
     CLASSPATH=`cygpath -wp $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar`
 else
     CLASSPATH=$JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar
@@ -27,9 +27,19 @@ export PATH=$JAVA_HOME/bin:$PATH
 JAVA=$JAVA_HOME/bin/java
 
 SBTJAR_DIR=$NETLOGO_ROOT/`dirname $0`
-
+echo $SBTJAR_DIR
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 # add tools.jar to the classpath so we can use native2ascii on linux - ST 1/7/11
+if [ `uname -s` = CYGWIN_NT-6.1 ]; then
+$JAVA \
+  -Xss2m -Xmx1536m -XX:MaxPermSize=256m \
+  -Dfile.encoding=UTF-8 \
+  $JAVA_OPTS \
+  -Djava.awt.headless=true \
+  -Dapple.awt.graphics.UseQuartz=false \
+  -classpath `cygpath -wp $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar` \
+  xsbt.boot.Boot "$@"
+else
 $JAVA \
   -Xss2m -Xmx1536m -XX:MaxPermSize=256m \
   -Dfile.encoding=UTF-8 \
@@ -38,3 +48,4 @@ $JAVA \
   -Dapple.awt.graphics.UseQuartz=false \
   -classpath $JAVA_HOME/lib/tools.jar:$SBTJAR_DIR/sbt-launch.jar \
   xsbt.boot.Boot "$@"
+fi

@@ -29,6 +29,7 @@ tmp/
 
 # other
 /bin/sbt
+/bin/xsbt
 /build/
 /.idea/workspace.xml
 /devel/depend.ddf
