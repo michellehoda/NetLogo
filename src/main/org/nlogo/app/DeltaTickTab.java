@@ -1041,7 +1041,8 @@ public class DeltaTickTab
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
                         // Now save the new pen name
                         quantBlock.setSavedPenName();
-                        ((AbstractPlotWidget) plotWidget).xLabel("Count");
+                        ((AbstractPlotWidget) plotWidget).xLabel(quantBlock.getXLabel());
+                        ((AbstractPlotWidget) plotWidget).yLabel(quantBlock.getYLabel());
                         //plot.legendIsOpen
                     }
 

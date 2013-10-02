@@ -327,22 +327,21 @@ public strictfp class QuantityBlock
     public String getXLabel() {
         String retLabel = xLabel;
         if (histo) {
-            retLabel = inputs.get("trait").getText();
+            retLabel = "Variations of " + tBlock.getTraitName();
+            //inputs.get("trait").getText();
         }
         return retLabel;
     }
     public String getYLabel() {
-        return yLabel;
+        return yLabel + " " + tBlock.getBreedName();
     }
 
     public String getHistoTrait() {
         return tBlock.getTraitName();
-        //return inputs.get("trait").getText();
     }
 
     public String getHistoBreed() {
         return tBlock.getBreedName();
-        //return inputs.get("breed-type").getText();
     }
 
     public HashMap<String, Variation> getHistoVariation() {

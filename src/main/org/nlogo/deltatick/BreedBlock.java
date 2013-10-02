@@ -326,10 +326,12 @@ public strictfp class BreedBlock
                 }
             }
             code += "set color " + colorName + '\n';
+
             code += setupTrait();
             code += "]\n";
             code += setupTraitLabels();
             code += setBreedShape();
+            code += "ask patches [set pcolor white]\n";
             int i;
         }
         return code;
@@ -339,7 +341,6 @@ public strictfp class BreedBlock
         String code = "";
         ArrayList<String> setTraits = new ArrayList<String>();  // to make sure setupTrait is called only once
 
-        //for (CodeBlock block: myBlocks) {
         for (TraitBlockNew block : myTraitBlocks) {
             if (block instanceof TraitBlockNew) {
                 String traitName =  block.getTraitName();

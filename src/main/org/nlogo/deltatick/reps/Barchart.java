@@ -62,8 +62,6 @@ public class Barchart extends JPanel {
         chartPanel.setPreferredSize(new Dimension(BARCHART_WIDTH, BARCHART_HEIGHT));
         this.setVisible(true);
         this.validate();
-
-
     }
 
     private CategoryDataset createDataset() {
@@ -162,9 +160,9 @@ public class Barchart extends JPanel {
         }
         public Paint getItemPaint(final int row, final int column) {
             // Make bars transparent (similar to NetLogo histograms)
-            return new Color(0, 0, 255, 0);
+            //return new Color(0, 0, 255, 0);
             // For colored bars, use the following line instead of the one for transparent colors
-            // return paintSupplier.getNextPaint();
+             return paintSupplier.getNextPaint();
         }
     }
 
