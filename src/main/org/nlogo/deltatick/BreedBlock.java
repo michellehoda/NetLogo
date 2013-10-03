@@ -173,8 +173,10 @@ public strictfp class BreedBlock
             for (TraitBlockNew traitBlock : getMyTraitBlocks()) {
                 // Check if this behavior block already has a trait associated with it
                 if (!behaviorBlock.getIsTrait() &&
-                     behaviorBlock.isTraitApplicable(traitBlock.getTraitName())) {
-                    // This trait applies to this behavior block, but hasn't been applied to the block yet
+                    behaviorBlock.isTraitApplicable(traitBlock.getTraitName()) &&
+                    !behaviorBlock.getIsWaitingForTrait()) {
+                    // This trait applies to this behavior block, but hasn't been applied to the block yet,
+                    // and this block isn't already waiting for the trait (with traitpanel)
                     // Remove behavior input and add the traitpanel
                     behaviorBlock.removeBehaviorInput();
                     behaviorBlock.addTraitblockPanel();
