@@ -11,6 +11,7 @@ import org.jfree.data.general.PieDataset;
 import org.nlogo.deltatick.TraitDisplay;
 
 import javax.swing.JPanel;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.text.DecimalFormat;
@@ -100,6 +101,15 @@ public class Piechart extends JPanel {
         plot.setShadowPaint(null);
         plot.setStartAngle(startAngle);
         plot.setOutlineVisible(false);
+        
+        // Customize label
+        // Background transparent, no border/outline
+        plot.setLabelBackgroundPaint(new Color(0xFF, 0xFF, 0xFF, 0));
+        plot.setLabelOutlinePaint(null);
+        // Font
+        plot.setLabelFont(new Font("Courier New", Font.PLAIN, 14));
+        // No shadow
+        plot.setLabelShadowPaint(null);
 
         paintSupplier.reset();
         for (Map.Entry<String, Double> entry: selectedVariationsPerc.entrySet()) {
