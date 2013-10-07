@@ -102,6 +102,7 @@ public class Barchart extends JPanel {
         rangeAxis.setRange(0, 100);
 
         // Customize bars
+        paintSupplier.reset();
         final BarRenderer customBarRenderer = new CustomBarRenderer(paintSupplier);
         customBarRenderer.setDrawBarOutline(true);
         customBarRenderer.setMaximumBarWidth(1.0);
@@ -109,8 +110,6 @@ public class Barchart extends JPanel {
         customBarRenderer.setItemMargin(0.0);
         customBarRenderer.setBarPainter(new StandardBarPainter());
         plot.setRenderer(customBarRenderer);
-
-        paintSupplier.reset();
 
         return chart;
     }
