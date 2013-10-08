@@ -154,7 +154,7 @@ public class TraitDisplay extends JPanel {
             }
 
             this.revalidate();
-            this.repaint();
+            //this.repaint();
 
         }
 
@@ -189,18 +189,19 @@ public class TraitDisplay extends JPanel {
         }
 
         public Paint getNextPaint() {
-            System.out.println("paintIndex: " + paintIndex);
             Paint nextPaint = COLORS.get(paintIndex);
             paintIndex = (paintIndex == moduloIndex) ? resetIndex : (paintIndex+1) % COLORS.size();
             // paintIndex = ((((paintIndex - resetIndex) + 1) % moduloSize) + resetIndex) % COLORS.size();
             return nextPaint;
         }
+        public Paint getPaint(int rawIndex) {
+            int pIndex = (resetIndex + rawIndex) % COLORS.size();
+            return COLORS.get(pIndex);
+        }
 
         public void reset() {
             paintIndex = resetIndex;
-            //System.out.println("paintIndex: " + paintIndex);
         }
-
     } // Paint Supplier
 
 } // class TraitDisplay

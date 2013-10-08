@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -101,7 +103,7 @@ public class Piechart extends JPanel {
         plot.setShadowPaint(null);
         plot.setStartAngle(startAngle);
         plot.setOutlineVisible(false);
-        
+
         // Customize label
         // Background transparent, no border/outline
         plot.setLabelBackgroundPaint(new Color(0xFF, 0xFF, 0xFF, 0));
@@ -158,4 +160,18 @@ public class Piechart extends JPanel {
         this.setVisible(true);
         this.validate();
     }
+    private class PiechartMouseListener implements MouseListener {
+        public void mouseReleased(MouseEvent e) {
+        }
+        public void mouseEntered(MouseEvent e) {
+        }
+        public void mouseClicked(MouseEvent e) {
+        }
+        public void mouseExited(MouseEvent e) {
+        }
+        public void mousePressed(MouseEvent e) {
+            System.out.println("X = " + e.getX() + " Y = " + e.getY());
+        }
+    }
+
 }
