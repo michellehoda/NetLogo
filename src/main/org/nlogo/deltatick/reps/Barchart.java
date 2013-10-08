@@ -1,6 +1,8 @@
 package org.nlogo.deltatick.reps;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -21,6 +23,8 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -126,7 +130,6 @@ public class Barchart extends JPanel {
         this.trait = trait;
         CategoryDataset dataset = createDataset();
         chart = createChart(dataset);
-
         chartPanel.setChart(chart);
         chartPanel.setPreferredSize(new Dimension(BARCHART_WIDTH, BARCHART_HEIGHT));
 
@@ -161,8 +164,7 @@ public class Barchart extends JPanel {
             // Make bars transparent (similar to NetLogo histograms)
             //return new Color(0, 0, 255, 0);
             // For colored bars, use the following line instead of the one for transparent colors
-             return paintSupplier.getNextPaint();
+            return paintSupplier.getPaint(column);
         }
     }
-
 }
