@@ -165,7 +165,7 @@ public class TraitBlockNew
             return DEFAULT_CODEBLOCK_WIDTH;
         }
         else if (getParent() instanceof BehaviorBlock) {
-            System.out.println("TraitBlockNew.getPreferredWidth()");
+            //System.out.println("TraitBlockNew.getPreferredWidth()");
             return 50;
         }
         return DEFAULT_CODEBLOCK_WIDTH;
