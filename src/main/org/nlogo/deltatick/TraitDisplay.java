@@ -102,7 +102,7 @@ public class TraitDisplay extends JPanel {
 
     private class ChartsPanel extends JPanel {
 
-        private static final int DEFAULT_PAINT_INDEX_INCREMENT = 3;
+        private static final int DEFAULT_PAINT_INDEX_INCREMENT = 5;
 
         HashMap<String, Piechart> selectedTraitPieChart = new HashMap<String, Piechart>();
         HashMap<String, Barchart> selectedTraitBarChart = new HashMap<String, Barchart>();
@@ -116,11 +116,11 @@ public class TraitDisplay extends JPanel {
 
             // Trait+Variation selected for the first time, i.e. no previously selected variation
             // Create new chart and add to hashmap and panel
-            Piechart piechart = new Piechart(traitName, new PaintSupplier(defaultPaintIndex));
+            Piechart piechart = new Piechart(traitName, new PaintSupplier(defaultPaintIndex, varPercent.size()));
             piechart.updateChart(traitName, varPercent);
             selectedTraitPieChart.put(traitName, piechart);
             // Create the corresponding barchart
-            Barchart barchart = new Barchart(traitName, new PaintSupplier(defaultPaintIndex));
+            Barchart barchart = new Barchart(traitName, new PaintSupplier(defaultPaintIndex, varPercent.size()));
             barchart.updateChart(traitName, varPercent);
             selectedTraitBarChart.put(traitName, barchart);
 
@@ -154,7 +154,7 @@ public class TraitDisplay extends JPanel {
             }
 
             this.revalidate();
-            this.repaint();
+            //this.repaint();
 
         }
 
@@ -162,10 +162,11 @@ public class TraitDisplay extends JPanel {
 
     public class PaintSupplier {
         ArrayList<Color> COLORS;
-        int resetIndex;
-        int paintIndex;
+        int resetIndex; //!< The index that paintIndex must reset to
+        int moduloIndex; //!< The index at which paintIndex will wrap back to resetIndex
+        int paintIndex; //!< THe next paint index
 
-        public PaintSupplier(int defaultIndex) {
+        public PaintSupplier(int defaultIndex, int moduloSize) {
 
             // Set up colors
             COLORS = new ArrayList<Color>();
@@ -183,19 +184,24 @@ public class TraitDisplay extends JPanel {
             COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
 
             resetIndex = defaultIndex % COLORS.size();
+            moduloIndex = (defaultIndex + moduloSize) % COLORS.size();
             paintIndex = resetIndex;
         }
 
         public Paint getNextPaint() {
             Paint nextPaint = COLORS.get(paintIndex);
-            paintIndex = (paintIndex+1) % COLORS.size();
+            paintIndex = (paintIndex == moduloIndex) ? resetIndex : (paintIndex+1) % COLORS.size();
+            // paintIndex = ((((paintIndex - resetIndex) + 1) % moduloSize) + resetIndex) % COLORS.size();
             return nextPaint;
+        }
+        public Paint getPaint(int rawIndex) {
+            int pIndex = (resetIndex + rawIndex) % COLORS.size();
+            return COLORS.get(pIndex);
         }
 
         public void reset() {
             paintIndex = resetIndex;
         }
-
     } // Paint Supplier
 
 } // class TraitDisplay
