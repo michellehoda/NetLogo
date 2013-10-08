@@ -24,8 +24,12 @@ public strictfp class BehaviorBlock
     boolean isTrait = false;
     boolean waitingForTrait = false;
     boolean isMutate;
-    TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
+    //TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
                                     // Do we really need a full trait block or just the trait name? (09/30/2013)
+
+    // The trait has been dropped in this block
+    // As of now only one trait can be dropped
+    String traitName = new String();
     //CodeBlock container = null;
     BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
@@ -33,7 +37,7 @@ public strictfp class BehaviorBlock
     // Set of acceptable traits
     Set<String> applicableTraits = new HashSet<String>();
     JPanel traitblockLabelPanel = null;
-
+    TraitBlockDisplayPanel traitBlockDisplayPanel;
 
     public BehaviorBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(0).brighter());
@@ -46,6 +50,10 @@ public strictfp class BehaviorBlock
         if (!aTraits.isEmpty()) {
             applicableTraits = new HashSet<String>(Arrays.asList(aTraits.split(",")));
         }
+        traitBlockDisplayPanel= new TraitBlockDisplayPanel("");
+        traitBlockDisplayPanel.setVisible(false);
+        label.add(traitBlockDisplayPanel);
+        validate();
     }
 
 
@@ -194,7 +202,8 @@ public strictfp class BehaviorBlock
             passBack += agentInput.getText() + " ";
         }
         if (isTrait) {
-            passBack += tBlockNew.getTraitName();
+            //passBack += tBlockNew.getTraitName();
+            passBack += traitName;
         }
         else {
             for (JTextField behaviorInput : behaviorInputs.values()) {
@@ -286,22 +295,25 @@ public strictfp class BehaviorBlock
     public boolean getIsWaitingForTrait() {
         return waitingForTrait;
     }
-//    public void setIsTrait(boolean value) {
-//        isTrait = value;
-//    }
 
     public void setTrait(TraitBlockNew traitBlockNew) {
-        tBlockNew = traitBlockNew;
+        //tBlockNew = traitBlockNew;
+        traitName = new String(traitBlockNew.getTraitName());
         // This block now HAS a trait block
         isTrait = true;
         // It is no longer waiting for a trait block
         waitingForTrait = false;
+        // Display the traitBlockDisplayPanel
+        traitBlockDisplayPanel.setTraitName(traitName);
+        traitBlockDisplayPanel.setVisible(true);
+        revalidate();
     }
 
     public String getTrait() {
         String retVal = "";
         if (isTrait) {
-            retVal = new String(tBlockNew.getTraitName());
+            retVal = traitName;
+            //retVal = new String(tBlockNew.getTraitName());
         }
         return retVal;
     }
@@ -336,21 +348,18 @@ public strictfp class BehaviorBlock
         super.addBlock(block);
         this.remove(block);
 
-        JPanel traitBlockPanel = new JPanel();
-        traitBlockPanel.setPreferredSize(new Dimension(70, 30));
-        traitBlockPanel.setLayout(new BoxLayout(traitBlockPanel, BoxLayout.X_AXIS));
-        traitBlockPanel.add(block);
+//        JPanel traitBlockPanel = new JPanel();
+//        traitBlockPanel.setPreferredSize(new Dimension(70, 30));
+//        traitBlockPanel.setLayout(new BoxLayout(traitBlockPanel, BoxLayout.X_AXIS));
+//        traitBlockPanel.add(block);
+//
+//        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 10, 0);
+//        label.setLayout(flowLayout);
+//        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//        label.setPreferredSize(new Dimension(label.getWidth(), 30));
+//        label.add(traitBlockPanel);
 
-        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 10, 0);
-        label.setLayout(flowLayout);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        label.setPreferredSize(new Dimension(label.getWidth(), 30));
-
-        //System.out.println("label size " + label.getSize().toString());
-        //System.out.println("block size " + block.getSize().toString());
-        label.add(traitBlockPanel);
-
-        block.repaint();
+        //block.repaint();
 
         repaint();
         validate();
@@ -400,5 +409,35 @@ public strictfp class BehaviorBlock
         return toolTip;
     }
 
+    private class TraitBlockDisplayPanel extends JPanel {
+        private JLabel traitLabel;
+        // Set the width and height here
+        private final int DEFAULT_WIDTH = 70;
+        private final int DEFAULT_HEIGHT = 30;
+
+        public TraitBlockDisplayPanel(String name) {
+            // Set the layout for the panel
+            this.setLayout(new BorderLayout(0, 0));
+
+            // Customize the label to look like a trait block
+            traitLabel = new JLabel(name, JLabel.CENTER);
+            traitLabel.setBackground(Color.YELLOW);
+            traitLabel.setVerticalAlignment(SwingConstants.CENTER);
+            traitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            traitLabel.setFont(new java.awt.Font("Arial", Font.PLAIN, 12));
+            traitLabel.setPreferredSize(new Dimension(this.DEFAULT_WIDTH, this.DEFAULT_HEIGHT));
+
+            // Add the label and customize the panel to look like a trait block
+            this.add(traitLabel, BorderLayout.CENTER);
+            this.setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+            this.setBackground(Color.YELLOW);
+            this.setPreferredSize(new Dimension(this.DEFAULT_WIDTH, this.DEFAULT_HEIGHT));
+        }
+        // Update trait name
+        public void setTraitName(String name) {
+            traitLabel.setText(name);
+            revalidate();
+        }
+    }
 
 }
