@@ -164,6 +164,7 @@ public strictfp class PlotBlock
     @Override
     public void makeLabel() {
         showRemoveButton();
+        makeRect();
     }
 
     public void makePlotLabel() {
@@ -259,7 +260,20 @@ public strictfp class PlotBlock
         return plotNameField;
     }
 
+    public void makeRect() {
+        rectPanel = new JPanel();
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        rectPanel.setBackground(getBackground());
+        JLabel label = new JLabel();
+        label.setBackground(getBackground());
+        label.setText("Add blocks here");
+        rectPanel.add(label);
+    }
+
+
     public void showRectPanel() {
+        rectPanel.validate();
         if (removedRectPanel) {
         this.add(rectPanel);
         this.validate();

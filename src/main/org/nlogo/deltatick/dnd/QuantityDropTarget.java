@@ -33,36 +33,17 @@ public class QuantityDropTarget
                 Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
                 if (o instanceof Component) {
                     if (o instanceof TraitBlockNew) {
-
-//                        if (! behBlock.getMyBreedBlock().plural().equalsIgnoreCase(((TraitBlockNew) o).getBreedName()) ) {
-//                            String message = "Oops! This block does not belong to this species!";
-//                            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
-//                            return false;
-//                        }
-                        //else
-//                        if (
-//                              !behBlock.getIsTrait() &&
-//                              behBlock.getApplicableTraits().contains(((TraitBlockNew) o).getTraitName()) ) {
-
                             addCodeBlock((TraitBlockNew) o);
                             ((TraitBlockNew) o).setMyParent(qBlock);
                             ((TraitBlockNew) o).hideRemoveButton();
                             qBlock.setHistoTrait((TraitBlockNew) o);
                             qBlock.removeInput();
-
-                            //behBlock.removeTraitblockPanel();
-                            //behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
-                            //behBlock.setTrait((TraitBlockNew) o);
-                            //behBlock.getMyBreedBlock().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)
-
+                            qBlock.removeTraitblockPanel();
                             qBlock.validate();
                             ((TraitBlockNew) o).validate();
 
                             return true;
-//                        }
-//                        else {
-//                            return false;
-//                        }
+
                     }
                 }
                 return false;

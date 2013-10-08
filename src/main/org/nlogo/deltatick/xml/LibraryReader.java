@@ -224,6 +224,7 @@ public class LibraryReader {
                 String bars = "0";
                 String trait = " ";
                 boolean isRunResult = false;
+                boolean needsTrait = false;
 
                 String xLabel = new String(quantity.getAttributes().getNamedItem("xlabel").getTextContent());
                 String yLabel = new String(quantity.getAttributes().getNamedItem("ylabel").getTextContent());
@@ -236,10 +237,11 @@ public class LibraryReader {
                     isRunResult = quantity.getAttributes().getNamedItem("runresult").getTextContent().equalsIgnoreCase("true");
 
                 }
+                if (quantity.getAttributes().getNamedItem("trait").getTextContent().contains("true")) {
+                    needsTrait = true;
+                }
 
-
-
-                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel);
+                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, needsTrait, trait, xLabel, yLabel);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
                 ((QuantityBlock) block).setRunResult(isRunResult);
@@ -248,8 +250,6 @@ public class LibraryReader {
 
             NodeList breeds = library.getElementsByTagName("breed");
             NodeList globals = library.getElementsByTagName("global");
-
-            //deltaTickTab.backgroundInfo = new DeltaTickTab.ModelBackgroundInfo(  );
 
         } catch (Exception e) {
             e.printStackTrace();

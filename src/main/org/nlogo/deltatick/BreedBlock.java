@@ -597,7 +597,7 @@ public strictfp class BreedBlock
         rectPanel.setBackground(getBackground());
         JLabel label = new JLabel();
         label.setBackground(getBackground());
-        label.setText("What do you want " + this.getName() + " to do?");
+        label.setText("Add blocks here");
         rectPanel.add(label);
         rectPanel.validate();
     }

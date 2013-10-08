@@ -184,7 +184,7 @@ public class TraitBlockNew
     }
 
     private void setSmallSize() {
-        this.setSize(50, 20);
+        //this.setSize(50, 20);
         this.setPreferredSize(new Dimension(50, 20));
         label.setBorder(BorderFactory.createLineBorder(Color.black));
         //this.label.setMinimumSize(new Dimension(30, 20));

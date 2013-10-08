@@ -31,6 +31,10 @@ public class MonitorDropTarget
         if (o instanceof QuantityBlock) {
             ((MonitorBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
+            if (((QuantityBlock) o).getNeedsTrait() == true) {
+                ((QuantityBlock) o).addTraitblockPanel();
+                ((QuantityBlock) o).removeInput();
+            }
                 new QuantityDropTarget((QuantityBlock) o);
                 ((QuantityBlock) o).validate();
                 ((QuantityBlock) o).repaint();

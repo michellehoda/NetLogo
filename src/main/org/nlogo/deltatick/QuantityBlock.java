@@ -8,6 +8,7 @@ import org.nlogo.window.MonitorWidget;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseAdapter;
@@ -24,6 +25,7 @@ public strictfp class QuantityBlock
     Color penColor = Color.black;
     boolean histo = false;
     String bars = "0";
+    boolean needsTrait = false;
     String trait = " ";
     String population;
     String variable;
@@ -46,14 +48,15 @@ public strictfp class QuantityBlock
     ImageIcon lineImageIcon;
 
     TraitBlockNew tBlock;
+    JPanel traitblockLabelPanel = null;
 
 
-
-    public QuantityBlock(String name, boolean histo, String bars, String trait, String xLabel, String yLabel) {
+    public QuantityBlock(String name, boolean histo, String bars, boolean needsTrait, String trait, String xLabel, String yLabel) {
         super(name, ColorSchemer.getColor(2));
         this.histo = histo;
         this.bars = bars;
         this.trait = trait;
+        this.needsTrait = needsTrait;
         this.xLabel = xLabel;
         this.yLabel = yLabel;
         flavors = new DataFlavor[]{
@@ -112,6 +115,7 @@ public strictfp class QuantityBlock
     public void removeInput() {
         for (PrettyInput input : inputs.values()) {
             input.setVisible(false);
+            //this.remove(input);
         }
     }
 
@@ -284,6 +288,43 @@ public strictfp class QuantityBlock
         }
     }
 
+    public void addTraitblockPanel() {
+
+        if (needsTrait == true) {
+            removeInput();
+            // Set up the panel
+            traitblockLabelPanel = new JPanel();
+            traitblockLabelPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+            traitblockLabelPanel.setBackground(getBackground());
+            traitblockLabelPanel.setAlignmentX(CENTER_ALIGNMENT);
+            traitblockLabelPanel.setAlignmentY(CENTER_ALIGNMENT);
+            traitblockLabelPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+
+            // Set up the label
+            JLabel traitblockLabel = new JLabel();
+            traitblockLabel.setText("Add trait block here");
+            traitblockLabel.setFont(new Font("Arial", 1, 11));
+            traitblockLabel.setBackground(getBackground());
+            traitblockLabel.setForeground(Color.WHITE);
+            traitblockLabel.setAlignmentX(CENTER_ALIGNMENT);
+            traitblockLabel.setAlignmentY(CENTER_ALIGNMENT);
+
+            // Add label and update
+            traitblockLabelPanel.add(traitblockLabel);
+            traitblockLabelPanel.setVisible(true);
+            traitblockLabelPanel.validate();
+            add(traitblockLabelPanel);
+            validate();
+        }
+    }
+
+    public void removeTraitblockPanel() {
+        if (traitblockLabelPanel != null) {
+            remove(traitblockLabelPanel);
+        }
+        validate();
+    }
+
     public void addColorButton() {
         label.add(colorButton);
         colorButton.setVisible(false);
@@ -346,6 +387,10 @@ public strictfp class QuantityBlock
 
     public HashMap<String, Variation> getHistoVariation() {
         return tBlock.getVariationHashMap();
+    }
+
+    public boolean getNeedsTrait() {
+        return needsTrait;
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {
