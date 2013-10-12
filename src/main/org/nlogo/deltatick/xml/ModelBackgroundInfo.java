@@ -191,7 +191,7 @@ public class ModelBackgroundInfo {
     }
 
     // return only names of breeds -A. (Oct 17)
-    public String[] getBreedTypes() {
+    public String[] getBreedNames() {
         // breedTypes is an array of size n of breeds -A. (oct 5)
         String[] breedTypes = new String[breeds.size()];
         int i = 0;
@@ -239,7 +239,7 @@ public class ModelBackgroundInfo {
         return diveIns;
     }
 
-    public String[] getTraitTypes() {
+    public String[] getTraitNames() {
         String[] traitTypes = new String[traits.size()];
         int i = 0;
         for (Trait trait : traits) {

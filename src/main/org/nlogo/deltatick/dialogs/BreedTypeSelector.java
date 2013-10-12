@@ -3,8 +3,6 @@ package org.nlogo.deltatick.dialogs;
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,7 +61,7 @@ public class BreedTypeSelector extends javax.swing.JDialog {
 
 
     public void showMe(ModelBackgroundInfo backgroundInfo) {
-        final String[] strings = backgroundInfo.getBreedTypes();
+        final String[] strings = backgroundInfo.getBreedNames();
         breedList.setModel(new javax.swing.AbstractListModel() {
             public int getSize() {
                 return strings.length;

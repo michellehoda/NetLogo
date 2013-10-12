@@ -135,7 +135,7 @@ public class TraitPreview extends JPanel {
 
     public void showMe() {
         final String[] traitStrings = getTraitTypes();
-                //breedBlock.getTraitTypes();
+                //breedBlock.getTraitNames();
         myTraitsList = new JList(traitStrings);
         myTraitsList.setModel(new javax.swing.AbstractListModel() {
             public int getSize() {

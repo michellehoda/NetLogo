@@ -1,18 +1,15 @@
 package org.nlogo.deltatick.dialogs;
 
-import org.jdesktop.layout.*;
 import org.nlogo.deltatick.BreedBlock;
 import org.nlogo.deltatick.TraitBlock;
 import org.nlogo.deltatick.xml.ModelBackgroundInfo;
 import org.nlogo.deltatick.BuildPanel;
-import org.nlogo.deltatick.xml.Breed;
 import org.nlogo.deltatick.xml.Trait;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -88,7 +85,7 @@ public class TraitTypeSelectorOld
 
         // Show traits from XML
 
-        final String[] traitStrings = backgroundInfo.getTraitTypes();
+        final String[] traitStrings = backgroundInfo.getTraitNames();
         myTraitsList.setModel(new javax.swing.AbstractListModel() {
             public int getSize() {
                 return traitStrings.length;
