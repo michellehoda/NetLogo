@@ -566,6 +566,16 @@ public String newSaveAsXML() {
         return myBreeds.size();
     }
 
+    public boolean breedExists(String name) {
+        boolean retVal = false;
+        for ( BreedBlock breedBlock : myBreeds ) {
+            if (breedBlock.plural().equalsIgnoreCase(name)) {
+                retVal = true;
+            }
+        }
+        return retVal;
+    }
+
     public String[] getbreedNames() {
         String [] names = new String [myBreeds.size()];
         int i = 0;

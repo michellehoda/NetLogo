@@ -651,7 +651,7 @@ public class TraitPreview extends JPanel {
         return (TRAITPREVIEW_TOTAL_WIDTH + 50);
     }
     public int getTotalHeight() {
-        return (TRAITPREVIEW_TOTAL_HEIGHT + labelPanel.getPreferredSize().height + 50);
+        return (TRAITPREVIEW_TOTAL_HEIGHT + LabelPanel.LABELPANEL_HEIGHT + 50);
     }
 
     public TraitDistribution getTraitDistribution() {

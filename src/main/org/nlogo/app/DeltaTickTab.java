@@ -10,6 +10,7 @@ import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
 import org.nlogo.widget.NoteWidget;
 import org.nlogo.window.*;
+import org.nlogo.deltatick.SpeciesEditorPanel;
 
 
 import org.nlogo.plot.PlotPen;
@@ -56,6 +57,9 @@ public class DeltaTickTab
     BuildPanel buildPanel;
     SpeciesInspectorPanel speciesInspectorPanel;
     HashMap<BreedBlock, SpeciesInspectorPanel> speciesInspectorPanelMap = new HashMap<BreedBlock, SpeciesInspectorPanel>();
+
+    SpeciesEditorPanel speciesEditorPanel;
+    HashMap<String, SpeciesEditorPanel> speciesEditorPanelHashMap = new HashMap<String, SpeciesEditorPanel>();
 
     JButton loadLibrary;
     JButton addBreed;
@@ -322,7 +326,22 @@ public class DeltaTickTab
     private final javax.swing.Action addBreedAction =
 		new javax.swing.AbstractAction( "Add Species" ) {
             public void actionPerformed( java.awt.event.ActionEvent e ) {
-                makeBreedBlock(null, null);
+                //makeBreedBlock(null, null);
+
+                // Disable the AddBreed button until Okay/Cancel is clicked
+                addBreed.setEnabled(false);
+                // Create the species editor
+                JFrame someFrame = new JFrame("Species Editor");
+                someFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                SpeciesEditorPanel speciesEditorPanel = new SpeciesEditorPanel(buildPanel.getBgInfo().getBreedNames(),
+                                                                               buildPanel.getBgInfo().getTraits(),
+                                                                               someFrame);
+                speciesEditorPanel.getOkayButton().addActionListener(new SpeciesEditorPanelOkayListener(speciesEditorPanel));
+                speciesEditorPanel.getCancelButton().addActionListener(new SpeciesEditorPanelCancelListener(speciesEditorPanel));
+                speciesEditorPanel.setVisible(true);
+                someFrame.setResizable(false);
+                someFrame.pack();
+                someFrame.setVisible(true);
 
                 // if more than 1 breed available in XML -A. (oct 5)
                 //Commented this out because I'm not using breedTypeSelector anymore -Aditi (March 31, 2013)
@@ -371,21 +390,20 @@ public class DeltaTickTab
         // Add the appropriate remove/close button listener
         newBreed.getRemoveButton().addActionListener(new BreedBlockRemoveButtonListener(newBreed));
 
-        // Create speciesinspectorpanel for the breedblock
-        JFrame jFrame = new JFrame("Species Inspector");
-        speciesInspectorPanel = new SpeciesInspectorPanel(newBreed, jFrame);
+//        // Create speciesinspectorpanel for the breedblock
+//        JFrame jFrame = new JFrame("Species Inspector");
+//        speciesInspectorPanel = new SpeciesInspectorPanel(newBreed, jFrame);
 
-        speciesInspectorPanel.addPanels(jFrame.getContentPane());
         newBreed.setHasSpeciesInspector(true);
-        jFrame.setResizable(true);
-        jFrame.pack();
-        jFrame.setVisible(false);
+//        jFrame.setResizable(true);
+//        jFrame.pack();
+//        jFrame.setVisible(false);
 
-        // Add action listeners here because the action listener is a member class of deltaticktab and not accessible in breedblock
-        speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(newBreed));
-        speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(newBreed));
-        // Put the speciesinspectorpanel in the map
-        speciesInspectorPanelMap.put(newBreed, speciesInspectorPanel);
+//        // Add action listeners here because the action listener is a member class of deltaticktab and not accessible in breedblock
+//        speciesInspectorPanel.getOkayButton().addActionListener(new SpeciesPanelOkayListener(newBreed));
+//        speciesInspectorPanel.getCancelButton().addActionListener(new SpeciesPanelCancelListener(newBreed));
+//        // Put the speciesinspectorpanel in the map
+//        speciesInspectorPanelMap.put(newBreed, speciesInspectorPanel);
 
         buildPanel.addBreed(newBreed);
         userInput.addBreed(newBreed.plural());
@@ -437,70 +455,230 @@ public class DeltaTickTab
         }
 
         public void actionPerformed(ActionEvent e) {
-            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
-            // Copy from orig traitstate map to traitstate map
-            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+            SpeciesEditorPanel panel = speciesEditorPanelHashMap.get(myParent.plural());
+            panel.getTraitPreview().loadOrigSelectedTraitsMap();
+            panel.updateTraitDisplay();
+            panel.getMyFrame().pack();
+            panel.getMyFrame().setVisible(true);
 
-            speciesInspectorPanel.updateText();
-            speciesInspectorPanel.updateTraitDisplay();
-            speciesInspectorPanel.getMyFrame().pack();
-            speciesInspectorPanel.getMyFrame().validate();
-            speciesInspectorPanel.getMyFrame().setVisible(true);
+//            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+//            // Copy from orig traitstate map to traitstate map
+//            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+//            speciesInspectorPanel.updateText();
+//            speciesInspectorPanel.updateTraitDisplay();
+//            speciesInspectorPanel.getMyFrame().pack();
+//            speciesInspectorPanel.getMyFrame().validate();
+//            speciesInspectorPanel.getMyFrame().setVisible(true);
         }
     }
 
+//    // This function should/will be removed once species editor panel starts working as intended.
+//    private void updateTraitBlocks(SpeciesInspectorPanel panel, BreedBlock breedBlock) {
+//        // First remove all existing traits for this breed (block)
+//        ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
+//        for (TraitBlockNew tBlock : panel.getMyParent().getMyTraitBlocks()) {
+//            removeBlocks.add(tBlock);
+//        }
+//        for (TraitBlockNew tBlock : removeBlocks) {
+//            libraryHolder.removeTraitBlock(tBlock);
+//            buildPanel.removeTrait(tBlock);
+//            userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+//            //speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
+//            breedBlock.removeAllTraitBlocks();
+//        }
+//        // Then create all traits (as selected) for this breed(block)
+//        for (TraitState traitState : panel.getTraitStateMap().values()) {
+//            makeTraitBlock(breedBlock, traitState);
+//        }
+//
+//    }
 
-    public class SpeciesPanelOkayListener implements ActionListener {
-        BreedBlock myParent;
+    private void updateTraitBlocks(SpeciesEditorPanel panel, BreedBlock breedBlock) {
+        // First remove all existing traits for this breed (block)
+        ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
+        for (TraitBlockNew tBlock : breedBlock.getMyTraitBlocks()) {
+            removeBlocks.add(tBlock);
+        }
+        for (TraitBlockNew tBlock : removeBlocks) {
+            libraryHolder.removeTraitBlock(tBlock);
+            buildPanel.removeTrait(tBlock);
+            userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+            //speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
+            breedBlock.removeAllTraitBlocks();
+        }
+        // Then create all traits (as selected) for this breed(block)
+        for (TraitState traitState : panel.getTraitStateMap().values()) {
+            makeTraitBlock(breedBlock, traitState);
+        }
 
-        SpeciesPanelOkayListener(BreedBlock myParent) {
-            this.myParent = myParent;
+    }
+
+//    public class SpeciesPanelOkayListener implements ActionListener {
+//        BreedBlock myParent;
+//
+//        SpeciesPanelOkayListener(BreedBlock myParent) {
+//            this.myParent = myParent;
+//        }
+//
+//        public void actionPerformed(ActionEvent e) {
+//            //SpeciesInspectorPanel
+//            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+//
+//            // Save origSelectedTraitsMap
+//            speciesInspectorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
+//
+//            myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
+//            myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
+//            speciesInspectorPanel.getMyFrame().setVisible(false);
+//
+////            // First remove all existing traits for this breed (block)
+////            ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
+////            for (TraitBlockNew tBlock : speciesInspectorPanel.getMyParent().getMyTraitBlocks()) {
+////                removeBlocks.add(tBlock);
+////            }
+////            for (TraitBlockNew tBlock : removeBlocks) {
+////                libraryHolder.removeTraitBlock(tBlock);
+////                buildPanel.removeTrait(tBlock);
+////                userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
+////                //speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
+////                myParent.removeAllTraitBlocks();
+////            }
+////            // Then create all traits (as selected) for this breed(block)
+////            for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
+////                makeTraitBlock(myParent, traitState);
+////            }
+//
+//            // Update the trait blocks (add, remove or update variations)
+//            // because of possible changes from species inspector
+//            updateTraitBlocks(speciesInspectorPanel, myParent);
+//
+//            // Update existing behavior blocks because traits and variations may have changed
+//            myParent.updateMyBehaviorBlocks();
+//
+//            myParent.getTraitLabels().clear();
+//            for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
+//                myParent.addToTraitLabels(traitLabel);
+//            }
+//                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
+//        }
+//    }
+//
+    public class SpeciesPanelCancelListener implements ActionListener {
+    BreedBlock myParent;
+
+    SpeciesPanelCancelListener(BreedBlock myParent) {
+        this.myParent = myParent;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        //SpeciesInspectorPanel
+        speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+        speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+        speciesInspectorPanel.updateTraitDisplay();
+        speciesInspectorPanel.getMyFrame().setVisible(false);
+    }
+}
+
+    public class SpeciesEditorPanelOkayListener implements ActionListener {
+        // The Species Editor Panel corresponding to this listener
+        SpeciesEditorPanel sePanel;
+
+        SpeciesEditorPanelOkayListener(SpeciesEditorPanel panel) {
+            this.sePanel = panel;
         }
 
         public void actionPerformed(ActionEvent e) {
-            //SpeciesInspectorPanel
-            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            // Pointer to a breed block
+            // This will be set by a new one or retrived from an existing one
+            BreedBlock breedBlock;
+            // Check if new breedBlock needs to be created
+            if (sePanel.getMakeNewBreedBlock()) {
+                // This panel has been created from Add Species button
+                // Enable the button
+                addBreed.setEnabled(true);
+                // Read information from the panel
+                String breedName = new String(sePanel.getMyBreedName());
+                String setupNumber = new String(sePanel.getMySetupNumber());
+                String maxNumber = new String(sePanel.getMyMaxNumber());
+                // Create the breed block
+                breedBlock = makeBreedBlock(breedName, setupNumber);
+                // Set the panel's breed block to the newly created one
+                sePanel.setMyBreedBlock(breedBlock);
+                // Indicate that next time, a new breed block does not need to be created
+                sePanel.setMakeNewBreedBlock(false);
+                // Add panel to HashMap
+                speciesEditorPanelHashMap.put(breedName, sePanel);
+            }
 
+            // Get the breed block
+            breedBlock = sePanel.getMyBreedBlock();
+            // Check if breed name has changed, and if the change is valid
+            if (!breedBlock.plural().equalsIgnoreCase(sePanel.getMyBreedName())) {
+                // Check if change is valid
+                String newBreedName = sePanel.getMyBreedName();
+                if (!buildPanel.breedExists(newBreedName)) {
+                    // New selected breed(name) is okay
+                    // Update HashMap
+                    speciesEditorPanelHashMap.remove(sePanel);
+                    speciesEditorPanelHashMap.put(newBreedName, sePanel);
+                    // Update plural (textfield) of breedblock
+                    breedBlock.setPlural(newBreedName);
+                    breedBlock.setName(newBreedName);
+                }
+                else {
+                    // Breed already exists -- this change is invalid
+                    String message = new String("Oops! The species you selected already exists. Choose a different species.");
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
             // Save origSelectedTraitsMap
-            speciesInspectorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
+            sePanel.getTraitPreview().saveOrigSelectedTraitsMap();
+            // Update the trait blocks
+            updateTraitBlocks(sePanel, breedBlock);
+            // Update existing behavior blocks because traits and variations may have changed
+            breedBlock.updateMyBehaviorBlocks();
+            // Set the shape
+            breedBlock.setBreedShape(sePanel.getMyBreedShape());
+            // Set the color
+            breedBlock.setColorName(sePanel.getMyBreedColorName());
+            // Set the setup number
+            breedBlock.setSetupNumber(sePanel.getMySetupNumber());
+            // Set the max number
+            breedBlock.setMaxNumber(sePanel.getMyMaxNumber());
 
-            myParent.setMaxAge(speciesInspectorPanel.getEndListSpan());
-            myParent.setMaxEnergy(speciesInspectorPanel.getHighestEnergy());
-            speciesInspectorPanel.getMyFrame().setVisible(false);
-
-            ArrayList<TraitBlockNew> removeBlocks = new ArrayList<TraitBlockNew>();
-//            for (Trait trait: speciesInspectorPanel.getSpeciesInspector().getSelectedTraitsList()) {
-//                for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
-//                    if (speciesInspectorPanel.getMyParent().plural().equalsIgnoreCase(tBlock.getBreedName())
-//                            && (trait.getNameTrait().equalsIgnoreCase(tBlock.getName()))) {
-//                        removeBlocks.add(tBlock);
-//                    }
-//                }
+            // Now hide the panel
+            sePanel.getMyFrame().setVisible(false);
+//
+//            myParent.getTraitLabels().clear();
+//            for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
+//                myParent.addToTraitLabels(traitLabel);
 //            }
-            for (TraitBlockNew tBlock : speciesInspectorPanel.getMyParent().getMyTraitBlocks()) {
-                removeBlocks.add(tBlock);
-            }
+//            //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
+        }
+    }
+    public class SpeciesEditorPanelCancelListener implements ActionListener {
+        BreedBlock myParent;
+        SpeciesEditorPanel sePanel;
 
-            for (TraitBlockNew tBlock : removeBlocks) {
-                libraryHolder.removeTraitBlock(tBlock);
-                buildPanel.removeTrait(tBlock);
-                userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
-                speciesInspectorPanel.getSpeciesInspector().removeTrait(tBlock.getTraitName());
-                myParent.removeAllTraitBlocks();
-            }
+        SpeciesEditorPanelCancelListener(SpeciesEditorPanel panel) {
+            sePanel = panel;
+        }
 
-            for (TraitState traitState : speciesInspectorPanel.getTraitStateMap().values()) {
-                makeTraitBlock(myParent, traitState);
+        public void actionPerformed(ActionEvent e) {
+            if (sePanel.getMakeNewBreedBlock()) {
+                // This panel has been created from Add Species button
+                // Enable the button
+                addBreed.setEnabled(true);
+                // Hide this frame
+                sePanel.getMyFrame().setVisible(false);
             }
-
-            // Update existing behavior blocks
-            myParent.updateMyBehaviorBlocks();
-
-            myParent.getTraitLabels().clear();
-            for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {
-                myParent.addToTraitLabels(traitLabel);
+            else {
+                // This panel has been created/called from Species Inspector Button
+                sePanel.getTraitPreview().loadOrigSelectedTraitsMap();
+                sePanel.updateTraitDisplay();
+                sePanel.getMyFrame().setVisible(false);
             }
-                //TODO: this is a hard-coded hack because "trait" becomes null. Fix it -Aditi (Feb 22, 2013)
         }
     }
 
@@ -516,8 +694,8 @@ public class DeltaTickTab
         traitBlock.setMyParent(bBlock);
         traitBlock.setBreedName(bBlock.plural());
 
-        speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
-        userInput.addTraitAndVariations(bBlock.getName(), traitState.getNameTrait(), traitState.getVariationsList());
+        //speciesInspectorPanel.getSpeciesInspector().addToSelectedTraitsList(traitState);
+        userInput.addTraitAndVariations(bBlock.plural(), traitState.getNameTrait(), traitState.getVariationsList());
         buildPanel.addTrait(traitBlock);
         libraryHolder.addTraittoTab(traitBlock, buildPanel.getMyTraits().size());
         deltaTickTab.addDragSource(traitBlock);
@@ -529,26 +707,6 @@ public class DeltaTickTab
     public SpeciesInspectorPanel getSpeciesInspectorPanel(BreedBlock bBlock) {
         return speciesInspectorPanelMap.get(bBlock);
     }
-
-    public class SpeciesPanelCancelListener implements ActionListener {
-        BreedBlock myParent;
-
-        SpeciesPanelCancelListener(BreedBlock myParent) {
-            this.myParent = myParent;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            //SpeciesInspectorPanel
-            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
-            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
-            speciesInspectorPanel.updateTraitDisplay();
-            speciesInspectorPanel.getMyFrame().setVisible(false);
-        }
-    }
-
-
-
-
     public PlotBlock makePlotBlock(boolean isHisto) {
         PlotBlock newPlotBlock = new PlotBlock(isHisto);
         buildPanel.removeRect();
@@ -566,7 +724,6 @@ public class DeltaTickTab
         getParent().repaint();
         return newPlotBlock;
     }
-
     public MonitorBlock makeMonitorBlock() {
         MonitorBlock monitorBlock = new MonitorBlock();
         buildPanel.removeRect();

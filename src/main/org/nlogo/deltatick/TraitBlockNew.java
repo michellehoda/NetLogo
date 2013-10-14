@@ -3,8 +3,13 @@ package org.nlogo.deltatick;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
-import javax.swing.*;
-import java.awt.*;
+//import javax.swing;
+//import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +25,7 @@ import java.util.Map;
 public class TraitBlockNew
     extends CodeBlock
 {
-    JTextField textName;
+    //JTextField textName;
     ArrayList<String> varList;
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     BreedBlock myBreedBlock = null;
@@ -30,9 +35,9 @@ public class TraitBlockNew
     String visualizeCode;
     String visualizeProcedure;
 
-    transient Trait trait;
+    //transient Trait trait;
     transient TraitState traitState;
-    transient Frame parentFrame;
+    //transient Frame parentFrame;
 
     HashMap<String, String> varPercentage;
     HashMap<String, Integer> varNum = new HashMap<String, Integer>();
@@ -158,13 +163,13 @@ public class TraitBlockNew
         validate();
     }
 
-    public void lookBetter() {
-        hideRemoveButton();
-        removeBreedLabel();
-        setSmallSize();
-        repaint();
-        revalidate();
-    }
+//    public void lookBetter() {
+//        hideRemoveButton();
+//        removeBreedLabel();
+//        setSmallSize();
+//        repaint();
+//        revalidate();
+//    }
     public int getPreferredWidth() {
         if (getParent() instanceof BuildPanel) {
             return DEFAULT_CODEBLOCK_WIDTH;
@@ -191,7 +196,7 @@ public class TraitBlockNew
     private void setSmallSize() {
         //this.setSize(50, 20);
         this.setPreferredSize(new Dimension(50, 20));
-        label.setBorder(BorderFactory.createLineBorder(Color.black));
+        //label.setBorder(BorderFactory.createLineBorder(Color.black));
         //this.label.setMinimumSize(new Dimension(30, 20));
         //this.label.setMaximumSize(new Dimension(30,20));
         revalidate();

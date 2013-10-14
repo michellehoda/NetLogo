@@ -69,6 +69,8 @@ public strictfp class BreedBlock
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
     // This is a list of all behavior blocks for this breedblock
     List<BehaviorBlock> myBehaviorBlocks = new ArrayList<BehaviorBlock>();
+
+    String setupNumber;
     String maxNumber;
     String maxAge;
     String maxEnergy;
@@ -82,7 +84,8 @@ public strictfp class BreedBlock
     boolean hasSpeciesInspector;
     ArrayList<String> traitLabels = new ArrayList<String>();
 
-    JPanel rectPanel;
+    //JPanel rectPanel;
+    RectPanel rectPanel;
     boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
     boolean reproduceUsed = false;
@@ -90,10 +93,6 @@ public strictfp class BreedBlock
     Color curColor;
     JNumberFieldFilter numberDocument;
     JCharNumberNoSpaceFieldFilter pluralDocument;
-
-    // Each breedblock has a species inspector panel
-    // Deltaticktab simple 'gets' this panel when inspect species button is clicked and makes it visible
-    SpeciesInspectorPanel speciesInspectorPanel;
 
     //dummy constructor - Aditi (Jan 27, 2013)
    public BreedBlock() {
@@ -320,7 +319,7 @@ public strictfp class BreedBlock
     public String setup() {
         String code = "";
         if (breed.needsSetupBlock()) {
-            code += "create-" + plural() + " " + number.getText() + " [\n";
+            code += "create-" + plural() + " " + getSetupNumber() + " [\n";
             if (breed.getSetupCommands() != null) {
                 code += breed.getSetupCommands();
             }
@@ -329,12 +328,13 @@ public strictfp class BreedBlock
                     code += "set " + var.name + " " + var.setupReporter + "\n";
                 }
             }
-            code += "set color " + colorName + '\n';
+            code += "set color " + getColorName() + '\n';
+
             code += setupTrait();
             code += "]\n";
-            //code += setupTraitLabels();
+            code += setupTraitLabels();
             code += setupTraitVisualization();
-            code += setBreedShape();
+            code += setupBreedShape();
             code += "ask patches [set pcolor white]\n";
             int i;
         }
@@ -490,8 +490,9 @@ public strictfp class BreedBlock
         return plural.getText();
     }
 
-    public void setPlural(String plural) {
-        this.plural.setText(plural);
+    public void setPlural(String name) {
+        this.plural.setText(name);
+        this.rectPanel.setBreedName(name);
     }
 
     public void setNumber(String number) {
@@ -511,8 +512,18 @@ public strictfp class BreedBlock
     public String getMaxEnergy() {
         return maxEnergy;
     }
+    public void setMaxNumber(String number) {
+        maxNumber = number;
+    }
     public String getMaxNumber() {
         return maxNumber;
+    }
+    public void setSetupNumber(String number) {
+        setupNumber = number;
+    }
+    public String getSetupNumber() {
+        //return number.getText();
+        return setupNumber;
     }
 
     public void setColorName(String color) {
@@ -586,14 +597,16 @@ public strictfp class BreedBlock
         //plural = new PrettyInput(this);
         plural = new PrettierInput(this);
         plural.setText(getName());
+        plural.setEditable(false);
 
         label.add(plural);
 
-        label.add(makeBreedShapeButton());
+        //label.add(makeBreedShapeButton());
         inspectSpeciesButton = new InspectSpeciesButton(this);
         label.add(inspectSpeciesButton);
 
-        makeRect();
+        // makeRect();
+        rectPanel = new RectPanel(getName(), getBackground());
 
         add(label);
         add(rectPanel);
@@ -603,17 +616,17 @@ public strictfp class BreedBlock
         label.validate();
     }
 
-    public void makeRect() {
-        rectPanel = new JPanel();
-        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
-        rectPanel.setBackground(getBackground());
-        JLabel label = new JLabel();
-        label.setBackground(getBackground());
-        label.setText("Add blocks here");
-        rectPanel.add(label);
-        rectPanel.validate();
-    }
+//    public void makeRect() {
+//        rectPanel = new JPanel();
+//        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+//        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+//        rectPanel.setBackground(getBackground());
+//        JLabel label = new JLabel();
+//        label.setBackground(getBackground());
+//        label.setText("What do you want " + plural() + " to do?");
+//        rectPanel.add(label);
+//        rectPanel.validate();
+//    }
 
     public void showRectPanel() {
         if (removedRectPanel) {
@@ -718,7 +731,11 @@ public strictfp class BreedBlock
         return org.nlogo.shape.VectorShape.parseShapes(shapes, version);
     }
 
-    public String setBreedShape() {
+    public void setBreedShape(String shape) {
+        breedShape = new String(shape);
+    }
+
+    public String setupBreedShape() {
         if (breedShape != null) {
             return "set-default-shape " + plural() + " \"" + breedShape + "\"\n";
         }
@@ -882,6 +899,34 @@ public strictfp class BreedBlock
 
     public List<CodeBlock> getMyBlocks() {
         return myBlocks;
+    }
+
+    class RectPanel extends JPanel {
+        private String breedName;
+        private Color color;
+        private JLabel label;
+
+        public RectPanel(String breedName, Color color) {
+            this.breedName = breedName;
+            this.color = color;
+            label = new JLabel();
+
+            setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+            setPreferredSize(new Dimension(this.getWidth(), 40));
+            setBackground(this.color);
+            this.makeLabel();
+            add(this.label);
+            validate();
+
+        }
+        private void makeLabel() {
+            this.label.setText("What do you want " + this.breedName + " to do?");
+            this.label.setBackground(this.color);
+        }
+        public void setBreedName(String name) {
+            this.breedName = name;
+            makeLabel();
+        }
     }
 }
 
