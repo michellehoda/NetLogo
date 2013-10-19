@@ -374,7 +374,20 @@ public strictfp class QuantityBlock
         return retLabel;
     }
     public String getYLabel() {
-        return yLabel + " " + tBlock.getBreedName();
+        String retLabel = yLabel;
+        String breedName = null;
+        for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                breedName = entry.getValue().getText();
+            }
+        }
+        if (histo) {
+            retLabel += " " + tBlock.getBreedName();
+        }
+        else if (breedName != null) {
+            retLabel += " of " + breedName;
+        }
+        return retLabel;
     }
 
     public String getHistoTrait() {
