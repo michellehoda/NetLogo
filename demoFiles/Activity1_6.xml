@@ -133,10 +133,10 @@
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
     
-    <quantity name="average" histo="false" xlabel="Time" ylabel="Count">
+    <quantity name="average" histo="false" xlabel="Time" ylabel="Count" runresult="true">
         <input name="breed-type" default="species"></input>
         <input name="variable" default="trait?"  tooltip="Trait"></input>        
-        <reporter>mean [variable] of turtles with [breed = breed-type]</reporter>
+        <reporter>mean [runresult variable] of turtles with [breed = breed-type]</reporter>
     </quantity>
     
     <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count">
