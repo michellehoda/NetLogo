@@ -395,7 +395,10 @@ public strictfp class BreedBlock
     public String setupTraitLabels() {
         String code = "";
         if (numTraits() > 0) {
-            code += "\task " + plural() + "[  ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [set label \"\" ]  ]";
+            code += "\task " + plural() + "[  ifelse not (" + plural() + "-label = \"none\")\n\t" +
+                    "[\n\t set label runresult " + plural() + "-label \n\t" +
+                    "  set label-color black ]\n\t" +
+                    "[set label \"\" ]  ]";
         }
 
 //        if (traitLabels.size() > 0) {
