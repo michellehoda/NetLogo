@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.nlogo.deltatick.dnd.JCharNumberFieldFilter;
+import org.nlogo.deltatick.dnd.JCharNumberNoSpaceFieldFilter;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.nlogo.deltatick.xml.Variation;
 
@@ -24,6 +25,7 @@ public strictfp class BehaviorBlock
     boolean isTrait = false;
     boolean waitingForTrait = false;
     boolean isMutate;
+    JCharNumberNoSpaceFieldFilter textInputDocument; // TO enforce restrictions on textfields (i.e.agent inputs)
     //TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
                                     // Do we really need a full trait block or just the trait name? (09/30/2013)
 
@@ -53,6 +55,11 @@ public strictfp class BehaviorBlock
         traitBlockDisplayPanel= new TraitBlockDisplayPanel("");
         traitBlockDisplayPanel.setVisible(false);
         label.add(traitBlockDisplayPanel);
+        textInputDocument = new JCharNumberNoSpaceFieldFilter();
+        textInputDocument.setMaxChars(10);
+        for (PrettyInput aInput : agentInputs.values()) {
+            aInput.setDocument(textInputDocument);
+        }
         validate();
     }
 
