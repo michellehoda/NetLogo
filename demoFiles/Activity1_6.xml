@@ -128,18 +128,18 @@
         </reporterCode>
     </diveIn>
     
-    <quantity name="count-of" histo="false" xlabel="Time" ylabel="Count">
+    <quantity name="count-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
         <input name="breed-type" default="species?"></input>	
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
     
-    <quantity name="average" histo="false" xlabel="Time" ylabel="Count" runresult="true">
+    <quantity name="average" histo="false" xlabel="Time" ylabel="Count" runresult="true" istrait="true">
         <input name="breed-type" default="species"></input>
         <input name="variable" default="trait?"  tooltip="Trait"></input>        
         <reporter>mean [runresult variable] of turtles with [breed = breed-type]</reporter>
     </quantity>
     
-    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count">
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
         <input name="tBlock" default="species?"></input>
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>

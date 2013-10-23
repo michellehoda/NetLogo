@@ -115,7 +115,8 @@ public class TraitBlockNew
 
     public String getMyTraitName() {
         String passback = "";
-        passback += traitName + "\n ";
+        // passback += traitName + "\n "; // Why the \n -- new-line????
+        passback += traitName;
         return passback;
     }
 

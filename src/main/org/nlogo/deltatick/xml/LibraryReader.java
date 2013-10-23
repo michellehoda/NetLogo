@@ -221,6 +221,7 @@ public class LibraryReader {
                 Node quantity = quantities.item(i);
 
                 boolean histo = false;
+                boolean isTrait = false;
                 String bars = "0";
                 String trait = " ";
                 boolean isRunResult = false;
@@ -237,11 +238,12 @@ public class LibraryReader {
                     isRunResult = quantity.getAttributes().getNamedItem("runresult").getTextContent().equalsIgnoreCase("true");
 
                 }
-                if (quantity.getAttributes().getNamedItem("trait").getTextContent().contains("true")) {
-                    needsTrait = true;
+                if (quantity.getAttributes().getNamedItem("istrait").getTextContent().contains("true")) {
+                    isTrait = true;
                 }
 
-                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, needsTrait, trait, xLabel, yLabel);
+
+                block = new QuantityBlock(quantity.getAttributes().getNamedItem("name").getTextContent(), histo, bars, trait, xLabel, yLabel, isTrait);
                 seekAndAttachInfo(quantity);
                 ((QuantityBlock) block).addColorButton();
                 ((QuantityBlock) block).setRunResult(isRunResult);
