@@ -29,7 +29,7 @@ public class DiveIn {
     }
 
     public String getName() {
-        return "name";
+        return "When clicked?";
     }
 
     public String getReporterCode() {

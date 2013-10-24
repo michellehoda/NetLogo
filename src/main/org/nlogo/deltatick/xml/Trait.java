@@ -18,7 +18,8 @@ import java.util.Map;
 
 public class Trait {
     String traitName = new String();
-    String setupCode = new String();
+    String visualizeCode = new String();
+    String visualizeProcedure = new String();
     String setupReporter = new String();
     String color = new String();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
@@ -34,7 +35,8 @@ public class Trait {
     // Copy all members
     public Trait(Trait trait) {
         traitName = new String(trait.traitName);
-        setupCode = new String(trait.setupCode);
+        visualizeCode = new String(trait.visualizeCode);
+        visualizeProcedure = new String(trait.visualizeProcedure);
         color = new String(trait.color);
         setupReporter = new String(trait.setupReporter);
         message = new String(trait.message);
@@ -63,15 +65,18 @@ public class Trait {
                 Variation variation = new Variation(traitName, name, value, color, Integer.parseInt(setupNumber));
                 variationHashMap.put(name, variation);
             }
-            if (traitNodes.item(i).getNodeName() == "setupCode") {
-                setupCode = traitNodes.item(i).getTextContent();
+            if (traitNodes.item(i).getNodeName() == "visualizeCode") {
+                visualizeCode = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName() == "visualizeProcedure") {
+                visualizeProcedure = traitNodes.item(i).getTextContent();
             }
             if (traitNodes.item(i).getNodeName() == "message") {
                 message = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "mutateCode") {
+            /*if (traitNodes.item(i).getNodeName() == "mutateCode") {
                 mutateCode = traitNodes.item(i).getTextContent();
-            }
+            }*/
         }
     }
 
@@ -79,8 +84,12 @@ public class Trait {
         return traitName;
     }
 
-    public String getSetupCode() {
-        return setupCode;
+    public String getVisualizeCode() {
+        return visualizeCode;
+    }
+
+    public String getVisualizeProcedure() {
+        return visualizeProcedure;
     }
 
     public String getColor() {

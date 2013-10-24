@@ -75,6 +75,8 @@ public class BuildPanel
         for (DiveInBlock block : myDiveIns) {
             passBack += "breed [predators predator] \n";
         }
+        passBack += "breed [sense-cones sense-cone]\n";
+        passBack += "breed [speed-icons speed-icon]\n";
 
         for (BreedBlock breedBlock : myBreeds) {
             passBack += breedBlock.breedVars();
@@ -318,11 +320,9 @@ public String newSaveAsXML() {
                         block.getPreferredSize().width,
                         block.getPreferredSize().height);
 
-        //block.colorButton.setEnabled(false);
         block.doLayout();
         block.validate();
         block.repaint();
-        //myTraits.add(block);
         myTraitsNew.add(block);
     }
 
@@ -489,9 +489,15 @@ public String newSaveAsXML() {
             }
         }
 
+
         for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
+
+        for (TraitBlockNew tBlock : myTraitsNew) {
+            passBack += "\n" + tBlock.getVisualizeProcedure();
+        }
+
 
         // Mutate procedure
         boolean needMutateCode = false;
@@ -538,7 +544,6 @@ public String newSaveAsXML() {
         myPlots.clear();
         myHisto.clear();
         myMonitors.clear();
-        //myTraits.clear();
         myTraitsNew.clear();
         myEnvts.clear();
         removeAll();
