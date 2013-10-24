@@ -204,7 +204,7 @@ public class DeltaTickTab
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = GridBagConstraints.VERTICAL;
 
-        buildPanel.addRect("Click on Load behavior library to get started!");
+        buildPanel.addRect("Click on Load blocks to get started!");
 
         //contentPanel.pack();
 
@@ -238,7 +238,7 @@ public class DeltaTickTab
     }
 
     private final javax.swing.Action loadAction =
-            new AbstractAction("Load Behavior Library") {
+            new AbstractAction("Load Blocks") {
                 JFileChooser fileChooser = new JFileChooser();
 
                 public void actionPerformed (ActionEvent e) {
@@ -1157,9 +1157,9 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
 
-                speciesTry = new JButton( speciesTryAction );
+                /*speciesTry = new JButton( speciesTryAction );
                 speciesTry.setEnabled(true);
-                this.add(speciesTry);
+                this.add(speciesTry);*/
 
                 addTrackSpecies = new JButton("Track Species");
                 addTrackSpecies.addMouseListener(new TrackSpeciesListener());

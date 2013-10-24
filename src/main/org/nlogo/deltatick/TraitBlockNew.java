@@ -27,6 +27,8 @@ public class TraitBlockNew
     String traitName;
     String varColor;
     JLabel breedName = new JLabel();
+    String visualizeCode;
+    String visualizeProcedure;
 
     transient Trait trait;
     transient TraitState traitState;
@@ -48,6 +50,8 @@ public class TraitBlockNew
         this.variationHashMap.clear();
         this.variationHashMap.putAll(variationHashMap);
         this.varColor = traitState.getColor();
+        this.visualizeCode = traitState.getVisualizeCode();
+        this.visualizeProcedure = traitState.getVisualizeProcedure();
 
         myBreedBlock = breedBlock;
 
@@ -202,5 +206,19 @@ public class TraitBlockNew
     public String getVarColor() {
         return varColor;
     }
+
+    public String getVisualizeCode() {
+        return visualizeCode;
+    }
+
+    public String getVisualizeProcedure() {
+        String passBack = "";
+        passBack += "to " + visualizeCode + "\n";
+        passBack += visualizeProcedure;
+        passBack += "\nend";
+        return passBack;
+    }
+
+
 
 }

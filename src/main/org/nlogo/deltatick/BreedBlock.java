@@ -330,10 +330,10 @@ public strictfp class BreedBlock
                 }
             }
             code += "set color " + colorName + '\n';
-
             code += setupTrait();
             code += "]\n";
-            code += setupTraitLabels();
+            //code += setupTraitLabels();
+            code += setupTraitVisualization();
             code += setBreedShape();
             code += "ask patches [set pcolor white]\n";
             int i;
@@ -356,7 +356,6 @@ public strictfp class BreedBlock
                     int startValue = 0;
                     int endValue = 0;
 
-                    //for (Map.Entry<String, Variation> entry : ((TraitBlockNew) block).getVariationHashMap().entrySet()) {
                     Iterator it = block.variationHashMap.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry entry = (Map.Entry) it.next();
@@ -386,6 +385,7 @@ public strictfp class BreedBlock
                         startValue = endValue;
                     }
 
+
                 }
             }// if
         }
@@ -403,6 +403,16 @@ public strictfp class BreedBlock
 //            code += setTraitLabelCode();
 //            code += "]\n";
 //        }
+        return code;
+    }
+
+    public String setupTraitVisualization() {
+        String code = "";
+        for (TraitBlockNew tBlock : myTraitBlocks) {
+            code += "\nask " + tBlock.getBreedName() + " [";
+            code += tBlock.getVisualizeCode() + "\n";
+            code += " ]\n";
+        }
         return code;
     }
 
@@ -444,7 +454,7 @@ public strictfp class BreedBlock
 
             // Update labels
             if (numTraits() > 0) {
-                code += "ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label ] [ set label \"\" ] ";
+                code += "ifelse not (" + plural() + "-label = \"none\") [ set label runresult " + plural() + "-label set label-color black] [ set label \"\" ] ";
             }
 
 //           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)

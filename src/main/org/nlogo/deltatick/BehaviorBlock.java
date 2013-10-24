@@ -178,7 +178,6 @@ public strictfp class BehaviorBlock
             }
         }
 
-
         passBack += "end\n\n";
 
         return passBack;
