@@ -4,6 +4,7 @@ import org.parboiled.support.Var;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 
-public class Trait {
+public class Trait implements Serializable {
     String traitName = new String();
     String visualizeCode = new String();
     String visualizeProcedure = new String();

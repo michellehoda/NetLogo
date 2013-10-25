@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+// IS THIS CLASS STILL NEEDED??
+// THIS SHOULD BE REMOVED IF IT IS NO LONGER NEEDED
+
 /**
  * Created by IntelliJ IDEA.
  * User: aditiwagh
@@ -34,23 +37,23 @@ public class SpeciesInspector {
 
         }
 
-    public ArrayList<Trait> getSelectedTraitsList() {
-        return selectedTraitsList;
-    }
+//    public ArrayList<Trait> getSelectedTraitsList() {
+//        return selectedTraitsList;
+//    }
 
-    public void addToSelectedTraitsList(Trait trait) {
-        selectedTraitsList.add(trait);
-    }
+//    public void addToSelectedTraitsList(Trait trait) {
+//        selectedTraitsList.add(trait);
+//    }
 
-    public void removeTrait(String traitName) {
-        Iterator it = selectedTraitsList.iterator();
-        while(it.hasNext()) {
-            Trait t = (Trait) it.next();
-            if (traitName.equalsIgnoreCase(t.getNameTrait())) {
-                it.remove();
-            }
-        }
-    }
+//    public void removeTrait(String traitName) {
+//        Iterator it = selectedTraitsList.iterator();
+//        while(it.hasNext()) {
+//            Trait t = (Trait) it.next();
+//            if (traitName.equalsIgnoreCase(t.getNameTrait())) {
+//                it.remove();
+//            }
+//        }
+//    }
 
     public void addtoSelectedVariations(Trait string, Variation variation) {
         selectedVariationHashMap.put(string, variation);

@@ -25,8 +25,11 @@ public class PlotDropTarget
             if (((QuantityBlock) o).getHisto() == false) {
                 ((PlotBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
+                if (((QuantityBlock) o).getIsTrait()) {
+                    new QuantityDropTarget((QuantityBlock) o);
+                }
                 ((QuantityBlock) o).showColorButton();
-                if (((QuantityBlock) o).getNeedsTrait() == true) {
+                if (((QuantityBlock) o).getIsTrait() == true) {
                     ((QuantityBlock) o).addTraitblockPanel();
                     new QuantityDropTarget((QuantityBlock) o);
                 }

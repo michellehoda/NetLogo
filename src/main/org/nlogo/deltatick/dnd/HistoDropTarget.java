@@ -39,8 +39,10 @@ public class HistoDropTarget
                 ((PlotBlock) block).removeQuantityblockPanel();
                 addCodeBlock((QuantityBlock) o);
                 ((QuantityBlock) o).showColorButton();
+                if (((QuantityBlock) o).getIsTrait()) {
                     ((QuantityBlock) o).addTraitblockPanel();
                     new QuantityDropTarget((QuantityBlock) o);
+                }
                 ((QuantityBlock) o).validate();
                 block.validate();
                 return true;

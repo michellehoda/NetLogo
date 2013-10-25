@@ -25,7 +25,6 @@ public strictfp class QuantityBlock
     Color penColor = Color.black;
     boolean histo = false;
     String bars = "0";
-    boolean needsTrait = false;
     String trait = " ";
     String population;
     String variable;
@@ -42,7 +41,7 @@ public strictfp class QuantityBlock
     String yLabel;
 
     boolean isRunResult = false;
-
+    boolean isTrait = false;
     JLabel image;
     ImageIcon histoImageIcon;
     ImageIcon lineImageIcon;
@@ -51,14 +50,15 @@ public strictfp class QuantityBlock
     JPanel traitblockLabelPanel = null;
 
 
-    public QuantityBlock(String name, boolean histo, String bars, boolean needsTrait, String trait, String xLabel, String yLabel) {
+
+    public QuantityBlock(String name, boolean histo, String bars, String trait, String xLabel, String yLabel, boolean isTrait) {
         super(name, ColorSchemer.getColor(2));
         this.histo = histo;
         this.bars = bars;
         this.trait = trait;
-        this.needsTrait = needsTrait;
         this.xLabel = xLabel;
         this.yLabel = yLabel;
+        this.isTrait = isTrait;
         flavors = new DataFlavor[]{
                 DataFlavor.stringFlavor,
                 quantityBlockFlavor
@@ -183,6 +183,8 @@ public strictfp class QuantityBlock
 
     public String unPackAsCommand() {
         String passBack = "";
+        String population = "";
+        String variable = "";
         Container parent = getParent();
 
         if (parent instanceof PlotBlock) {
@@ -202,31 +204,63 @@ public strictfp class QuantityBlock
                     }
                 }
 
-                //passBack += "\thistogram [ " + variable + " ] of " + population ;
-                passBack += "histogram [ " + tBlock.getName() + " ] of " + tBlock.getBreedName();
+                if (isTrait && (tBlock != null)) {
+                    variable = tBlock.getMyTraitName();
+                    population = tBlock.getBreedName();
+                }
+                passBack += "\thistogram [ " + variable + " ] of " + population ;
+                //passBack += "histogram [ " + tBlock.getName() + " ] of " + tBlock.getBreedName();
                 passBack += "\n";
             }
 
             else {
                 // Not Histogram -- plot line
+                variable = "";
+                // Plot command
                 if (isRunResult()) {
                     passBack += "\tplot (runresult task [" + getName() + " ";
-                    for (JTextField input : inputs.values()) {
-                        if (input.getName().equalsIgnoreCase("variable")) {
-                            passBack += "\"" + input.getText() + "\"" + " ";
-                        }
-                        else {
-                            passBack += input.getText() + " ";
-                        }
-                    }
-                    passBack += "])";
                 }
                 else {
                     passBack += "plot " + getName() + " ";
+                }
+                // Generate plot task parameters
+                if (isTrait && (tBlock != null)) {
+                    variable = tBlock.getMyTraitName();
+                    population = tBlock.getBreedName();
+                }
+                else {
                     for (JTextField input : inputs.values()) {
-                        passBack += input.getText() + " ";
+                        if (input.getName().equalsIgnoreCase("variable")) {
+                            variable = input.getText();
+                        }
+                        if (input.getName().equalsIgnoreCase("breed-type")) {
+                            population = input.getText();
+                        }
                     }
                 }
+                // If runresult, enclose variable (trait) in double quotes to pass as a string
+                variable = isRunResult() ? "\"" + variable + "\"" : variable;
+                passBack += population + " " + variable;
+                passBack += isRunResult() ? "])" : "";
+//                if (isRunResult()) {
+//                    passBack += "\tplot (runresult task [" + getName() + " ";
+//                    for (JTextField input : inputs.values()) {
+//                        if (input.getName().equalsIgnoreCase("variable")) {
+//                            variable += "\"" + input.getText() + "\"" + " ";
+//                        }
+//                        else {
+//                            variable += input.getText() + " ";
+//                        }
+//                    }
+//                    passBack += variable + "])";
+//                }
+//                else {
+//                    passBack += "plot " + getName() + " ";
+//                    for (JTextField input : inputs.values()) {
+//                        variable += input.getText() + " ";
+//                    }
+//                    passBack += variable;
+//                }
             }
 
             passBack += "\n";
@@ -290,7 +324,7 @@ public strictfp class QuantityBlock
 
     public void addTraitblockPanel() {
 
-        if (needsTrait == true) {
+        if (isTrait == true) {
             removeInput();
             // Set up the panel
             traitblockLabelPanel = new JPanel();
@@ -352,8 +386,14 @@ public strictfp class QuantityBlock
     public String getPenName() {
         String passBack = new String();
         passBack += getName();
-        for (JTextField input : inputs.values()) {
-            passBack += "-" + input.getText();
+        if (isTrait && (tBlock != null)) {
+            passBack += "-" + tBlock.getMyTraitName();
+            passBack += "-" + tBlock.getBreedName();
+        }
+        else {
+            for (JTextField input : inputs.values()) {
+                passBack += "-" + input.getText();
+            }
         }
         return passBack;
     }
@@ -374,7 +414,20 @@ public strictfp class QuantityBlock
         return retLabel;
     }
     public String getYLabel() {
-        return yLabel + " " + tBlock.getBreedName();
+        String retLabel = yLabel;
+        String breedName = null;
+        for (Map.Entry<String, PrettyInput> entry : inputs.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("breed-type")) {
+                breedName = entry.getValue().getText();
+            }
+        }
+        if (histo) {
+            retLabel += " " + tBlock.getBreedName();
+        }
+        else if (breedName != null) {
+            retLabel += " of " + breedName;
+        }
+        return retLabel;
     }
 
     public String getHistoTrait() {
@@ -387,10 +440,6 @@ public strictfp class QuantityBlock
 
     public HashMap<String, Variation> getHistoVariation() {
         return tBlock.getVariationHashMap();
-    }
-
-    public boolean getNeedsTrait() {
-        return needsTrait;
     }
 
     public void mouseReleased(java.awt.event.MouseEvent event) {
@@ -442,6 +491,9 @@ public strictfp class QuantityBlock
 
     public boolean getHisto() {
         return histo;
+    }
+    public boolean getIsTrait() {
+        return isTrait;
     }
 
 }

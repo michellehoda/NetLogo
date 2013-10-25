@@ -116,7 +116,7 @@ public class Piechart extends JPanel {
         paintSupplier.reset();
         for (Map.Entry<String, Double> entry: selectedVariationsPerc.entrySet()) {
             //if (entry.getValue() > 0.0) {
-                plot.setSectionPaint((String) entry.getKey(), paintSupplier.getNextPaint());
+                plot.setSectionPaint(entry.getKey(), paintSupplier.getNextPaint());
             //}
         }
         // Set Colors

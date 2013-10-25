@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
-<library name="Basic" version="0.1">
+<library name="Blocks" version="0.1">
+    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    
     <breed singular="name?" plural="name" setupNumber="25" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
@@ -16,21 +18,6 @@
         set age age + 1
         </updateCode>
     </breed> 
-    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
-        <ownVar name="age">
-            <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
-        </ownVar>
-
-        <setupCode>
-    setxy random-xcor random-ycor
-    set size 1.5
-    set color random color
-        </setupCode>
-        <updateCode>
-        set age age + 1
-        </updateCode>
-    </breed>
     
     
     <trait name="speed">
@@ -41,6 +28,18 @@
         <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
         <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>What is their speed?</message>
+        <visualizeCode>set-sense-cone</visualizeCode>
+        <visualizeProcedure>
+        let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <traitShape>vision cone</traitShape>
+                
     </trait>   
     
     <trait name="vision">
@@ -51,6 +50,17 @@
         <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
         <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>What is their speed?</message>
+        <visualizeCode>set-sense-cone1</visualizeCode>
+        <visualizeProcedure>
+        let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <traitShape>vision cone</traitShape>        
     </trait>   
     
         
@@ -72,16 +82,15 @@
     </condition>
     
     <condition name="any-within-distance?" traits="vision">
-        <input name="breed-type" default="who?"></input>
         <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
+        <input name="breed-type" default="who?"></input>
         <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
     </condition>  
     
     
     <condition name="age-more-than" traits="">
-        <input name="age-agents" default="100"></input>
-        <agentInput name="carrying-capacity" default="who?"></agentInput>
-        <test>report count carrying-capacity &gt; max-agents</test>
+        <input name="my-age" default="10"></input>        
+        <test>report age &gt; my-age</test>
     </condition>   
     
 
@@ -89,17 +98,7 @@
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
         rt (random-float 5 - random-float 5)
-        fd random-float speed1 * .5        
-        </commands>
-    </behavior>
-    
-    <behavior name="step-in" traits="">
-        <commands>
-        hide-turtle
-        setxy mouse-xcor mouse-ycor
-    ;; only show the predator if the mouse pointer is
-    ;; actually inside the view
-    set hidden? not mouse-inside?
+        fd random-float speed1 * .25        
         </commands>
     </behavior>
     
@@ -113,7 +112,7 @@
         </commands>
     </behavior>
     
-    <behavior name="die-with-chance-of" traits="">
+    <behavior name="die-with-chance" traits="">
         <percentInput name="probability" default="1"></percentInput>		
         <commands>if random-float 100 &lt; probability [die]       
         </commands>            
@@ -143,20 +142,27 @@
         </reporterCode>
     </diveIn>
     
-    <quantity name="count-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
-        <input name="breed-type" default="species?"></input>	
+    <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
+        <input name="breed-type" default="species"></input>	
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
     
-    <quantity name="average" histo="false" xlabel="Time" ylabel="Count" runresult="true" istrait="true">
+    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Count" istrait="true">
         <input name="breed-type" default="species"></input>
-        <input name="variable" default="trait?"  tooltip="Trait"></input>        
-        <reporter>mean [runresult variable] of turtles with [breed = breed-type]</reporter>
+        <input name="variable" default="trait"  tooltip="Trait"></input>        
+        <reporter>mean [variable] of turtles with [breed = breed-type]</reporter>
     </quantity>
     
-    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="false">
         <input name="tBlock" default="species?"></input>
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
+       
+    
+    <visualization name="set-sense-cone" trait="vision">
+        <commands>
+        enter code here
+        </commands>
+    </visualization>
     
 </library>

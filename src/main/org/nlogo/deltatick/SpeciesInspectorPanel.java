@@ -48,6 +48,8 @@ public class SpeciesInspectorPanel extends JPanel {
         lifeSpanBlank.setMaximumSize(new Dimension(20, 30));
         updateText();
         //activateButtons();
+
+        addPanels();
     }
 
     public void updateText() {
@@ -56,15 +58,15 @@ public class SpeciesInspectorPanel extends JPanel {
         lifeSpanLabel.setText("How old do " + myParent.plural() + " live to be?");
     }
 
-    public void addPanels(Container pane) {
+    public void addPanels() {
 
         setupTopPanel();
         setupSidePanel();
         setupMidPanel();
         setupBottomPanel();
 
-        GroupLayout layout = new GroupLayout(pane);
-        pane.setLayout(layout);
+        GroupLayout layout = new GroupLayout(myFrame.getContentPane());
+        myFrame.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(topPanel)
@@ -164,7 +166,7 @@ public class SpeciesInspectorPanel extends JPanel {
 
         //labelPanel.setPreferredSize(new Dimension(LabelPanel.LABELPANEL_WIDTH, LabelPanel.LABELPANEL_HEIGHT));
 
-        traitPreview = new TraitPreview(myParent, traitDisplay, labelPanel, myFrame);
+        traitPreview = new TraitPreview(myParent.plural(), traitDisplay, labelPanel, myFrame);
         traitPreview.setTraits(myParent.getTraits());
         traitPreview.setTraitsListListener(new TraitListSelectionHandler());
         traitPreview.setTraitTableModelListener(new TraitTableModelListener());
@@ -232,6 +234,10 @@ public class SpeciesInspectorPanel extends JPanel {
         return myParent;
     }
 
+    public TraitPreview getTraitPreview() {
+        return traitPreview;
+    }
+
 //    public void setSelectedTrait() {
 //        speciesInspector.addToSelectedTraitsList(traitPreview.getSelectedTrait());
 //    }
@@ -244,9 +250,6 @@ public class SpeciesInspectorPanel extends JPanel {
         return traitPreview.getTraitStateMap();
     }
 
-    public TraitPreview getTraitPreview() {
-        return traitPreview;
-    }
 
     // Implements listener when a trait is clicked on
     class TraitListSelectionHandler implements ListSelectionListener {

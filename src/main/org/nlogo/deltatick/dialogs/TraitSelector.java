@@ -90,7 +90,7 @@ public class TraitSelector extends JDialog {
 
         public void showMe() {
             final String[] traitStrings = getTraitTypes();
-                    //breedBlock.getTraitTypes();
+                    //breedBlock.getTraitNames();
             myTraitsList = new JList(traitStrings);
 
             myTraitsList.setModel(new javax.swing.AbstractListModel() {
