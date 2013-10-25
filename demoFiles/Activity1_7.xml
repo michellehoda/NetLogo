@@ -18,6 +18,22 @@
         set age age + 1
         </updateCode>
     </breed> 
+
+    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+    set color random color
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed>
     
     
     <trait name="speed">
@@ -147,10 +163,10 @@
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
     
-    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Count" istrait="true">
+    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Count" runresult="true" istrait="true">
         <input name="breed-type" default="species"></input>
         <input name="variable" default="trait"  tooltip="Trait"></input>        
-        <reporter>mean [variable] of turtles with [breed = breed-type]</reporter>
+        <reporter>mean [runresult variable] of turtles with [breed = breed-type]</reporter>
     </quantity>
     
     <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="false">
