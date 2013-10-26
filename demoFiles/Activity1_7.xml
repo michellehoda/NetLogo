@@ -169,7 +169,7 @@
         <reporter>mean [runresult variable] of turtles with [breed = breed-type]</reporter>
     </quantity>
     
-    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="false">
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
         <input name="tBlock" default="species?"></input>
         <reporter>count turtles with [ breed = breed-type ]</reporter>
     </quantity>
