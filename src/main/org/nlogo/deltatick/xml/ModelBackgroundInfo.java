@@ -163,9 +163,9 @@ public class ModelBackgroundInfo {
 
     public String updateBlock(List<BreedBlock> usedBreeds, List<EnvtBlock> usedEnvts) {
         String code = "";
-        if (go != null) {
-            code += go;
-        }
+//        if (go != null) {
+//            code += go;
+//        }
 
         for (BreedBlock breedBlock : usedBreeds) {
             code += breedBlock.update();
@@ -180,7 +180,14 @@ public class ModelBackgroundInfo {
         return code;
     }
 
-
+    public String getGoCode() {
+        if (go != null) {
+            return go;
+        }
+        else {
+            return  "";
+        }
+    }
 
     public String drawCode() {
         String code = "";

@@ -102,6 +102,13 @@ public class DeltaTickTab
     private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
 
+    private final int PLOTS_START_XOFFSET = 660;
+    private final int PLOTS_START_YOFFSET = 10;
+    private final int PLOTS_PER_COLUMN = 2;
+    private final int PLOTS_WIDTH = 230;
+    private final int PLOTS_HEIGHT = 200;
+    private final int PLOTS_SEPARATION = 10;
+
     // HashMaps to store slider values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
     HashMap<String, Double> carryingCapacitySliderValues = new HashMap<String, Double>();
@@ -1180,11 +1187,24 @@ public class DeltaTickTab
         int plotCount = 0;
         try {
             for (PlotBlock plotBlock : buildPanel.getMyPlots()) {
+                // Calculate X and Y coordinates for the plot widget
+                int plotColumn = plotCount / PLOTS_PER_COLUMN; // column starts at 0
+                int plotRow = plotCount % PLOTS_PER_COLUMN; // row starts at 0
+                int plotX = PLOTS_START_XOFFSET + (plotColumn * (PLOTS_WIDTH + PLOTS_SEPARATION));
+                int plotY = PLOTS_START_YOFFSET + (plotRow * (PLOTS_HEIGHT + PLOTS_SEPARATION));
+                System.out.println("Row="+plotRow+" Col="+plotColumn+" X="+plotX+" Y="+plotY);
                 if (plotWrappers.containsKey(plotBlock.getPlotName()) == false) {
                     // Plot not previously present ==> new plot must be created
                     org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
 
-                    WidgetWrapper ww = interfacePanel.addWidget(plotWidget, 660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160), true, false);
+//                    WidgetWrapper ww = interfacePanel.addWidget(plotWidget,
+//                                                                PLOTS_START_XOFFSET + ((plotCount/PLOTS_PER_COLUMN) * 250),
+//                                                                PLOTS_SEPARATION + ((plotCount%PLOTS_PER_COLUMN)*210),
+//                                                                true, false);
+                    // Create the widget wrapper
+                    WidgetWrapper ww = interfacePanel.addWidget(plotWidget, plotX, plotY, true, false);
+                    // Set the X Y coordinates, height and width
+                    ww.setBounds(plotX, plotY, PLOTS_WIDTH, PLOTS_HEIGHT );
 
                     plotWidget.displayName(plotBlock.getPlotName());
 
@@ -1217,7 +1237,8 @@ public class DeltaTickTab
                 else {
                     // Plot already exists, just recalculate its position
                     WidgetWrapper ww = plotWrappers.get(plotBlock.getPlotName());
-                    ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
+                    //ww.setLocation(660 + ((plotCount/3) * 200), 10 + ((plotCount%3)*160));
+                    ww.setLocation(plotX, plotY);
 
                     // Clear renamed plot pens
                     for (QuantityBlock quantBlock : plotBlock.getMyBlocks()) {
@@ -1275,13 +1296,15 @@ public class DeltaTickTab
     public void removePlots() {
 
         try {
-            for (Map.Entry<String, WidgetWrapper> entry : plotWrappers.entrySet()) {
+            Iterator<Map.Entry<String, WidgetWrapper>> iter = plotWrappers.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<String, WidgetWrapper> entry = iter.next();
                 String p = entry.getKey();
                 WidgetWrapper w = entry.getValue();
                 if (buildPanel.plotExists(p) == false) {
                     interfacePanel.removeWidget(w);
-                    plotWrappers.remove(p);
                     workspace.plotManager().forgetPlot(workspace.plotManager().getPlot(p));
+                    iter.remove();
                 }
             }
         }

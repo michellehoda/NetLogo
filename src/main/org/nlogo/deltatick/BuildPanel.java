@@ -132,6 +132,7 @@ public class BuildPanel
             passBack += block.unPackAsCode();
         }
 
+        passBack += bgInfo.getGoCode();
 
         if (myPlots.size() > 0) {
             passBack += "do-plotting\n";
