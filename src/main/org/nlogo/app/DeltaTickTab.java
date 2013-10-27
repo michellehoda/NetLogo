@@ -299,9 +299,8 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(true);
             }
 
-            if (buildPanel.getMyBreeds().size() > 0) {
-                addTrackSpecies.setEnabled(true);
-            }
+            addTrackSpecies.setEnabled(true);
+
             addClear.setEnabled(true);
             saveModelButton.setEnabled(true);
             buildPanel.removeRect();
@@ -452,8 +451,10 @@ public class DeltaTickTab
                 buildPanel.removeTrait(tBlock);
                 userInput.removeTrait(tBlock.getBreedName(), tBlock.getTraitName());
             }
+            if (buildPanel.getMyBreeds().size() < buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
+                addBreed.setEnabled(true);
+            }
         }
-
     }
 
     class SpeciesButtonListener implements ActionListener {
@@ -659,6 +660,12 @@ public class DeltaTickTab
 
             // Now hide the panel
             sePanel.getMyFrame().setVisible(false);
+
+            if (buildPanel.getMyBreeds().size() == buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
+                addBreed.setEnabled(false);
+            }
+
+
 //
 //            myParent.getTraitLabels().clear();
 //            for (String traitLabel : speciesInspectorPanel.getTraitPreview().getLabelPanel().getSelectedLabels()) {

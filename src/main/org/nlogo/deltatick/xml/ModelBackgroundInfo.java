@@ -327,8 +327,8 @@ public class ModelBackgroundInfo {
         return library;
     }
 
-    public String getMaxNumberSpeciesAllowed() {
-        return maxNumberSpecies;
+    public int getMaxNumberSpeciesAllowed() {
+        return Integer.parseInt(maxNumberSpecies);
     }
 
     public boolean getActivateStepIn() {
