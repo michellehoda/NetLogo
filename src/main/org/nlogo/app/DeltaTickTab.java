@@ -284,26 +284,29 @@ public class DeltaTickTab
 
             libraryReader.openLibrary(fileName);
 
-        	// if(buildPanel.getBgInfo().getLibrary() != null){
-        		libraryPanel.add(libraryHolder);
-        		libraryHolder.setTabName(currentLibraryName);
+            libraryPanel.add(libraryHolder);
+        	libraryHolder.setTabName(currentLibraryName);
+            addBreed.setEnabled(true);
 
-        		addBreed.setEnabled(true);
-                addDiveIn.setEnabled(true); //ToDO: Set this true only when XML says so (Aditi, Sept 20, 2013)
+            if (buildPanel.getBgInfo().getActivateStepIn()) {
+                addDiveIn.setEnabled(true);
+            }
+
+            if (buildPanel.getMyBreeds().size() > 0) {
                 addTrackSpecies.setEnabled(true);
-        		addClear.setEnabled(true);
-                saveModelButton.setEnabled(true);
-        	    buildPanel.removeRect();
+            }
+            addClear.setEnabled(true);
+            saveModelButton.setEnabled(true);
+            buildPanel.removeRect();
 
-        	    if (buildPanel.getMyBreeds().size() == 0) {
-                    buildPanel.addRect("Click Add species to start building your model!");
-                    buildPanel.repaint();
-                    buildPanel.validate();
-                }
+            if (buildPanel.getMyBreeds().size() == 0) {
+                buildPanel.addRect("Click Add species to start building your model!");
+                buildPanel.repaint();
+                buildPanel.validate();
+            }
 
-        		deltaTickTab.contentPanel.validate();
-        		count ++;
-
+            deltaTickTab.contentPanel.validate();
+            count ++;
         }
          else if (count > 0 ) {
 
@@ -956,6 +959,7 @@ public class DeltaTickTab
             button.displayName("go");
             button.wrapSource("go");
             button.setForeverOn();
+
         }
 
       /*

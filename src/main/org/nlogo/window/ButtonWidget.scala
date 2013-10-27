@@ -174,7 +174,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
   }
 
+
   private def disabledWaitingForSetup = goTime && ! setupFinished
+
+
+  //def disabledWaitingForSetup = goTime && ! setupFinished
 
   private def respondToClick(inBounds: Boolean) {
     if(disabledWaitingForSetup){

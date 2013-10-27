@@ -181,4 +181,11 @@
         </commands>
     </visualization>
     
+    <interface>
+        <numberSpecies>2</numberSpecies>
+        <mutationSlider>true</mutationSlider>
+        <drawFeature>true</drawFeature>
+        <stepIn>false</stepIn>
+    </interface>
+    
 </library>

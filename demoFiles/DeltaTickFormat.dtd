@@ -11,6 +11,8 @@ WARNING: Work in progress.  ~Michelle (03/02/2010)
 
 <!ELEMENT setup		(#PCDATA)>
 
+<!ELEMENT interface (numberSpecies, mutationSlider, drawFeature, stepIn)>
+
 <!ELEMENT global 	(setupReporter*,updateReporter*)>
 
 <!ELEMENT breed 	(ownVar*,setupCode*,updateCode*)>

@@ -28,6 +28,9 @@ public class ModelBackgroundInfo {
     String version;
     String draw;
 
+    String maxNumberSpecies;
+    boolean activateStepIn;
+
     public ModelBackgroundInfo() {
     }
 
@@ -43,7 +46,8 @@ public class ModelBackgroundInfo {
         traits.clear();
     }
 
-    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library, NodeList draw, NodeList behavior, NodeList diveInNodes) throws Exception {
+    public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library,
+                         NodeList draw, NodeList behavior, NodeList diveInNodes, NodeList interfaceNodes) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
@@ -102,6 +106,21 @@ public class ModelBackgroundInfo {
             for (int i = 0; i < diveInNodes.getLength(); i++) {
                 Node diveInNode = diveInNodes.item(i);
                 diveIns.add(new DiveIn(diveInNode));
+            }
+
+            for (int i = 0; i < interfaceNodes.getLength(); i++) {
+                Node interfaceNode = interfaceNodes.item(i);
+                NodeList iNodes = interfaceNode.getChildNodes();
+                for (int j = 0; j < iNodes.getLength(); j++) {
+                    Node iNode = iNodes.item(j);
+                    if (iNode.getNodeName() == "numberSpecies") {
+                        maxNumberSpecies = iNode.getTextContent();
+                    }
+                    if (iNode.getNodeName() == "stepIn") {
+                        String tempActivateStepIn = new String(iNode.getTextContent());
+                        activateStepIn = Boolean.parseBoolean(tempActivateStepIn);
+                    }
+                }
             }
 
             this.library = library.item(0).getAttributes().getNamedItem("name").getTextContent();
@@ -295,11 +314,17 @@ public class ModelBackgroundInfo {
             code += "set " + name + " " + updateReporter + "\n";
             return code;
         }
-
-
     }
 
     public String getLibrary() {
         return library;
-        }
+    }
+
+    public String getMaxNumberSpeciesAllowed() {
+        return maxNumberSpecies;
+    }
+
+    public boolean getActivateStepIn() {
+        return activateStepIn;
+    }
 }

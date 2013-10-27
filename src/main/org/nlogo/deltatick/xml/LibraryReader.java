@@ -167,7 +167,8 @@ public class LibraryReader {
                     library.getElementsByTagName("library"),
                     library.getElementsByTagName("draw"),
                     library.getElementsByTagName("behavior"),
-                    library.getElementsByTagName("diveIn")
+                    library.getElementsByTagName("diveIn"),
+                    library.getElementsByTagName("interface")
             );
 
             NodeList behaviors = library.getElementsByTagName("behavior");
@@ -212,8 +213,6 @@ public class LibraryReader {
                 block = new PatchBlock(patch.getAttributes().getNamedItem("name").getTextContent());
                 seekAndAttachInfo(patch);
             }
-
-
 
             // make the quantities
             NodeList quantities = library.getElementsByTagName("quantity");
