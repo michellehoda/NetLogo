@@ -592,7 +592,8 @@ public strictfp class BreedBlock
 
         number = new PrettyInput(this); // number of turtles of a breed starting with -a.
         number.setText("100");
-
+        // Setup number cannot be edited. Must be updated from Species Editor Panel
+        number.setEditable(false);
         label.add(number);
 
         //plural = new PrettyInput(this);

@@ -610,6 +610,12 @@ public class DeltaTickTab
                 String breedName = new String(sePanel.getMyBreedName());
                 String setupNumber = new String(sePanel.getMySetupNumber());
                 String maxNumber = new String(sePanel.getMyMaxNumber());
+                if (buildPanel.breedExists(breedName)) {
+                    // Breed already exists -- cannot add another breed of the same name
+                    String message = new String("Oops! The species you selected already exists. Choose a different species.");
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 // Create the breed block
                 breedBlock = makeBreedBlock(breedName, setupNumber);
                 // Set the panel's breed block to the newly created one
