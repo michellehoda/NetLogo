@@ -162,7 +162,7 @@ public strictfp class QuantityBlock
                 }
                 passBack += "]";
             }
-            passBack += "\nreport " + code + "\nend\n";
+            passBack += "\n " + code + "\nend\n";
         }
 
         if (parent instanceof MonitorBlock) {
@@ -421,11 +421,14 @@ public strictfp class QuantityBlock
                 breedName = entry.getValue().getText();
             }
         }
-        if (histo) {
+        if (histo && (tBlock != null)) {
             retLabel += " " + tBlock.getBreedName();
         }
+        else if (isTrait && (tBlock != null)) {
+            retLabel += " " + tBlock.getMyTraitName();
+        }
         else if (breedName != null) {
-            retLabel += " of " + breedName;
+            retLabel += " " + breedName;
         }
         return retLabel;
     }

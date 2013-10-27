@@ -520,6 +520,7 @@ public strictfp class BreedBlock
     }
     public void setSetupNumber(String number) {
         setupNumber = number;
+        this.number.setText(setupNumber);
     }
     public String getSetupNumber() {
         //return number.getText();
