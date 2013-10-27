@@ -220,8 +220,14 @@ public class SpeciesEditorPanel extends JPanel {
     public String getMyBreedShape() {
         return topPanel.getBreedShape();
     }
+    public VectorShape getMyBreedVectorShape() {
+        return topPanel.getBreedVectorShape();
+    }
     public String getMyBreedColorName() {
         return topPanel.getBreedColorName();
+    }
+    public Color getMyBreedColor() {
+        return topPanel.getBreedColor();
     }
     public HashMap<String, TraitState> getTraitStateMap() {
         return traitPreview.getTraitStateMap();
@@ -347,6 +353,9 @@ public class SpeciesEditorPanel extends JPanel {
         public String getBreedShape() {
            return breedShapeButtonActionListener.getBreedShape();
         }
+        public VectorShape getBreedVectorShape() {
+            return breedShapeButtonActionListener.getShape();
+        }
         public Color getBreedColor() {
            return (Color) breedColorComboBox.getSelectedItem();
         }
@@ -416,6 +425,7 @@ public class SpeciesEditorPanel extends JPanel {
             return breedShape;
         }
         public VectorShape getShape() {
+
             return myShapeSelector.getShape();
         }
     }

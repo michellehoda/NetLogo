@@ -903,6 +903,12 @@ public strictfp class BreedBlock
         return myBlocks;
     }
 
+    public void setInspectSpeciesButtonShapeColor(VectorShape shape, Color color) {
+        ShapeIcon icon = new ShapeIcon(shape);
+        icon.setColor(color);
+        inspectSpeciesButton.setIcon(icon);
+    }
+
     class RectPanel extends JPanel {
         private String breedName;
         private Color color;
