@@ -97,9 +97,11 @@ public class BuildPanel
         }
 
         passBack += "\n";
-        for (EnvtBlock envtBlock : myEnvts) {
-            passBack += envtBlock.OwnVars();
-        }
+//        for (EnvtBlock envtBlock : myEnvts) {
+//            passBack += envtBlock.OwnVars();
+//        }
+
+        passBack += bgInfo.declareDrawingEnvt();
 
         passBack += "\n";
 
@@ -169,6 +171,10 @@ public class BuildPanel
         //new function: to draw - Aditi (jan 17, 2013)
         passBack += "to draw\n";
         passBack += bgInfo.drawCode() + "\n";
+        passBack += "end\n";
+
+        passBack += "to erase\n";
+        passBack += bgInfo.eraseCode() + "\n";
         passBack += "end\n";
 
         // remaining procedures

@@ -27,6 +27,8 @@ public class ModelBackgroundInfo {
     String library;
     String version;
     String draw;
+    String erase;
+    boolean isThereDraw; //does the XML have a drawing procedure
 
     String maxNumberSpecies;
     boolean activateStepIn;
@@ -57,8 +59,14 @@ public class ModelBackgroundInfo {
             }
 
             if (draw.getLength() > 0) {
+                //isThereDraw = true;
                 this.draw = draw.item(0).getTextContent();
             }
+
+//            else if (draw == null) {
+//                isThereDraw = false;
+//            }
+
 
             for (int i = 0; i < traitNodes.getLength(); i++) {
                 Node traitNode = traitNodes.item(i);
@@ -120,6 +128,10 @@ public class ModelBackgroundInfo {
                         String tempActivateStepIn = new String(iNode.getTextContent());
                         activateStepIn = Boolean.parseBoolean(tempActivateStepIn);
                     }
+                    if (iNode.getNodeName() == "drawFeature") {
+                        String temp = new String(iNode.getTextContent());
+                        isThereDraw = Boolean.parseBoolean(temp);
+                    }                                            //
                 }
             }
 
@@ -142,6 +154,12 @@ public class ModelBackgroundInfo {
             }
             code += "]\n";
         }
+        return code;
+    }
+
+    public String declareDrawingEnvt() {
+        String code = "";
+        code += "patches-own [painted?]\n";
         return code;
     }
 
@@ -212,6 +230,14 @@ public class ModelBackgroundInfo {
         String code = "";
         if (draw != null) {
             code += draw;
+        }
+        return code;
+    }
+
+    public String eraseCode() {
+        String code = "";
+        if (erase != null) {
+            code += erase;
         }
         return code;
     }
@@ -333,5 +359,9 @@ public class ModelBackgroundInfo {
 
     public boolean getActivateStepIn() {
         return activateStepIn;
+    }
+
+    public boolean getIsDraw() {
+        return isThereDraw;
     }
 }

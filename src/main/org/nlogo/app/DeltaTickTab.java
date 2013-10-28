@@ -1,6 +1,7 @@
 package org.nlogo.app;
 
 import org.nlogo.agent.Observer;
+import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.deltatick.*;
@@ -979,6 +980,41 @@ public class DeltaTickTab
             button.displayName("go");
             button.wrapSource("go");
             button.setForeverOn();
+
+        }
+
+        if (buildPanel.getBgInfo().getIsDraw()) {
+            org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
+            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
+            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
+                org.nlogo.window.ButtonWidget button =
+                    (org.nlogo.window.ButtonWidget) drawWidget;
+                button.displayName("draw");
+                button.wrapSource("draw");
+                button.setForeverOn();
+            }
+            org.nlogo.window.Widget eraseWidget = interfacePanel.makeWidget("BUTTON",false);
+            interfacePanel.addWidget(eraseWidget, 30, 130, true, false);
+            if (eraseWidget instanceof org.nlogo.window.ButtonWidget) {
+                org.nlogo.window.ButtonWidget butto =
+                    (org.nlogo.window.ButtonWidget) eraseWidget;
+                butto.displayName("erase");
+                butto.wrapSource("erase");
+                //button.setForeverOn();
+            }
+
+            org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
+            interfacePanel.addWidget(envtChooserWidget, 0, 200, true, false);
+            if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
+                org.nlogo.window.ChooserWidget chooser = (org.nlogo.window.ChooserWidget) envtChooserWidget;
+                chooser.displayName("environment");
+                chooser.nameWrapper("environment");
+                LogoListBuilder choicesList = new LogoListBuilder();
+                choicesList.add("river");
+                choicesList.add("highway");
+                choicesList.add("city");
+                chooser.setChoices(choicesList.toLogoList());
+            }
 
         }
 
