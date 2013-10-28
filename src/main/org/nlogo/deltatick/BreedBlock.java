@@ -69,6 +69,8 @@ public strictfp class BreedBlock
     List<TraitBlockNew>myTraitBlocks = new ArrayList<TraitBlockNew>(); // to have setupTrait code once trait is defined in SpeciesInspector (March 26, 2013)
     // This is a list of all behavior blocks for this breedblock
     List<BehaviorBlock> myBehaviorBlocks = new ArrayList<BehaviorBlock>();
+    // This is a list of all condition blocks for this breedblock
+    List<ConditionBlock> myConditionBlocks = new ArrayList<ConditionBlock>();
 
     String setupNumber;
     String maxNumber;
@@ -164,11 +166,27 @@ public strictfp class BreedBlock
 
     // This method should be called from SpeciesPanelOkayListener whenever a trait is added/removed/modified
     public void updateMyBehaviorBlocks() {
-        List<BehaviorBlock> removeTheseBlocks = new ArrayList<BehaviorBlock>();
+        List<CodeBlock> removeTheseBlocks = new ArrayList<CodeBlock>();
+        List<BehaviorBlock> allMyBehaviorBlocks = new ArrayList<BehaviorBlock>();
+        List<ConditionBlock> allMyConditionBlocks = new ArrayList<ConditionBlock>();
+
+        // First add all the behavior blocks that are directly in this breed block
+        allMyBehaviorBlocks.addAll(getMyBehaviorBlocks());
+        // Then iterate over condition blocks and get their behavior blocks
+        for (ConditionBlock conditionBlock : getMyConditionBlocks()) {
+            allMyBehaviorBlocks.addAll(conditionBlock.getAllMyBehaviorBlocks());
+        }
+
+        // There may be traits applied to condition blocks
+        // These blocks will need to be removed if that trait is removed
+        allMyConditionBlocks.addAll(getMyConditionBlocks());
+        for (ConditionBlock conditionBlock : getMyConditionBlocks()) {
+            allMyConditionBlocks.addAll(conditionBlock.getAllMyConditionBlocks());
+        }
 
         // After traits are defined *after* applicable behavior blocks are added
         // Then update the behavior block to accept the corresponding trait blocks
-        for (BehaviorBlock behaviorBlock : getMyBehaviorBlocks()) {
+        for (BehaviorBlock behaviorBlock : allMyBehaviorBlocks) {
             for (TraitBlockNew traitBlock : getMyTraitBlocks()) {
                 // Check if this behavior block already has a trait associated with it
                 if (!behaviorBlock.getIsTrait() &&
@@ -183,7 +201,7 @@ public strictfp class BreedBlock
             }
             // If traits are removed but there are behavior blocks that depend of the (removed) traits,
             // these blocks must be removed. Add them to a remove list -- they cannot be removed in this loop.
-            // Removing them in this loop results in concurrent modification exception
+            // Directly removing them in this loop results in concurrent modification exception
             for (String traitName : behaviorBlock.getApplicableTraits()) {
                 if (!this.hasTrait(traitName) &&
                     (behaviorBlock.getIsTrait() ||
@@ -192,9 +210,24 @@ public strictfp class BreedBlock
                 }
             }
         }
+        // Check if condition blocks need to be removed
+        for (ConditionBlock conditionBlock : allMyConditionBlocks) {
+            // If traits are removed but there are behavior blocks that depend of the (removed) traits,
+            // these blocks must be removed. Add them to a remove list -- they cannot be removed in this loop.
+            // Directly removing them in this loop results in concurrent modification exception
+            for (String traitName : conditionBlock.getApplicableTraits()) {
+                if (!this.hasTrait(traitName) &&
+                        (conditionBlock.getIsTrait())) { // ||
+                                //conditionBlock.getIsWaitingForTrait())) {
+                    removeTheseBlocks.add(conditionBlock);
+                }
+            }
+
+        }
         // Remove any blocks that need to be removed
-        for (BehaviorBlock behaviorBlock : removeTheseBlocks) {
-            behaviorBlock.die();
+        for (CodeBlock codeBlock : removeTheseBlocks) {
+            if (codeBlock != null)
+                codeBlock.die();
         }
         validate();
         doLayout();
@@ -236,6 +269,8 @@ public strictfp class BreedBlock
                 addPercentInputToList(p);
             }
             else if (block instanceof ConditionBlock) {
+                // Add to list of condition blocks
+                myConditionBlocks.add((ConditionBlock)block);
                 String tmp = ((ConditionBlock) block).getBehaviorInputName();
                 addBehaviorInputToList(tmp);
                 String s = ((ConditionBlock) block).getAgentInputName();
@@ -256,6 +291,9 @@ public strictfp class BreedBlock
         super.removeBlock(block);
         if (block instanceof BehaviorBlock) {
             myBehaviorBlocks.remove(block);
+        }
+        else if (block instanceof ConditionBlock) {
+            myConditionBlocks.remove(block);
         }
     }
 
@@ -877,6 +915,10 @@ public strictfp class BreedBlock
 
     public List<BehaviorBlock> getMyBehaviorBlocks() {
         return myBehaviorBlocks;
+    }
+
+    public List<ConditionBlock> getMyConditionBlocks() {
+        return myConditionBlocks;
     }
 
     public void setReproduceUsed (boolean value) {
