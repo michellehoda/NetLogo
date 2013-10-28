@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -99,21 +100,27 @@ public class SpeciesEditorPanel extends JPanel {
 
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(topPanel)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(midPanel)
-                                .addComponent(sidePanel))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(topPanel)
+                                        .addComponent(midPanel)
+                                )
+                                .addComponent(sidePanel)
+                        )
                         .addComponent(bottomPanel)
+
         );
         layout.setVerticalGroup(
                 layout.createSequentialGroup()
-                        .addComponent(topPanel)
-                        .addGroup(layout.createParallelGroup()
-                                .addComponent(midPanel)
-                                .addComponent(sidePanel))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(topPanel)
+                                        .addComponent(midPanel)
+                                )
+                                .addComponent(sidePanel)
+                        )
                         .addComponent(bottomPanel)
         );
-
         myFrame.validate();
         myFrame.pack();
 
@@ -262,18 +269,18 @@ public class SpeciesEditorPanel extends JPanel {
 
             // Initialize labels and components
             // Species name
-            this.breedNameLabel = new JLabel("Choose a species:");
+            this.breedNameLabel = new JLabel("What is the name of this species? ");
             // Initialize name combobox
             this.breedNamesComboBox = new JComboBox(allBreedNames);
             this.breedNamesComboBox.setSelectedIndex(0);
             // Species setup number
-            this.breedSetupNumberLabel = new JLabel("Start Number:");
+            this.breedSetupNumberLabel = new JLabel("How many to begin with?");
             this.breedSetupNumberText = new JTextField("25");
             // Species max number
-            this.breedMaxNumberLabel = new JLabel("Max Number:");
+            this.breedMaxNumberLabel = new JLabel("What should be their maximum number?");
             this.breedMaxNumberText = new JTextField("100");
             // Species color
-            this.breedColorLabel = new JLabel("Choose Color:");
+            this.breedColorLabel = new JLabel("What color should this species be?");
             // Set up colors
             COLORS = new ArrayList<Color>();
             COLORS.add(new Color(0x99, 0x99, 0x99)); // GRAY
@@ -287,7 +294,7 @@ public class SpeciesEditorPanel extends JPanel {
             COLORS.add(new Color(0xFF, 0x66, 0x00)); // ORANGE
             this.breedColorComboBox = new JComboBox(COLORS.toArray());
             // Speies shape
-            this.breedShapeLabel = new JLabel("Choose Shape:");
+            this.breedShapeLabel = new JLabel("What shape should this species have?");
             this.breedShapeButton = new JButton(new ShapeIcon(org.nlogo.shape.VectorShape.getDefaultShape()));
             breedShapeButtonActionListener = new BreedShapeButtonActionListener(myFrame,
                     breedShapeButton,
@@ -324,21 +331,83 @@ public class SpeciesEditorPanel extends JPanel {
                     breedShapeButtonActionListener);
             breedColorComboBox.addItemListener(itemListener);
 
-            this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+//            this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+//
+//            this.add(breedNameLabel);
+//            this.add(breedNamesComboBox);
+//            this.add(Box.createRigidArea(new Dimension(10,10)));
+//            this.add(breedSetupNumberLabel);
+//            this.add(breedSetupNumberText);
+//            this.add(Box.createRigidArea(new Dimension(10,10)));
+//            this.add(breedMaxNumberLabel);
+//            this.add(breedMaxNumberText);
+//            this.add(Box.createRigidArea(new Dimension(10,10)));
+//            this.add(breedColorLabel);
+//            this.add(breedColorComboBox);
+//            this.add(breedShapeLabel);
+//            this.add(breedShapeButton);
 
-            this.add(breedNameLabel);
-            this.add(breedNamesComboBox);
-            this.add(Box.createRigidArea(new Dimension(10,10)));
-            this.add(breedSetupNumberLabel);
-            this.add(breedSetupNumberText);
-            this.add(Box.createRigidArea(new Dimension(10,10)));
-            this.add(breedMaxNumberLabel);
-            this.add(breedMaxNumberText);
-            this.add(Box.createRigidArea(new Dimension(10,10)));
-            this.add(breedColorLabel);
-            this.add(breedColorComboBox);
-            this.add(breedShapeLabel);
-            this.add(breedShapeButton);
+            // Set up the layout
+            GroupLayout layout = new GroupLayout(this);
+            this.setLayout(layout);
+            // The Horizontal Group
+            // Create parallel groups
+            GroupLayout.ParallelGroup hpgroup1 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            hpgroup1.addComponent(breedNameLabel);
+            hpgroup1.addComponent(breedSetupNumberLabel);
+            hpgroup1.addComponent(breedMaxNumberLabel);
+            hpgroup1.addComponent(breedColorLabel);
+            hpgroup1.addComponent(breedShapeLabel);
+            GroupLayout.ParallelGroup hpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            hpgroup2.addComponent(breedNamesComboBox);
+            hpgroup2.addComponent(breedSetupNumberText);
+            hpgroup2.addComponent(breedMaxNumberText);
+            hpgroup2.addComponent(breedColorComboBox);
+            hpgroup2.addComponent(breedShapeButton);
+            // Create the sequential group
+            GroupLayout.SequentialGroup hsgroup = layout.createSequentialGroup();
+            hsgroup.addGroup(hpgroup1);
+            hsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
+            hsgroup.addGroup(hpgroup2);
+
+            // Set the horizontal group
+            layout.setHorizontalGroup(hsgroup);
+
+            // The Vertical Group
+            // Create parallel groups
+            GroupLayout.ParallelGroup vpgroup1 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            vpgroup1.addComponent(breedNameLabel);
+            vpgroup1.addComponent(breedNamesComboBox);
+            GroupLayout.ParallelGroup vpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            vpgroup2.addComponent(breedSetupNumberLabel);
+            vpgroup2.addComponent(breedSetupNumberText);
+            GroupLayout.ParallelGroup vpgroup3 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            vpgroup3.addComponent(breedMaxNumberLabel);
+            vpgroup3.addComponent(breedMaxNumberText);
+            GroupLayout.ParallelGroup vpgroup4 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            vpgroup4.addComponent(breedColorLabel);
+            vpgroup4.addComponent(breedColorComboBox);
+            GroupLayout.ParallelGroup vpgroup5 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
+            vpgroup5.addComponent(breedShapeLabel);
+            vpgroup5.addComponent(breedShapeButton);
+            // Create the sequential group
+            GroupLayout.SequentialGroup vsgroup = layout.createSequentialGroup();
+            vsgroup.addGroup(vpgroup1);
+            vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
+            vsgroup.addGroup(vpgroup2);
+            vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
+            vsgroup.addGroup(vpgroup3);
+            vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
+            vsgroup.addGroup(vpgroup4);
+            vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
+            vsgroup.addGroup(vpgroup5);
+
+            // Set the vertical group
+            layout.setVerticalGroup(vsgroup);
+
+            // this.setPreferredSize(new Dimension(200, 200));
+            validate();
+
         }
 
         public String getSelectedBreed() {
