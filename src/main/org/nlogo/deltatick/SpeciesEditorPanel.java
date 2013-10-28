@@ -269,18 +269,18 @@ public class SpeciesEditorPanel extends JPanel {
 
             // Initialize labels and components
             // Species name
-            this.breedNameLabel = new JLabel("What is the name of this species? ");
+            this.breedNameLabel = new JLabel("Which species do you want to add to your model? ");
             // Initialize name combobox
             this.breedNamesComboBox = new JComboBox(allBreedNames);
             this.breedNamesComboBox.setSelectedIndex(0);
             // Species setup number
-            this.breedSetupNumberLabel = new JLabel("How many to begin with?");
+            this.breedSetupNumberLabel = new JLabel("How many individuals of this species do you want to begin with?");
             this.breedSetupNumberText = new JTextField("25");
             // Species max number
             this.breedMaxNumberLabel = new JLabel("What should be their maximum number?");
             this.breedMaxNumberText = new JTextField("100");
             // Species color
-            this.breedColorLabel = new JLabel("What color should this species be?");
+            this.breedColorLabel = new JLabel("What color do you want it to be?");
             // Set up colors
             COLORS = new ArrayList<Color>();
             COLORS.add(new Color(0x99, 0x99, 0x99)); // GRAY

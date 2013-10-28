@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Blocks" version="0.1">
+    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    
+    <breed singular="name?" plural="name" setupNumber="25" maxNumber="50">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+            
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+    set color random color  
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed> 
+
+    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+    set color random color
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed>
+    
+    <envt envtName="barrier">
+        <ownVar name="painted?"></ownVar>     
+        <setupCode>    
+        </setupCode>
+        <updateCode>            
+        </updateCode>
+    </envt>  
+    
+    
+    <trait name="speed">
+        <setupReporter>random 9</setupReporter>
+        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="medium" value="3" color="" setupNumber="30"></variation>
+        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
+        <message>What is their speed?</message>
+        <visualizeCode>set-sense-cone</visualizeCode>
+        <visualizeProcedure>
+        let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <traitShape>vision cone</traitShape>
+                
+    </trait>   
+    
+    <trait name="vision">
+        <setupReporter>random 9</setupReporter>
+        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="medium" value="3" color="" setupNumber="30"></variation>
+        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
+        <message>What is their speed?</message>
+        <visualizeCode>set-sense-cone1</visualizeCode>
+        <visualizeProcedure>
+        let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <traitShape>vision cone</traitShape>        
+    </trait>   
+    
+        
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>        
+    </global>
+
+    <go>
+    if not any? turtles [ 
+			user-message (word "There are no more turtles!")
+			stop
+		]
+    </go>
+    
+    <condition name="any-here?" traits="">
+        <input name="breed-type" default="who?"></input>
+        <test>report any? other turtles-here with [ breed = breed-type ]</test>
+    </condition>
+    
+    <condition name="any-in-sight?" traits="vision">
+        <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
+        <input name="breed-type" default="who?"></input>
+        <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
+    </condition>  
+    
+    
+    <condition name="age-more-than" traits="">
+        <input name="my-age" default="10"></input>        
+        <test>report age &gt; my-age</test>
+    </condition>
+    
+       <condition name="barrier-ahead" traits="vision">
+        <test>report painted?</test>
+    </condition>   
+    
+
+    <behavior name="move" traits="speed">
+        <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
+        <commands>
+        rt (random-float 5 - random-float 5)
+        fd random-float speed1 * .25        
+        </commands>
+    </behavior>
+    
+    <behavior name="turn-around" traits="">
+        <commands>
+        set heading (heading + 180)
+        fd 4
+        </commands>
+    </behavior>
+    
+    
+    <behavior name="eat" traits="">        
+        <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
+        <commands>
+        if any? other turtles-here with [breed = prey] [
+    let food one-of turtles-here with [breed = prey]
+    ask food [die]]  
+        </commands>
+    </behavior>
+    
+    <behavior name="die-with-chance" traits="">
+        <percentInput name="probability" default="1"></percentInput>		
+        <commands>if random-float 100 &lt; probability [die]       
+        </commands>            
+    </behavior>
+    
+    <behavior name="have-babies-with-chance" traits="" mutate="true">
+        <percentInput name="probability" default="1"></percentInput>
+        <commands> if random 100 &lt; 50 [
+        if random-float 1 &lt; probability [
+        hatch 1 [set age 0 fd 1]
+        </commands>
+    </behavior>
+    
+    <diveIn>
+        <setupCode>
+        create-predators 1 [
+        set size 2
+        set shape "x"]
+        </setupCode>
+        <reporterCode>
+        hide-turtle
+        setxy mouse-xcor mouse-ycor
+        ;; only show the predator if the mouse pointer is
+        ;; actually inside the view
+        set hidden? not mouse-inside?
+        report mouse-down?   
+        </reporterCode>
+    </diveIn>
+    
+    <draw>
+    if mouse-down?
+  [ if barrier-type = "highway" [
+      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
+    if barrier-type = "river" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
+    if barrier-type = "city" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
+  ]
+  if barrier-type = "mountain" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
+    </draw>
+    
+    <erase>
+    if mouse-down? [
+    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
+    </erase>
+    
+    
+    
+    
+    <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
+        <input name="breed-type" default="species"></input>	
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+    
+    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Average" runresult="true" istrait="true">
+        <input name="breed-type" default="species"></input>
+        <input name="variable" default="trait"  tooltip="Trait"></input>        
+        <reporter>
+			ifelse not any? turtles with [breed = breed-type] [
+				report 0
+			]
+			[
+				report mean [runresult variable] of turtles with [breed = breed-type]
+			]
+		</reporter>
+    </quantity>
+    
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
+        <input name="tBlock" default="species?"></input>
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+       
+    
+    <visualization name="set-sense-cone" trait="vision">
+        <commands>
+        enter code here
+        </commands>
+    </visualization>
+    
+    <interface>
+        <numberSpecies>2</numberSpecies>
+        <mutationSlider>true</mutationSlider>
+        <drawFeature>true</drawFeature>
+        <stepIn>false</stepIn>
+    </interface>
+    
+</library>
