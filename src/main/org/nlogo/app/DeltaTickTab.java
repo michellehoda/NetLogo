@@ -658,6 +658,7 @@ public class DeltaTickTab
             breedBlock.updateMyBehaviorBlocks();
             // Set the shape
             breedBlock.setBreedShape(sePanel.getMyBreedShape());
+            breedBlock.setInspectSpeciesButtonShapeColor(sePanel.getMyBreedVectorShape(), sePanel.getMyBreedColor());
             // Set the color
             breedBlock.setColorName(sePanel.getMyBreedColorName());
             // Set the setup number
