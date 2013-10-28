@@ -166,9 +166,11 @@ public class LibraryReader {
                     library.getElementsByTagName("go"),
                     library.getElementsByTagName("library"),
                     library.getElementsByTagName("draw"),
+                    library.getElementsByTagName("erase"),
                     library.getElementsByTagName("behavior"),
                     library.getElementsByTagName("diveIn"),
                     library.getElementsByTagName("interface")
+
             );
 
             NodeList behaviors = library.getElementsByTagName("behavior");

@@ -986,30 +986,30 @@ public class DeltaTickTab
 
         if (buildPanel.getBgInfo().getIsDraw()) {
             org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
+            interfacePanel.addWidget(drawWidget, 0, 300, true, false);
             if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
                 org.nlogo.window.ButtonWidget button =
                     (org.nlogo.window.ButtonWidget) drawWidget;
                 button.displayName("draw");
-                button.wrapSource("draw");
+                button.wrapSource("draw-barrier");
                 button.setForeverOn();
             }
             org.nlogo.window.Widget eraseWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(eraseWidget, 30, 130, true, false);
+            interfacePanel.addWidget(eraseWidget, 90, 300, true, false);
             if (eraseWidget instanceof org.nlogo.window.ButtonWidget) {
                 org.nlogo.window.ButtonWidget butto =
                     (org.nlogo.window.ButtonWidget) eraseWidget;
-                butto.displayName("erase");
-                butto.wrapSource("erase");
+                butto.displayName("erase barrier");
+                butto.wrapSource("erase-barrier");
                 //button.setForeverOn();
             }
 
             org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
-            interfacePanel.addWidget(envtChooserWidget, 0, 200, true, false);
+            interfacePanel.addWidget(envtChooserWidget, 0, 250, true, false);
             if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
                 org.nlogo.window.ChooserWidget chooser = (org.nlogo.window.ChooserWidget) envtChooserWidget;
-                chooser.displayName("environment");
-                chooser.nameWrapper("environment");
+                chooser.displayName("barrier type");
+                chooser.nameWrapper("barrier-type");
                 LogoListBuilder choicesList = new LogoListBuilder();
                 choicesList.add("river");
                 choicesList.add("highway");

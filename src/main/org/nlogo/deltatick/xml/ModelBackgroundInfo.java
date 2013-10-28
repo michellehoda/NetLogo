@@ -49,7 +49,7 @@ public class ModelBackgroundInfo {
     }
 
     public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library,
-                         NodeList draw, NodeList behavior, NodeList diveInNodes, NodeList interfaceNodes) throws Exception {
+                         NodeList draw, NodeList erase, NodeList behavior, NodeList diveInNodes, NodeList interfaceNodes) throws Exception {
         try {
             if (setup.getLength() > 0) {
                 this.setup = setup.item(0).getTextContent();
@@ -67,6 +67,9 @@ public class ModelBackgroundInfo {
 //                isThereDraw = false;
 //            }
 
+            if (erase.getLength() > 0) {
+                this.erase = erase.item(0).getTextContent();
+            }
 
             for (int i = 0; i < traitNodes.getLength(); i++) {
                 Node traitNode = traitNodes.item(i);
@@ -170,6 +173,10 @@ public class ModelBackgroundInfo {
         //code += "ask patches [set pcolor white]\n";
         if (setup != null) {
             code += setup;
+        }
+
+        if (draw != null) {
+            code += "ask patches [set painted? false]\n";
         }
         //this shows up when BreedBlock is dragged into BuildPanel -A. (sept 13)
         for (BreedBlock breedBlock : usedBreeds) {

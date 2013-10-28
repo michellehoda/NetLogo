@@ -169,11 +169,11 @@ public class BuildPanel
         }
 
         //new function: to draw - Aditi (jan 17, 2013)
-        passBack += "to draw\n";
+        passBack += "to draw-barrier\n";
         passBack += bgInfo.drawCode() + "\n";
         passBack += "end\n";
 
-        passBack += "to erase\n";
+        passBack += "to erase-barrier\n";
         passBack += bgInfo.eraseCode() + "\n";
         passBack += "end\n";
 
