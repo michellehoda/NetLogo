@@ -18,7 +18,7 @@ public strictfp class ConditionBlock
     JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
-    Set<String> applicableTraits;// = new HashSet<String>();
+    Set<String> applicableTraits = new HashSet<String>();
     boolean isTrait; // When trait block is dropped in this condition block, isTrait is set
     String traitName;
     List<BehaviorBlock> myBehaviorBlocks = new ArrayList<BehaviorBlock>();
