@@ -5,23 +5,19 @@ import org.nlogo.deltatick.dialogs.ShapeSelectorWithoutColor;
 import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.hotlink.dialogs.ShapeIcon;
 import org.nlogo.shape.VectorShape;
-import scala.actors.threadpool.Arrays;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -244,7 +240,7 @@ public class SpeciesEditorPanel extends JPanel {
     }
 
     private class SpeciesEditorTopPanel extends JPanel {
-
+        private final int BORDER_PADDING = 10;
         // Components
         private JLabel breedNameLabel;
         private JLabel breedSetupNumberLabel;
@@ -263,7 +259,7 @@ public class SpeciesEditorPanel extends JPanel {
         String breedShape = "default";
 
         // The layout
-        // GroupLayout layout;
+        GroupLayout layout;
 
         public SpeciesEditorTopPanel(String [] allBreedNames) {
 
@@ -331,24 +327,8 @@ public class SpeciesEditorPanel extends JPanel {
                     breedShapeButtonActionListener);
             breedColorComboBox.addItemListener(itemListener);
 
-//            this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-//
-//            this.add(breedNameLabel);
-//            this.add(breedNamesComboBox);
-//            this.add(Box.createRigidArea(new Dimension(10,10)));
-//            this.add(breedSetupNumberLabel);
-//            this.add(breedSetupNumberText);
-//            this.add(Box.createRigidArea(new Dimension(10,10)));
-//            this.add(breedMaxNumberLabel);
-//            this.add(breedMaxNumberText);
-//            this.add(Box.createRigidArea(new Dimension(10,10)));
-//            this.add(breedColorLabel);
-//            this.add(breedColorComboBox);
-//            this.add(breedShapeLabel);
-//            this.add(breedShapeButton);
-
             // Set up the layout
-            GroupLayout layout = new GroupLayout(this);
+            layout = new GroupLayout(this);
             this.setLayout(layout);
             // The Horizontal Group
             // Create parallel groups
@@ -405,7 +385,10 @@ public class SpeciesEditorPanel extends JPanel {
             // Set the vertical group
             layout.setVerticalGroup(vsgroup);
 
-            // this.setPreferredSize(new Dimension(200, 200));
+            this.setBorder(new EmptyBorder(BORDER_PADDING,
+                    BORDER_PADDING,
+                    BORDER_PADDING,
+                    BORDER_PADDING));
             validate();
 
         }
