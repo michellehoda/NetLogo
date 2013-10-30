@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -632,12 +633,14 @@ public strictfp class BreedBlock
         number.setText("100");
         // Setup number cannot be edited. Must be updated from Species Editor Panel
         number.setEditable(false);
+        number.setBorder(new EmptyBorder(0, 0, 0, 0));
         label.add(number);
 
         //plural = new PrettyInput(this);
         plural = new PrettierInput(this);
         plural.setText(getName());
         plural.setEditable(false);
+        plural.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         label.add(plural);
 
