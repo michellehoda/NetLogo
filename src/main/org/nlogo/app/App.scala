@@ -272,7 +272,14 @@ class App extends
 
   import App.{pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingName}
 
-  val frame = new AppFrame
+  val frame = {
+    import java.awt.Toolkit
+    val myFrame    = new AppFrame
+    val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+    val (w, h)     = (screenSize.getWidth,  screenSize.getHeight)
+    myFrame.setPreferredSize(new Dimension(w.toInt, h.toInt))
+    myFrame
+  }
 
   // all these guys get set in the locally block
   private var _workspace: GUIWorkspace = null

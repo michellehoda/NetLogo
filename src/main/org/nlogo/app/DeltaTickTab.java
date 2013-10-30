@@ -969,39 +969,41 @@ public class DeltaTickTab
         if (setupWidget instanceof org.nlogo.window.ButtonWidget) {
           org.nlogo.window.ButtonWidget button =
               (org.nlogo.window.ButtonWidget) setupWidget;
-            button.displayName("setup");
+            button.displayName("Setup");
             button.wrapSource("setup");
         }
         org.nlogo.window.Widget goWidget = interfacePanel.makeWidget("BUTTON",false);
-        interfacePanel.addWidget(goWidget, 60, 0, true, false);
+        WidgetWrapper goWrapper = interfacePanel.addWidget(goWidget, 60, 0, true, false);
+        //goWrapper.setBounds(60, 0, 200, 200);
 
         if (goWidget instanceof org.nlogo.window.ButtonWidget) {
           org.nlogo.window.ButtonWidget button =
               (org.nlogo.window.ButtonWidget) goWidget;
-            button.displayName("go");
+            button.displayName("Go/Pause");
             button.wrapSource("go");
             button.setForeverOn();
-
+            button.goTime_$eq(true);
         }
 
         if (buildPanel.getBgInfo().getIsDraw()) {
             org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(drawWidget, 0, 300, true, false);
+            WidgetWrapper drawWrapper = interfacePanel.addWidget(drawWidget, 0, 300, true, false);
+            drawWrapper.setBounds(0, 300, 100, 50);
             if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
                 org.nlogo.window.ButtonWidget button =
                     (org.nlogo.window.ButtonWidget) drawWidget;
-                button.displayName("draw");
+                button.displayName("Draw barrier");
                 button.wrapSource("draw-barrier");
                 button.setForeverOn();
             }
             org.nlogo.window.Widget eraseWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(eraseWidget, 90, 300, true, false);
+            WidgetWrapper eraseWrapper = interfacePanel.addWidget(eraseWidget, 90, 300, true, false);
+            eraseWrapper.setBounds(100, 300, 100, 50);
             if (eraseWidget instanceof org.nlogo.window.ButtonWidget) {
                 org.nlogo.window.ButtonWidget butto =
                     (org.nlogo.window.ButtonWidget) eraseWidget;
-                butto.displayName("erase barrier");
+                butto.displayName("Erase barrier");
                 butto.wrapSource("erase-barrier");
-                //button.setForeverOn();
             }
 
             org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);

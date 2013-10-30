@@ -114,15 +114,14 @@ public strictfp class BreedBlock
         this.maxNumber = breed.getMaxQuant();
         number.setText(breed.getStartQuant());
         String word = number.getText();
-        System.out.println(word.length());
         curIconIndex = 0;
         curColor = Color.GRAY;
         numberDocument = new JNumberFieldFilter();
         pluralDocument = new JCharNumberNoSpaceFieldFilter();
-        numberDocument.setMaxChars(5);
-        pluralDocument.setMaxChars(8);
-        number.setDocument(numberDocument);
-        this.plural.setDocument(pluralDocument);
+        //numberDocument.setMaxChars(5);
+        //pluralDocument.setMaxChars(8);
+        //number.setDocument(numberDocument);
+        //this.plural.setDocument(pluralDocument);
         number.setText(breed.getStartQuant().toString());
         this.plural.setText(getName());
 

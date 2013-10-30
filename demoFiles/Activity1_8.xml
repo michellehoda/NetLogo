@@ -3,12 +3,11 @@
 <library name="Blocks" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="name?" plural="name" setupNumber="25" maxNumber="50">
+    <breed singular="bird" plural="birds" setupNumber="10" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
-        </ownVar>
-            
+        </ownVar>            
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
@@ -19,7 +18,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
+    <breed singular="bug" plural="bugs" setupNumber="25" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -105,7 +104,7 @@
         <test>report any? other turtles-here with [ breed = breed-type ]</test>
     </condition>
     
-    <condition name="any-within-distance?" traits="vision">
+    <condition name="any-in-distance?" traits="vision">
         <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
         <input name="breed-type" default="who?"></input>
         <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
@@ -136,13 +135,13 @@
         </commands>
     </behavior>
     
-    <behavior name="die-with-chance" traits="">
+    <behavior name="die-with-a-chance-of" traits="">
         <percentInput name="probability" default="1"></percentInput>		
         <commands>if random-float 100 &lt; probability [die]       
         </commands>            
     </behavior>
     
-    <behavior name="have-babies-with-chance" traits="" mutate="true">
+    <behavior name="have-babies-with-a-chance-of" traits="" mutate="true">
         <percentInput name="probability" default="1"></percentInput>
         <commands> if random 100 &lt; 50 [
         if random-float 1 &lt; probability [
@@ -202,7 +201,7 @@
         <numberSpecies>2</numberSpecies>
         <mutationSlider>false</mutationSlider>
         <drawFeature>false</drawFeature>
-        <stepIn>true</stepIn>
+        <stepIn>false</stepIn>
     </interface>
     
 </library>
