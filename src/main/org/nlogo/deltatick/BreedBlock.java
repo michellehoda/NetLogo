@@ -633,6 +633,7 @@ public strictfp class BreedBlock
         // Setup number cannot be edited. Must be updated from Species Editor Panel
         number.setEditable(false);
         number.setBorder(new EmptyBorder(0, 0, 0, 0));
+        number.setFont(new java.awt.Font("Arial", 0, 11));
         label.add(number);
 
         //plural = new PrettyInput(this);
@@ -640,6 +641,7 @@ public strictfp class BreedBlock
         plural.setText(getName());
         plural.setEditable(false);
         plural.setBorder(new EmptyBorder(0, 0, 0, 0));
+        plural.setFont(new java.awt.Font("Arial", 0, 11));
 
         label.add(plural);
 
