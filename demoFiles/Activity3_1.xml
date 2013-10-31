@@ -3,10 +3,15 @@
 <library name="Blocks" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="25" maxNumber="50">
+    <breed singular="predator" plural="predators" setupNumber="10" maxNumber="20">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
+        </ownVar>
+        
+        <ownVar name="energy">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 100</setupReporter>
         </ownVar>
             
         <setupCode>
@@ -16,13 +21,18 @@
         </setupCode>
         <updateCode>
         set age age + 1
+        set energy energy - 1
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
+    <breed singular="bug" plural="bugs" setupNumber="25" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
+        </ownVar>
+        <ownVar name="energy">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 100</setupReporter>
         </ownVar>
 
         <setupCode>
@@ -31,6 +41,7 @@
     set color random color
         </setupCode>
         <updateCode>
+        set energy energy - 1
         set age age + 1
         </updateCode>
     </breed>
@@ -73,7 +84,7 @@
         <variation name="medium" value="3" color="" setupNumber="30"></variation>
         <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
         <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
-        <message>How far can they see?</message>
+        <message>How far can they see??</message>
         <visualizeCode>set-sense-cone1</visualizeCode>
         <visualizeProcedure>
         ;let parent-speed speed
@@ -109,6 +120,10 @@
         <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
         <input name="breed-type" default="who?"></input>
         <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
+    </condition>
+    
+      <condition name="no-energy?" traits="">
+        <test>report energy &lt; 0</test>
     </condition>  
     
     
@@ -117,23 +132,11 @@
         <test>report age &gt; my-age</test>
     </condition>
     
-       <condition name="barrier-ahead" traits="vision">
-        <test>report painted?</test>
-    </condition>   
-    
-
     <behavior name="move" traits="speed">
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
         rt (random-float 5 - random-float 5)
         fd random-float speed1 * .25        
-        </commands>
-    </behavior>
-    
-    <behavior name="turn-around" traits="">
-        <commands>
-        set heading (heading + 180)
-        fd 4
         </commands>
     </behavior>
     
@@ -143,7 +146,8 @@
         <commands>
         if any? other turtles-here with [breed = prey] [
     let food one-of turtles-here with [breed = prey]
-    ask food [die]]  
+    ask food [die] 
+    set energy energy + 20]  
         </commands>
     </behavior>
     
@@ -177,27 +181,6 @@
         </reporterCode>
     </diveIn>
     
-    <draw>
-    if mouse-down?
-  [ if barrier-type = "highway" [
-      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
-    if barrier-type = "river" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
-    if barrier-type = "city" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
-  ]
-  if barrier-type = "mountain" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
-    </draw>
-    
-    <erase>
-    if mouse-down? [
-    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
-    </erase>
-    
-    
-    
-    
     <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
         <input name="breed-type" default="species"></input>	
         <reporter>report count turtles with [ breed = breed-type ]</reporter>
@@ -230,8 +213,8 @@
     
     <interface>
         <numberSpecies>2</numberSpecies>
-        <mutationSlider>false</mutationSlider>
-        <drawFeature>true</drawFeature>
+        <mutationSlider>true</mutationSlider>
+        <drawFeature>false</drawFeature>
         <stepIn>false</stepIn>
     </interface>
     

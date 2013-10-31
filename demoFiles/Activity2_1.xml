@@ -67,7 +67,7 @@
         <message>What is their speed?</message>
         <visualizeCode>set-sense-cone</visualizeCode>
         <visualizeProcedure>
-        let parent-speed speed
+        ;let parent-speed speed
         ;hatch 1 [
         ;set breed sense-cones
         ;create-link-from myself [tie]
