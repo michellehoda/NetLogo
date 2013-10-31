@@ -1058,7 +1058,9 @@ public class DeltaTickTab
         boolean putNoteWidget = false;
 
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            if (bBlock.getReproduceUsed() && buildPanel.getMyTraits().size() > 0) {
+            if (bBlock.getReproduceUsed() &&
+                    (buildPanel.getMyTraits().size() > 0) &&
+                    (buildPanel.getBgInfo().getEnableMutationSlider())) {
                 putNoteWidget = true;
                 for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
                     String sliderName = tBlock.getMyParent().plural() + "-" + tBlock.getTraitName() + "-mutation";
@@ -1476,9 +1478,9 @@ public class DeltaTickTab
             populateInterface();
             removePlots();
             populatePlots();
-            //removeMutationSlider();
+            removeMutationSlider();
             interfaceSliderCount = 0;
-            //populateMutationSlider();
+            populateMutationSlider();
             populateCarryingCapacitySlider();
             populateLabelChooser();
             populateMonitors();

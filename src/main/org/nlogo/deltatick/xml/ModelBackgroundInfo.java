@@ -1,7 +1,6 @@
 package org.nlogo.deltatick.xml;
 
 import org.nlogo.deltatick.*;
-import org.nlogo.prim._patches;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -29,6 +28,7 @@ public class ModelBackgroundInfo {
     String draw;
     String erase;
     boolean isThereDraw; //does the XML have a drawing procedure
+    boolean enableMutationSlider = false;
 
     String maxNumberSpecies;
     boolean activateStepIn;
@@ -46,6 +46,7 @@ public class ModelBackgroundInfo {
         version = null;
         draw = null;
         traits.clear();
+        enableMutationSlider = false;
     }
 
     public void populate(NodeList breedNodes, NodeList traitNodes, NodeList globalNodes, NodeList envtNodes, NodeList setup, NodeList go, NodeList library,
@@ -135,6 +136,9 @@ public class ModelBackgroundInfo {
                         String temp = new String(iNode.getTextContent());
                         isThereDraw = Boolean.parseBoolean(temp);
                     }                                            //
+                    if (iNode.getNodeName() == "mutationSlider") {
+                        enableMutationSlider = Boolean.parseBoolean(iNode.getTextContent());
+                    }
                 }
             }
 
@@ -370,5 +374,9 @@ public class ModelBackgroundInfo {
 
     public boolean getIsDraw() {
         return isThereDraw;
+    }
+
+    public boolean getEnableMutationSlider() {
+        return enableMutationSlider;
     }
 }
