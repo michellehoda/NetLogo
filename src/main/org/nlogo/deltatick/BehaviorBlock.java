@@ -56,7 +56,7 @@ public strictfp class BehaviorBlock
         traitBlockDisplayPanel.setVisible(false);
         label.add(traitBlockDisplayPanel);
         textInputDocument = new JCharNumberNoSpaceFieldFilter();
-        textInputDocument.setMaxChars(10);
+        //textInputDocument.setMaxChars(10);
         for (PrettyInput aInput : agentInputs.values()) {
             aInput.setDocument(textInputDocument);
         }

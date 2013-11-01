@@ -670,7 +670,8 @@ public class DeltaTickTab
             sePanel.getMyFrame().setVisible(false);
 
             if (buildPanel.getMyBreeds().size() == buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
-                addBreed.setEnabled(false);
+
+                //addBreed.setEnabled(false);
             }
 
 
