@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
-<library name="Blocks" version="0.1">
+<library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
     <breed singular="predator" plural="predators" setupNumber="25" maxNumber="50">

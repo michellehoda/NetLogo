@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
-<library name="Blocks" version="0.1">
+<library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
     <breed singular="deer?" plural="deer" setupNumber="25" maxNumber="50">
@@ -191,7 +191,7 @@
     </visualization>
     
     <interface>
-        <numberSpecies>2</numberSpecies>
+        <numberSpecies>1</numberSpecies>
         <mutationSlider>false</mutationSlider>
         <drawFeature>false</drawFeature>
         <stepIn>true</stepIn>

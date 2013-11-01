@@ -212,7 +212,7 @@
     </visualization>
     
     <interface>
-        <numberSpecies>2</numberSpecies>
+        <numberSpecies>1</numberSpecies>
         <mutationSlider>false</mutationSlider>
         <drawFeature>false</drawFeature>
         <stepIn>true</stepIn>

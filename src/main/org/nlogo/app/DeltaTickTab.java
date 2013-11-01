@@ -833,7 +833,7 @@ public class DeltaTickTab
 
 
     private final Action diveInAction =
-            new AbstractAction( "Step in") {
+            new AbstractAction( "Add click") {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     makeDiveInBlock();
                 }
