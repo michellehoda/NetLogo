@@ -339,7 +339,7 @@ public class DeltaTickTab
                 //makeBreedBlock(null, null);
 
                 if (buildPanel.getMyBreeds().size() == buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
-                    String message = new String("Oops! There can only be " + buildPanel.getBgInfo().getMaxNumberSpeciesAllowed() + " species in this model.");
+                    String message = new String("Oops! You need to add only " + buildPanel.getBgInfo().getMaxNumberSpeciesAllowed() + " species in this activity.");
                     JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
