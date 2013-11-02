@@ -67,13 +67,13 @@
         <message>What is their speed?</message>
         <visualizeCode>set-sense-cone</visualizeCode>
         <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
+        let parent-speed speed
+        hatch 1 [
+        set breed sense-cones
+        create-link-from myself [tie]
+        set shape "box"
+        set color gray
+        set size parent-speed]
         </visualizeProcedure>
         <traitShape>vision cone</traitShape>
                 
