@@ -338,12 +338,18 @@ public class DeltaTickTab
             public void actionPerformed( java.awt.event.ActionEvent e ) {
                 //makeBreedBlock(null, null);
 
+                if (buildPanel.getMyBreeds().size() == buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
+                    String message = new String("Oops! You need to add only " + buildPanel.getBgInfo().getMaxNumberSpeciesAllowed() + " species in this activity.");
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 // Disable the AddBreed button until Okay/Cancel is clicked
                 addBreed.setEnabled(false);
                 // Create the species editor
                 JFrame someFrame = new JFrame("Species Editor");
                 someFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 SpeciesEditorPanel speciesEditorPanel = new SpeciesEditorPanel(buildPanel.getBgInfo().getBreedNames(),
+                                                                               buildPanel.getBgInfo().getBreedSetupNumbers(),
                                                                                buildPanel.getBgInfo().getTraits(),
                                                                                someFrame);
                 speciesEditorPanel.getOkayButton().addActionListener(new SpeciesEditorPanelOkayListener(speciesEditorPanel));
@@ -668,11 +674,6 @@ public class DeltaTickTab
 
             // Now hide the panel
             sePanel.getMyFrame().setVisible(false);
-
-            if (buildPanel.getMyBreeds().size() == buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
-
-                //addBreed.setEnabled(false);
-            }
 
 
 //
