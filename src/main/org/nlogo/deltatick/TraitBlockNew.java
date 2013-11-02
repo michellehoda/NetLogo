@@ -221,7 +221,7 @@ public class TraitBlockNew
         String passBack = "";
         passBack += "to " + visualizeCode + "\n";
         passBack += visualizeProcedure;
-        passBack += "\nend";
+        passBack += "\nend\n";
         return passBack;
     }
 

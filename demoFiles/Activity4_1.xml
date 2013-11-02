@@ -52,7 +52,7 @@
         <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
         <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>What is their speed?</message>
-        <visualizeCode>set-sense-cone</visualizeCode>
+        <visualizeCode>set-sense-speed</visualizeCode>
         <visualizeProcedure>
         ;let parent-speed speed
         ;hatch 1 [
@@ -74,7 +74,7 @@
         <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
         <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>How far can they see?</message>
-        <visualizeCode>set-sense-cone1</visualizeCode>
+        <visualizeCode>set-sense-vision</visualizeCode>
         <visualizeProcedure>
         ;let parent-speed speed
         ;hatch 1 [

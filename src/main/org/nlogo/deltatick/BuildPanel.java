@@ -454,6 +454,7 @@ public String newSaveAsXML() {
     //HashMap is a pair of key mapped to values. eg. (key)name1: (value)SSN1 -A. (sept 8)
     public String unPackProcedures() {
         HashMap<String, CodeBlock> procedureCollection = new HashMap<String, CodeBlock>();
+        HashMap<String, TraitBlockNew> visualizeProcedures = new HashMap<String, TraitBlockNew>();
         String passBack = "";
 
         for (BreedBlock breedBlock : myBreeds) {
@@ -496,12 +497,22 @@ public String newSaveAsXML() {
             }
         }
 
+        // Populate visualizeProcedures
+        for (BreedBlock breedBlock : myBreeds) {
+            for (TraitBlockNew traitBlock : breedBlock.getMyTraitBlocks()) {
+                if (!visualizeProcedures.containsKey(traitBlock.getTraitName())) {
+                    visualizeProcedures.put(traitBlock.getMyTraitName(), traitBlock);
+                }
+            }
+        }
 
         for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
 
-        for (TraitBlockNew tBlock : myTraitsNew) {
+        // Unpack visualize procedures
+        passBack += "\n";
+        for (TraitBlockNew tBlock : visualizeProcedures.values()) {
             passBack += "\n" + tBlock.getVisualizeProcedure();
         }
 
