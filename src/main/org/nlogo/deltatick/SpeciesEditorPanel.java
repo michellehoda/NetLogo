@@ -43,6 +43,7 @@ import java.util.HashMap;
 public class SpeciesEditorPanel extends JPanel {
     // Data
     ArrayList<String> allBreedNames;
+    ArrayList<String> allBreedSetupNumbers;
     ArrayList<Trait> allTraits;
     TraitPreview traitPreview;
     TraitDisplay traitDisplay;
@@ -63,7 +64,7 @@ public class SpeciesEditorPanel extends JPanel {
     JPanel bottomPanel = new JPanel();
 
     // Constructor
-    public SpeciesEditorPanel(String[] allBreedNames, ArrayList<Trait> traits, JFrame jFrame) {
+    public SpeciesEditorPanel(String[] allBreedNames, String[] allBreedSetupNumbers, ArrayList<Trait> traits, JFrame jFrame) {
         this.myFrame = jFrame;
         // Initialize ArrayList<> allBreedNames like below. Arrays.asList doesn't compile on
         // the commandline. Warnings for unchecked case breaks the build
@@ -71,8 +72,13 @@ public class SpeciesEditorPanel extends JPanel {
         for (int i = 0; i < allBreedNames.length; i++) {
             this.allBreedNames.add(allBreedNames[i]);
         }
+        this.allBreedSetupNumbers = new ArrayList<String>();
+        for (int i = 0; i < allBreedSetupNumbers.length; i++) {
+            this.allBreedSetupNumbers.add(allBreedSetupNumbers[i]);
+        }
+
         this.allTraits = new ArrayList<Trait>(traits);
-        this.topPanel = new SpeciesEditorTopPanel(allBreedNames);
+        this.topPanel = new SpeciesEditorTopPanel(allBreedNames, allBreedSetupNumbers);
 
         traitDisplay = new TraitDisplay(sidePanel, myFrame);
 
@@ -241,6 +247,7 @@ public class SpeciesEditorPanel extends JPanel {
 
     private class SpeciesEditorTopPanel extends JPanel {
         private final int BORDER_PADDING = 10;
+        HashMap<String, String> breedNameSetupNumbers;
         // Components
         private JLabel breedNameLabel;
         private JLabel breedSetupNumberLabel;
@@ -261,14 +268,19 @@ public class SpeciesEditorPanel extends JPanel {
         // The layout
         GroupLayout layout;
 
-        public SpeciesEditorTopPanel(String [] allBreedNames) {
-
+        public SpeciesEditorTopPanel(String[] allBreedNames, String[] allBreedSetupNumbers) {
+            // Initialize HashMap
+            breedNameSetupNumbers = new HashMap<String, String>();
+            for (int i = 0; i < allBreedNames.length; i++) {
+                breedNameSetupNumbers.put(allBreedNames[i], allBreedSetupNumbers[i]);
+            }
             // Initialize labels and components
             // Species name
             this.breedNameLabel = new JLabel("Which species do you want to add? ");
             // Initialize name combobox
             this.breedNamesComboBox = new JComboBox(allBreedNames);
             this.breedNamesComboBox.setSelectedIndex(0);
+            this.breedNamesComboBox.addItemListener(new breedNamesComboBoxActionListener());
             // Species setup number
             this.breedSetupNumberLabel = new JLabel("How many individuals of this species to begin with?");
             this.breedSetupNumberText = new JTextField("25");
@@ -415,6 +427,15 @@ public class SpeciesEditorPanel extends JPanel {
             Color selectedColor = (Color) breedColorComboBox.getSelectedItem();
             int colorARGB = 0xff000000 + selectedColor.getRGB();
             return org.nlogo.api.Color.getClosestColorNameByARGB(colorARGB);
+        }
+        private class breedNamesComboBoxActionListener implements ItemListener {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                String breedName = (String) e.getItem();
+                String setupNumber = breedNameSetupNumbers.get(breedName);
+                breedSetupNumberText.setText(setupNumber);
+            }
         }
     }
 

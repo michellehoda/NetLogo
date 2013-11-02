@@ -19,7 +19,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="25" maxNumber="50">
+    <breed singular="bugs?" plural="bugs" setupNumber="50" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>

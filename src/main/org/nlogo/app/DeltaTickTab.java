@@ -349,6 +349,7 @@ public class DeltaTickTab
                 JFrame someFrame = new JFrame("Species Editor");
                 someFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 SpeciesEditorPanel speciesEditorPanel = new SpeciesEditorPanel(buildPanel.getBgInfo().getBreedNames(),
+                                                                               buildPanel.getBgInfo().getBreedSetupNumbers(),
                                                                                buildPanel.getBgInfo().getTraits(),
                                                                                someFrame);
                 speciesEditorPanel.getOkayButton().addActionListener(new SpeciesEditorPanelOkayListener(speciesEditorPanel));

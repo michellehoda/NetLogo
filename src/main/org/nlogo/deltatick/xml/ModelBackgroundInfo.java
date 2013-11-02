@@ -266,6 +266,17 @@ public class ModelBackgroundInfo {
         return breedTypes;
     }
 
+    public String[] getBreedSetupNumbers() {
+        // breedTypes is an array of size n of breeds -A. (oct 5)
+        String[] breedSetupNumbers = new String[breeds.size()];
+        int i = 0;
+        for (Breed breed : breeds) {
+            breedSetupNumbers[i] = breed.startQuant;
+            i++;
+        }
+        return breedSetupNumbers;
+    }
+
     // If I give you a breed name, give me other information about that breed -A. (oct 17)
     public Breed getBreed(String name) throws Exception {
         for (Breed breed : breeds) {
