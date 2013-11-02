@@ -140,12 +140,11 @@
         </commands>
     </behavior>
     
-    <behavior name="jump" traits="jump-length">
+    <behavior name="hop" traits="jump-length">
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
         rt (random-float 5 - random-float 5)
-        fd random-float speed1 * .25 
-        wait 1       
+        fd random-float speed1 * .25               
         </commands>
     </behavior>
     
