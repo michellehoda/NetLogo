@@ -518,18 +518,32 @@ public String newSaveAsXML() {
 
 
         // Mutate procedure
-        boolean needMutateCode = false;
+        boolean needMutateProcedureCode = false;
+        boolean needMutateProcedureHeader = false;
         for (BreedBlock bBlock : myBreeds) {
-            if (bBlock.getReproduceUsed() && bBlock.getMyTraitBlocks().size() > 0) {
-                //needMutateCode = true; // Commented May 27, 2013 for OOJH Activity1
+            if (bBlock.getReproduceUsed()) {
+                needMutateProcedureHeader = true;
+                if (bgInfo.getEnableMutationSlider() &&
+                        bBlock.getMyTraitBlocks().size() > 0) {
+                    needMutateProcedureCode = true; // Commented May 27, 2013 for OOJH Activity1
+                }
             }
         }
-
-        if (needMutateCode) {
+        if (needMutateProcedureHeader) {
             passBack += "to mutate\n";
-            // Check breed
-            for (BreedBlock breedBlock : myBreeds)  {
-                if (breedBlock.getReproduceUsed()) {
+            if (needMutateProcedureCode) {
+                passBack += generateMutateCode();
+            }
+            passBack += " end\n\n";
+        }
+
+        return passBack;
+    }
+
+    public String generateMutateCode() {
+        String passBack = "";
+        for (BreedBlock breedBlock : myBreeds)  {
+            if (breedBlock.getReproduceUsed()) {
 
                 passBack += "\t\tif breed = " + breedBlock.plural() + " [\n";
                 // Foreach trait of that breed
@@ -540,20 +554,11 @@ public String newSaveAsXML() {
                     passBack += "\nset " + traitName + " (" + traitName + " + .5 )]\n";
                     passBack += "\n[set " + traitName + " (" + traitName + " - .5 )]\n";
                     passBack += "\n]";
-
-//                    passBack += "[set " + traitName + " (" + traitName + " - random-float " + breedBlock.plural() + "-" +
-//                                                        traitBlock.getTraitName() + "-mutation)]\n";
-//                    passBack += "[set " + traitName + " (" + traitName + " + random-float " + breedBlock.plural() + "-" +
-//                                                        traitBlock.getTraitName() + "-mutation)]\n";
                 }
                 passBack += "\t\t]\n"; // corresponds to if condition
-                }
             }
-            passBack += " end\n\n";
-
         }
-
-        return passBack;
+        return  passBack;
     }
 
     //I think this is where you clear the window to remove everything-a.

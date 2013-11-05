@@ -157,7 +157,8 @@
         <percentInput name="probability" default="1"></percentInput>
         <commands> if random 100 &lt; 50 [
         if random-float 1 &lt; probability [
-        hatch 1 [set age 0 fd 1]
+        hatch 1 [set age 0 fd 1
+		         mutate]
         </commands>
     </behavior>
     
