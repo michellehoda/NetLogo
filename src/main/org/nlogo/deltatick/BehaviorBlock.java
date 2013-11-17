@@ -168,7 +168,7 @@ public strictfp class BehaviorBlock
 //            // Closing brackets for code
 
             passBack += processedCode + "\n";
-            passBack += "\t\t] ]";
+            passBack += "\t\t]\n";
             passBack += "\t]\n";
         }
         else {
