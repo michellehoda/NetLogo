@@ -115,13 +115,15 @@ public class BuildPanel
 
         // begin function to go
         passBack += "to go\n";
-        // 20130819 Check maxNumber for each breed, stop of maxNumber is reached
-        for (BreedBlock breedBlock : myBreeds) {
-            passBack += "if count " + breedBlock.plural() + " > " + breedBlock.getMaxNumber() + " [\n"
-                        + "\tuser-message(word \"There can only be at most " + breedBlock.getMaxNumber()
-                        + " " + breedBlock.plural() + " !\")"
-                        + " stop" + "\n]\n";
-        }
+        // 20131116 - The following code is no longer needed since we're not using maxNumber anymore.
+        // Kept it here in case we decide to return to it.
+//        // 20130819 Check maxNumber for each breed, stop of maxNumber is reached
+//        for (BreedBlock breedBlock : myBreeds) {
+//            passBack += "if count " + breedBlock.plural() + " > " + breedBlock.getMaxNumber() + " [\n"
+//                        + "\tuser-message(word \"There can only be at most " + breedBlock.getMaxNumber()
+//                        + " " + breedBlock.plural() + " !\")"
+//                        + " stop" + "\n]\n";
+//        }
         passBack += bgInfo.updateBlock(myBreeds, myEnvts);
 
         for (BreedBlock breedBlock : myBreeds) {

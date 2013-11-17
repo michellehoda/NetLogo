@@ -617,7 +617,6 @@ public class DeltaTickTab
                 // Read information from the panel
                 String breedName = new String(sePanel.getMyBreedName());
                 String setupNumber = new String(sePanel.getMySetupNumber());
-                String maxNumber = new String(sePanel.getMyMaxNumber());
                 if (buildPanel.breedExists(breedName)) {
                     // Breed already exists -- cannot add another breed of the same name
                     String message = new String("Oops! The species you selected already exists. Choose a different species.");
@@ -669,8 +668,6 @@ public class DeltaTickTab
             breedBlock.setColorName(sePanel.getMyBreedColorName());
             // Set the setup number
             breedBlock.setSetupNumber(sePanel.getMySetupNumber());
-            // Set the max number
-            breedBlock.setMaxNumber(sePanel.getMyMaxNumber());
 
             // Now hide the panel
             sePanel.getMyFrame().setVisible(false);

@@ -221,9 +221,6 @@ public class SpeciesEditorPanel extends JPanel {
     public String getMySetupNumber() {
         return topPanel.getSetupNumber();
     }
-    public String getMyMaxNumber() {
-        return topPanel.getMaxNumber();
-    }
     public String getMyBreedShape() {
         return topPanel.getBreedShape();
     }
@@ -251,8 +248,6 @@ public class SpeciesEditorPanel extends JPanel {
         private JLabel breedNameLabel;
         private JLabel breedSetupNumberLabel;
         private JComboBox breedSetupNumberComboBox;
-        private JLabel breedMaxNumberLabel;
-        private JTextField breedMaxNumberText;
         private JComboBox breedNamesComboBox;
         // Color
         private JComboBox breedColorComboBox;
@@ -288,9 +283,6 @@ public class SpeciesEditorPanel extends JPanel {
             this.breedSetupNumberLabel = new JLabel("How many individuals of this species to begin with?");
             this.breedSetupNumberComboBox = new JComboBox(breedNameSetupComboModelMap.get(allBreedNames[0]));
             this.breedSetupNumberComboBox.setSelectedIndex(0);
-            // Species max number
-            this.breedMaxNumberLabel = new JLabel("What should be their maximum number?");
-            this.breedMaxNumberText = new JTextField("100");
             // Species color
             this.breedColorLabel = new JLabel("What color do you want it to be?");
             // Set up colors
@@ -326,9 +318,6 @@ public class SpeciesEditorPanel extends JPanel {
             // Setup number
             breedSetupNumberLabel.setPreferredSize(new Dimension(75, 10));
             breedSetupNumberComboBox.setPreferredSize(new Dimension(25, 10));
-            // Max number
-            breedMaxNumberLabel.setPreferredSize(new Dimension(75, 10));
-            breedMaxNumberText.setPreferredSize(new Dimension(25, 10));
             // Shape
             breedShapeLabel.setPreferredSize(new Dimension(75, 10));
             breedShapeButton.setPreferredSize(new Dimension(25, 10));
@@ -351,13 +340,11 @@ public class SpeciesEditorPanel extends JPanel {
             GroupLayout.ParallelGroup hpgroup1 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             hpgroup1.addComponent(breedNameLabel);
             hpgroup1.addComponent(breedSetupNumberLabel);
-            hpgroup1.addComponent(breedMaxNumberLabel);
             hpgroup1.addComponent(breedColorLabel);
             hpgroup1.addComponent(breedShapeLabel);
             GroupLayout.ParallelGroup hpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             hpgroup2.addComponent(breedNamesComboBox);
             hpgroup2.addComponent(breedSetupNumberComboBox);
-            hpgroup2.addComponent(breedMaxNumberText);
             hpgroup2.addComponent(breedColorComboBox);
             hpgroup2.addComponent(breedShapeButton);
             // Create the sequential group
@@ -377,9 +364,6 @@ public class SpeciesEditorPanel extends JPanel {
             GroupLayout.ParallelGroup vpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             vpgroup2.addComponent(breedSetupNumberLabel);
             vpgroup2.addComponent(breedSetupNumberComboBox);
-            GroupLayout.ParallelGroup vpgroup3 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
-            vpgroup3.addComponent(breedMaxNumberLabel);
-            vpgroup3.addComponent(breedMaxNumberText);
             GroupLayout.ParallelGroup vpgroup4 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             vpgroup4.addComponent(breedColorLabel);
             vpgroup4.addComponent(breedColorComboBox);
@@ -391,8 +375,6 @@ public class SpeciesEditorPanel extends JPanel {
             vsgroup.addGroup(vpgroup1);
             vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
             vsgroup.addGroup(vpgroup2);
-            vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
-            vsgroup.addGroup(vpgroup3);
             vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
             vsgroup.addGroup(vpgroup4);
             vsgroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
@@ -414,9 +396,6 @@ public class SpeciesEditorPanel extends JPanel {
         }
         public String getSetupNumber() {
             return (String) breedSetupNumberComboBox.getSelectedItem();
-        }
-        public String getMaxNumber() {
-            return breedMaxNumberText.getText();
         }
         public String getBreedShape() {
            return breedShapeButtonActionListener.getBreedShape();
