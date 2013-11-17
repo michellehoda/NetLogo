@@ -3,7 +3,7 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="10" maxNumber="20">
+    <breed singular="predator" plural="predators" setupNumber="10" setupNumbers="5,10" maxNumber="20">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -25,7 +25,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bug" plural="bugs" setupNumber="25" maxNumber="50">
+    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="25,50" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>

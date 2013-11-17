@@ -5,6 +5,7 @@ import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -19,6 +20,7 @@ import java.util.LinkedList;
 public class Breed {
     ArrayList<OwnVar> vars = new ArrayList<OwnVar>();
     String startQuant;
+    ArrayList<String> setupNumbers = new ArrayList<String>();
     String maxQuant;
     String plural;
     String singular;
@@ -38,6 +40,8 @@ public class Breed {
         singular = breedNode.getAttributes().getNamedItem("singular").getTextContent();
         plural = breedNode.getAttributes().getNamedItem("plural").getTextContent();
         startQuant = breedNode.getAttributes().getNamedItem("setupNumber").getTextContent();
+        String sNumbers = breedNode.getAttributes().getNamedItem("setupNumbers").getTextContent();
+        setupNumbers = new ArrayList<String>(Arrays.asList(sNumbers.split(",")));
         maxQuant = breedNode.getAttributes().getNamedItem("maxNumber").getTextContent();
         this.id = id;
 
@@ -161,6 +165,9 @@ public class Breed {
 
     public String getStartQuant() {
         return startQuant;
+    }
+    public String [] getSetupNumbers() {
+        return (String []) setupNumbers.toArray(new String[0]);
     }
     public String getMaxQuant() {
         return maxQuant;

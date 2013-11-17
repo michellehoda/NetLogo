@@ -266,13 +266,10 @@ public class ModelBackgroundInfo {
         return breedTypes;
     }
 
-    public String[] getBreedSetupNumbers() {
-        // breedTypes is an array of size n of breeds -A. (oct 5)
-        String[] breedSetupNumbers = new String[breeds.size()];
-        int i = 0;
+    public ArrayList<String []> getBreedSetupNumbers() {
+        ArrayList<String []> breedSetupNumbers = new ArrayList<String []>();
         for (Breed breed : breeds) {
-            breedSetupNumbers[i] = breed.startQuant;
-            i++;
+            breedSetupNumbers.add(breed.getSetupNumbers());
         }
         return breedSetupNumbers;
     }
