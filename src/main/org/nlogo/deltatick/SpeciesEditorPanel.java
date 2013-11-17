@@ -8,6 +8,7 @@ import org.nlogo.shape.VectorShape;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -43,7 +44,6 @@ import java.util.HashMap;
 public class SpeciesEditorPanel extends JPanel {
     // Data
     ArrayList<String> allBreedNames;
-    ArrayList<String> allBreedSetupNumbers;
     ArrayList<Trait> allTraits;
     TraitPreview traitPreview;
     TraitDisplay traitDisplay;
@@ -64,7 +64,10 @@ public class SpeciesEditorPanel extends JPanel {
     JPanel bottomPanel = new JPanel();
 
     // Constructor
-    public SpeciesEditorPanel(String[] allBreedNames, String[] allBreedSetupNumbers, ArrayList<Trait> traits, JFrame jFrame) {
+    public SpeciesEditorPanel(String[] allBreedNames,
+                              ArrayList<String []> allBreedSetupNumbers,
+                              ArrayList<Trait> traits,
+                              JFrame jFrame) {
         this.myFrame = jFrame;
         // Initialize ArrayList<> allBreedNames like below. Arrays.asList doesn't compile on
         // the commandline. Warnings for unchecked case breaks the build
@@ -72,11 +75,6 @@ public class SpeciesEditorPanel extends JPanel {
         for (int i = 0; i < allBreedNames.length; i++) {
             this.allBreedNames.add(allBreedNames[i]);
         }
-        this.allBreedSetupNumbers = new ArrayList<String>();
-        for (int i = 0; i < allBreedSetupNumbers.length; i++) {
-            this.allBreedSetupNumbers.add(allBreedSetupNumbers[i]);
-        }
-
         this.allTraits = new ArrayList<Trait>(traits);
         this.topPanel = new SpeciesEditorTopPanel(allBreedNames, allBreedSetupNumbers);
 
@@ -247,11 +245,12 @@ public class SpeciesEditorPanel extends JPanel {
 
     private class SpeciesEditorTopPanel extends JPanel {
         private final int BORDER_PADDING = 10;
-        HashMap<String, String> breedNameSetupNumbers;
+        HashMap<String, String[]> breedNameSetupNumbers;
+        HashMap<String, DefaultComboBoxModel> breedNameSetupComboModelMap;
         // Components
         private JLabel breedNameLabel;
         private JLabel breedSetupNumberLabel;
-        private JTextField breedSetupNumberText;
+        private JComboBox breedSetupNumberComboBox;
         private JLabel breedMaxNumberLabel;
         private JTextField breedMaxNumberText;
         private JComboBox breedNamesComboBox;
@@ -268,12 +267,16 @@ public class SpeciesEditorPanel extends JPanel {
         // The layout
         GroupLayout layout;
 
-        public SpeciesEditorTopPanel(String[] allBreedNames, String[] allBreedSetupNumbers) {
+        public SpeciesEditorTopPanel(String[] allBreedNames,
+                                     ArrayList<String []> allBreedSetupNumbers) {
             // Initialize HashMap
-            breedNameSetupNumbers = new HashMap<String, String>();
+            breedNameSetupNumbers = new HashMap<String, String[]>();
+            breedNameSetupComboModelMap = new HashMap<String, DefaultComboBoxModel>();
             for (int i = 0; i < allBreedNames.length; i++) {
-                breedNameSetupNumbers.put(allBreedNames[i], allBreedSetupNumbers[i]);
+                breedNameSetupNumbers.put(allBreedNames[i], allBreedSetupNumbers.get(i));
+                breedNameSetupComboModelMap.put(allBreedNames[i], new DefaultComboBoxModel(allBreedSetupNumbers.get(i)));
             }
+
             // Initialize labels and components
             // Species name
             this.breedNameLabel = new JLabel("Which species do you want to add? ");
@@ -283,7 +286,8 @@ public class SpeciesEditorPanel extends JPanel {
             this.breedNamesComboBox.addItemListener(new breedNamesComboBoxActionListener());
             // Species setup number
             this.breedSetupNumberLabel = new JLabel("How many individuals of this species to begin with?");
-            this.breedSetupNumberText = new JTextField("25");
+            this.breedSetupNumberComboBox = new JComboBox(breedNameSetupComboModelMap.get(allBreedNames[0]));
+            this.breedSetupNumberComboBox.setSelectedIndex(0);
             // Species max number
             this.breedMaxNumberLabel = new JLabel("What should be their maximum number?");
             this.breedMaxNumberText = new JTextField("100");
@@ -321,7 +325,7 @@ public class SpeciesEditorPanel extends JPanel {
             breedNamesComboBox.setPreferredSize(new Dimension(100,10));
             // Setup number
             breedSetupNumberLabel.setPreferredSize(new Dimension(75, 10));
-            breedSetupNumberText.setPreferredSize(new Dimension(25, 10));
+            breedSetupNumberComboBox.setPreferredSize(new Dimension(25, 10));
             // Max number
             breedMaxNumberLabel.setPreferredSize(new Dimension(75, 10));
             breedMaxNumberText.setPreferredSize(new Dimension(25, 10));
@@ -352,7 +356,7 @@ public class SpeciesEditorPanel extends JPanel {
             hpgroup1.addComponent(breedShapeLabel);
             GroupLayout.ParallelGroup hpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             hpgroup2.addComponent(breedNamesComboBox);
-            hpgroup2.addComponent(breedSetupNumberText);
+            hpgroup2.addComponent(breedSetupNumberComboBox);
             hpgroup2.addComponent(breedMaxNumberText);
             hpgroup2.addComponent(breedColorComboBox);
             hpgroup2.addComponent(breedShapeButton);
@@ -372,7 +376,7 @@ public class SpeciesEditorPanel extends JPanel {
             vpgroup1.addComponent(breedNamesComboBox);
             GroupLayout.ParallelGroup vpgroup2 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             vpgroup2.addComponent(breedSetupNumberLabel);
-            vpgroup2.addComponent(breedSetupNumberText);
+            vpgroup2.addComponent(breedSetupNumberComboBox);
             GroupLayout.ParallelGroup vpgroup3 = layout.createParallelGroup(GroupLayout.Alignment.LEADING, false);
             vpgroup3.addComponent(breedMaxNumberLabel);
             vpgroup3.addComponent(breedMaxNumberText);
@@ -409,7 +413,7 @@ public class SpeciesEditorPanel extends JPanel {
             return (String) breedNamesComboBox.getSelectedItem();
         }
         public String getSetupNumber() {
-            return breedSetupNumberText.getText();
+            return (String) breedSetupNumberComboBox.getSelectedItem();
         }
         public String getMaxNumber() {
             return breedMaxNumberText.getText();
@@ -433,8 +437,8 @@ public class SpeciesEditorPanel extends JPanel {
             public void itemStateChanged(ItemEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 String breedName = (String) e.getItem();
-                String setupNumber = breedNameSetupNumbers.get(breedName);
-                breedSetupNumberText.setText(setupNumber);
+                breedSetupNumberComboBox.setModel(breedNameSetupComboModelMap.get(breedName));
+                breedSetupNumberComboBox.setSelectedIndex(0);
             }
         }
     }
