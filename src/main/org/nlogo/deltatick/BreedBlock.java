@@ -938,7 +938,7 @@ public strictfp class BreedBlock
         inspectSpeciesButton.setIcon(icon);
     }
 
-    class RectPanel extends JPanel {
+    public class RectPanel extends JPanel {
         private String breedName;
         private Color color;
         private JLabel label;

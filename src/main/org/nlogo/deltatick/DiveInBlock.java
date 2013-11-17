@@ -16,6 +16,7 @@ import org.nlogo.hotlink.dialogs.ShapeIcon;
 import org.picocontainer.Behavior;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,6 +35,9 @@ public strictfp class DiveInBlock
     transient Frame parentFrame;
     //int curIconIndex;
     //Color curColor;
+    JPanel rectPanel = new JPanel();
+    Boolean removedRectPanel = false;
+    public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
 
     public DiveInBlock (DiveIn diveIn, Frame frame) {
         super(diveIn.getName(), ColorSchemer.getColor(3));
@@ -43,8 +47,36 @@ public strictfp class DiveInBlock
         this.addMouseListener(this);
         this.setLocation(0, 0);
         this.showRemoveButton();
+        addRect();
         //curIconIndex = 0;
         //curColor = Color.GRAY;
+    }
+
+    public void addRect() {
+        rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
+        rectPanel.setBackground(getBackground());
+        JLabel label = new JLabel();
+        label.setText("Add blocks here");
+        rectPanel.add(label);
+        add(rectPanel);
+        validate();
+    }
+    public void showRectPanel() {
+        if (removedRectPanel) {
+            //rectPanel.setVisible(true);
+            this.add(rectPanel);
+            this.validate();
+            this.repaint();
+        }
+    }
+    public void hideRectPanel() {
+        if (removedRectPanel) {
+            //rectPanel.setVisible(false);
+            this.remove(rectPanel);
+            this.validate();
+            this.repaint();
+        }
     }
 
     public java.util.List<BehaviorBlock> getMyBlocks() {
@@ -103,10 +135,24 @@ public strictfp class DiveInBlock
         //return "create-predators 1 \n [set size 2 \n set shape \"bird\"]\n";
     }
 
+    public void addBlock(CodeBlock block) {
+        super.addBlock(block);
+        if (removedRectPanel == false) {
+            remove(rectPanel);
+            removedRectPanel = true;
+        }
+        else {
+            hideRectPanel();
+        }
+        validate();
+    }
     public void removeBlock(CodeBlock block) {
         super.removeBlock(block);
         if (block instanceof BehaviorBlock) {
             myBlocks.remove(block);
+        }
+        if (myBlocks.size() == 0) {
+            showRectPanel();
         }
     }
 
