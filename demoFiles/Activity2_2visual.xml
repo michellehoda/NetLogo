@@ -3,7 +3,7 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="deer?" plural="deer" setupNumber="25" maxNumber="50">
+    <breed singular="deer?" plural="deer" setupNumber="25" setupNumbers="20,25,30,35" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -18,7 +18,7 @@
         </updateCode>
     </breed> 
     
-    <breed singular="rabbit" plural="rabbits" setupNumber="25" maxNumber="50">
+    <breed singular="rabbit" plural="rabbits" setupNumber="25" setupNumbers="20,25,30,35" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -33,7 +33,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bug" plural="bugs" setupNumber="25" maxNumber="50">
+    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="40,45,50,55" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -57,13 +57,13 @@
     </envt>  
     
     
-    <trait name="speed">
+    <trait name="Speed">
         <setupReporter>random 9</setupReporter>
-        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="medium" value="3" color="" setupNumber="30"></variation>
-        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
+        <variation name="Very-long-legs" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="Long-legs" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="Medium-legs" value="3" color="" setupNumber="30"></variation>
+        <variation name="Short-legs" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="Very-short-legs" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>What is their speed?</message>
         <visualizeCode>set-sense-cone</visualizeCode>
         <visualizeProcedure>        

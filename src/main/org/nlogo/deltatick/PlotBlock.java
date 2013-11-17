@@ -175,9 +175,9 @@ public strictfp class PlotBlock
             label.add(new JLabel("Name of Line Graph"));
         }
         textFilter = new JCharNumberFieldFilter();
-        textFilter.setMaxChars(10);
+        textFilter.setMaxChars(15);
         plotNameField = new PrettyInput(this);
-        plotNameField.setDocument(textFilter);
+        //plotNameField.setDocument(textFilter);      //don't need this on plot name (Aditi, Nov 16, 2013)
 
         label.add(plotNameField);
         label.setBackground(getBackground());

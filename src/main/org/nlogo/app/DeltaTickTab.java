@@ -772,7 +772,7 @@ public class DeltaTickTab
                 }
             };
     private final javax.swing.Action addHistoAction =
-            new javax.swing.AbstractAction( "Add Bar Graph" ) {
+            new javax.swing.AbstractAction( "Add Distribution" ) {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     // histogram, so parameter is true
                     makePlotBlock(true);
@@ -1177,6 +1177,7 @@ public class DeltaTickTab
             String labelOptions = "\"none\"";
             for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
                 labelOptions += "\"" + tBlock.getTraitName() + "\"";
+                labelOptions += "\"" + tBlock.getTraitName() + " visual\"";
                 putChooser = true;
             }
             if (putChooser) {
@@ -1397,9 +1398,6 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(false);
                 this.add(addDiveIn);
 
-                /*speciesTry = new JButton( speciesTryAction );
-                speciesTry.setEnabled(true);
-                this.add(speciesTry);*/
 
                 addTrackSpecies = new JButton("Track Species");
                 addTrackSpecies.addMouseListener(new TrackSpeciesListener());
@@ -1414,12 +1412,9 @@ public class DeltaTickTab
                 trackSpeciesPopUp.add(addPlot);
 
                 addMonitor = new JMenuItem ( addMonitorAction );
-                trackSpeciesPopUp.add(addMonitor);
+                //trackSpeciesPopUp.add(addMonitor);
 
-                //this.add(addMonitor);
-                //addEnvt = new JButton ( chgEnvtAction );
-                //addEnvt.setEnabled(false);
-                //this.add(addEnvt) ;
+
                 this.add( new org.nlogo.swing.ToolBar.Separator() ) ;
                 saveModelButton = new JButton();
                 saveModelButton.setAction(opensaveModelAction);

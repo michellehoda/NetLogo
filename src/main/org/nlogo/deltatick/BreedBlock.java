@@ -305,29 +305,7 @@ public strictfp class BreedBlock
         }
         else {
             myUsedTraits.add(((TraitBlockNew) block).getTraitName());
-            // commented out to test TraitBlockNew (March 25, 2013)
-            //((TraitBlockNew) block).enableDropDown();
-            //((TraitBlockNew) block).colorButton.setEnabled(true);
-            //((TraitBlock) block).addRect("Add blocks here");
             myBlocks.add(block);
-//            this.add(block);
-//            block.enableInputs();
-//            block.showRemoveButton();
-//            this.add(Box.createRigidArea(new Dimension(this.getWidth(), 4)));
-//            block.setMyParent(this);
-//            block.doLayout();
-//            block.validate();
-//            block.repaint();
-//            if (removedRectPanel == false) {     //checking if rectPanel needs to be removed
-//            remove(rectPanel);
-//            removedRectPanel = true;
-//            }
-//            doLayout();
-//            validate();
-//            repaint();
-//            this.getParent().doLayout();
-//            this.getParent().validate();
-//            this.getParent().repaint();
         }
     }
 
@@ -370,7 +348,7 @@ public strictfp class BreedBlock
 
             code += setupTrait();
             code += "]\n";
-            code += setupTraitLabels();
+            //code += setupTraitLabels();
             code += setupTraitVisualization();
             code += setupBreedShape();
             code += "ask patches [set pcolor white]\n";
@@ -433,27 +411,32 @@ public strictfp class BreedBlock
     public String setupTraitLabels() {
         String code = "";
         if (numTraits() > 0) {
-            code += "\task " + plural() + "[  ifelse not (" + plural() + "-label = \"none\")\n\t" +
-                    "[\n\t set label runresult " + plural() + "-label \n\t" +
-                    "  set label-color black ]\n\t" +
-                    "[set label \"\" ]  ]";
+            code += "\task " + plural() + " [";
+            code += "if (" + plural() + "-label = \"none\")\n\t" +
+                    "[set label \"\" ]  \n";
+            code += setupTraitVisualization() + " ]\n";
         }
 
-//        if (traitLabels.size() > 0) {
-//            code += "ask " + plural() + "[";
-//            code += setTraitLabelCode();
-//            code += "]\n";
-//        }
         return code;
     }
 
     public String setupTraitVisualization() {
         String code = "";
-        for (TraitBlockNew tBlock : myTraitBlocks) {
-            code += "\nask " + tBlock.getBreedName() + " [";
-            code += tBlock.getVisualizeCode() + "\n";
-            code += " ]\n";
+        if (numTraits() > 0) {
+            code += "\task " + plural() + "[ ";
+            for (TraitBlockNew tBlock : myTraitBlocks) {
+                code += "if " + tBlock.getBreedName() + "-label = \"" +
+                        tBlock.getName() + " visual\" [" ;
+                code += tBlock.getVisualizeCode() + "]\n";
+                code += "if " + tBlock.getBreedName() + "-label = \"" +
+                        tBlock.getName() + "\" [ set label runresult " + plural() + "-label set label-color black]";
+                code += "if (" + plural() + "-label = \"none\")\n\t" +
+                    "[set label \"\" ]  \n";
+                code += " \n";
+            }
+            code += "\n]";
         }
+
         return code;
     }
 
