@@ -516,6 +516,7 @@ public String newSaveAsXML() {
         passBack += "\n";
         for (TraitBlockNew tBlock : visualizeProcedures.values()) {
             passBack += "\n" + tBlock.getVisualizeProcedure();
+            passBack += "\n" + tBlock.getVisualizeGoProcedure() + "\n";
         }
 
 

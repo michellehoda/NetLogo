@@ -21,6 +21,8 @@ public class Trait implements Serializable {
     String traitName = new String();
     String visualizeCode = new String();
     String visualizeProcedure = new String();
+    String visualizeGoCode = new String();
+    String visualizeGoProceudre = new String();
     String setupReporter = new String();
     String color = new String();
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
@@ -38,6 +40,8 @@ public class Trait implements Serializable {
         traitName = new String(trait.traitName);
         visualizeCode = new String(trait.visualizeCode);
         visualizeProcedure = new String(trait.visualizeProcedure);
+        visualizeGoCode = new String(trait.visualizeGoCode);
+        visualizeGoProceudre = new String(trait.visualizeGoProceudre);
         color = new String(trait.color);
         setupReporter = new String(trait.setupReporter);
         message = new String(trait.message);
@@ -72,6 +76,12 @@ public class Trait implements Serializable {
             if (traitNodes.item(i).getNodeName() == "visualizeProcedure") {
                 visualizeProcedure = traitNodes.item(i).getTextContent();
             }
+            if (traitNodes.item(i).getNodeName() == "visualizeGoCode") {
+                visualizeGoCode = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName() == "visualizeGoProcedure") {
+                visualizeGoProceudre = traitNodes.item(i).getTextContent();
+            }
             if (traitNodes.item(i).getNodeName() == "message") {
                 message = traitNodes.item(i).getTextContent();
             }
@@ -91,6 +101,14 @@ public class Trait implements Serializable {
 
     public String getVisualizeProcedure() {
         return visualizeProcedure;
+    }
+
+    public String getVisualizeGoCode() {
+        return visualizeGoCode;
+    }
+
+    public String getVisualizeGoProceudre() {
+        return visualizeGoProceudre;
     }
 
     public String getColor() {

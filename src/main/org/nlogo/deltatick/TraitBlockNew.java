@@ -34,6 +34,8 @@ public class TraitBlockNew
     JLabel breedName = new JLabel();
     String visualizeCode;
     String visualizeProcedure;
+    String visualizeGoCode;
+    String visualizeGoProcedure;
 
     //transient Trait trait;
     transient TraitState traitState;
@@ -57,6 +59,8 @@ public class TraitBlockNew
         this.varColor = traitState.getColor();
         this.visualizeCode = traitState.getVisualizeCode();
         this.visualizeProcedure = traitState.getVisualizeProcedure();
+        this.visualizeGoCode = traitState.getVisualizeGoCode();
+        this.visualizeGoProcedure = traitState.getVisualizeGoProceudre();
 
         myBreedBlock = breedBlock;
 
@@ -163,13 +167,6 @@ public class TraitBlockNew
         validate();
     }
 
-//    public void lookBetter() {
-//        hideRemoveButton();
-//        removeBreedLabel();
-//        setSmallSize();
-//        repaint();
-//        revalidate();
-//    }
     public int getPreferredWidth() {
         if (getParent() instanceof BuildPanel) {
             return DEFAULT_CODEBLOCK_WIDTH;
@@ -221,6 +218,18 @@ public class TraitBlockNew
         String passBack = "";
         passBack += "to " + visualizeCode + "\n";
         passBack += visualizeProcedure;
+        passBack += "\nend\n";
+        return passBack;
+    }
+
+    public String getVisualizeGoCode() {
+        return visualizeGoCode;
+    }
+
+    public String getVisualizeGoProcedure() {
+        String passBack = "";
+        passBack += "to " + visualizeGoCode + "\n";
+        passBack += visualizeGoProcedure;
         passBack += "\nend\n";
         return passBack;
     }

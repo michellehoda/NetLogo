@@ -169,10 +169,10 @@ public strictfp class PlotBlock
 
     public void makePlotLabel() {
         if (this.isHisto == true) {
-            label.add(new JLabel("Name of Bar Graph of"));
+            label.add(new JLabel("Distribution title"));
         }
         else {
-            label.add(new JLabel("Name of Line Graph"));
+            label.add(new JLabel("Line graph title"));
         }
         textFilter = new JCharNumberFieldFilter();
         textFilter.setMaxChars(15);
