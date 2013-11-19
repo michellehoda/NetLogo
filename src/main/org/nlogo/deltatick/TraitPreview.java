@@ -404,7 +404,7 @@ public class TraitPreview extends JPanel {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         //myVariationsList = new JList();
         if (lsm.isSelectionEmpty()) {
-            System.out.println("No trait selected");
+            ((TraitTableModel) traitInfoTable.getModel()).reset();
         }
         else {
 
