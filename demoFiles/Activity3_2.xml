@@ -152,6 +152,22 @@
         </commands>
     </behavior>
     
+    <behavior name="flee" traits="vision">
+        <agentInput name="prey" default ="who?" tooltip="Who do they run away from?"></agentInput>
+        <commands>
+        rt (random-float 5 - random-float 5)
+        fd random-float speed1 * .25               
+        </commands>
+    </behavior>
+    
+    <behavior name="chase" traits="vision">
+        <agentInput name="prey" default ="who?" tooltip="Who do they chase?"></agentInput>
+        <commands>
+        rt (random-float 5 - random-float 5)
+        fd random-float speed1 * .25               
+        </commands>
+    </behavior>
+    
     
     <behavior name="eat" traits="">        
         <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
