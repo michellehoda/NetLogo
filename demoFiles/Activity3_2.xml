@@ -73,6 +73,10 @@
         ;set color gray
         ;set size parent-speed]
         </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
         <traitShape>vision cone</traitShape>
 		<mutateCode>
         <probability-slider name="prob-slider" default="50"></probability-slider>
@@ -91,15 +95,28 @@
         <message>How far can they see??</message>
         <visualizeCode>set-sense-cone1</visualizeCode>
         <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
+            let this-xcor xcor
+            let this-ycor ycor
+            let this-vision vision
+            let this-heading heading
+            hatch 1 [
+            set breed sense-cones
+            set shape "vision cone"
+            create-link-from myself [tie] ]
+
+            let this-arrowhead out-link-neighbors
+            ask this-arrowhead [
+            set xcor this-xcor
+            set ycor this-ycor
+            set heading this-heading
+            fd .5 + this-vision / 2
+            set hidden? true]
         </visualizeProcedure>
-        <traitShape>vision cone</traitShape>        
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>
     </trait>   
     
         

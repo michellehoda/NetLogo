@@ -35,7 +35,7 @@ public class TraitDistribution
         //this.selectedVariations.add("No variations selected");
 
         //initComponents(breed, trait, selectedVariations);
-        this.setPreferredSize(new Dimension(350, 30));
+        //this.setPreferredSize(new Dimension(350, 30));
         this.validate();
 
     }
@@ -74,8 +74,8 @@ public class TraitDistribution
 
     public void initComponents(String breed, String trait, ArrayList<String> selectedVariations) {
         boolean addDummy = (selectedVariations.size() == 1);
-        this.setMinimumSize(new Dimension(traitDistributionWidth, 30));    //to fix size of trait distribution
-        this.setMaximumSize(new Dimension(traitDistributionWidth, 30));
+        //this.setMinimumSize(new Dimension(traitDistributionWidth, 30));    //to fix size of trait distribution
+        //this.setMaximumSize(new Dimension(traitDistributionWidth, 30));
 
         this.breed = breed;
         this.trait = trait;

@@ -167,7 +167,7 @@ public class Breed {
         return startQuant;
     }
     public String [] getSetupNumbers() {
-        return (String []) setupNumbers.toArray(new String[0]);
+        return setupNumbers.toArray(new String[0]);
     }
     public String getMaxQuant() {
         return maxQuant;

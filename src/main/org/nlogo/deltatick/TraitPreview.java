@@ -89,7 +89,7 @@ public class TraitPreview extends JPanel {
     public static final int TRAIT_TABLE_WIDTH = VARVALUE_COLUMN_WIDTH+VARNAME_COLUMN_WIDTH+VARCHECKBOX_COLUMN_WIDTH;
     public static final int TRAIT_TABLE_HEIGHT = TRAIT_SCROLLPANE_HEIGHT;
     public static final int TRAIT_DISTRIPANEL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
-    public static final int TRAIT_DISTRIPANEL_HEIGHT = 50;
+    public static final int TRAIT_DISTRIPANEL_HEIGHT = 60;
 
     // TOTAL HEIGHT AND WIDTH OF TRAITPREVIEW
     public static final int TRAITPREVIEW_TOTAL_WIDTH = TRAIT_SCROLLPANE_WIDTH + TRAIT_TABLE_WIDTH;
@@ -404,7 +404,7 @@ public class TraitPreview extends JPanel {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         //myVariationsList = new JList();
         if (lsm.isSelectionEmpty()) {
-            System.out.println("No trait selected");
+            ((TraitTableModel) traitInfoTable.getModel()).reset();
         }
         else {
 
@@ -651,7 +651,7 @@ public class TraitPreview extends JPanel {
         return (TRAITPREVIEW_TOTAL_WIDTH + 50);
     }
     public int getTotalHeight() {
-        return (TRAITPREVIEW_TOTAL_HEIGHT + LabelPanel.LABELPANEL_HEIGHT + 50);
+        return (TRAITPREVIEW_TOTAL_HEIGHT);// + LabelPanel.LABELPANEL_HEIGHT);
     }
 
     public TraitDistribution getTraitDistribution() {
