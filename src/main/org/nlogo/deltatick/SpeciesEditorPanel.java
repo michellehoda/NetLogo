@@ -464,7 +464,7 @@ public class SpeciesEditorPanel extends JPanel {
         private String[] allShapes() {
             String[] defaultShapes =
                     org.nlogo.util.Utils.getResourceAsStringArray
-                            ("/system/defaultShapes.txt");  //default NetLogo shapes shapes (Sept 19, 2013)
+                            ("/system/deltatickShapes.txt");  //default NetLogo shapes shapes (Sept 19, 2013)
             return defaultShapes;
         }
         // actionPerformed method that s called when the button is clicked
