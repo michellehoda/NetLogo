@@ -155,6 +155,7 @@ public class SpeciesEditorPanel extends JPanel {
         //midPanel.add(labelPanel);
 
         midPanel.setPreferredSize(new Dimension(TraitPreview.TRAITPREVIEW_TOTAL_WIDTH, traitPreview.getTotalHeight()));
+        midPanel.setMaximumSize(new Dimension(TraitPreview.TRAITPREVIEW_TOTAL_WIDTH, traitPreview.getTotalHeight()));
         midPanel.revalidate();
 
     }
@@ -518,7 +519,6 @@ public class SpeciesEditorPanel extends JPanel {
             sidePanel.setVisible(true);
         }
         sidePanel.validate();
-
         myFrame.pack();
     }
 
