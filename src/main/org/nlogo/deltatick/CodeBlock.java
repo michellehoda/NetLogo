@@ -355,7 +355,9 @@ public abstract class CodeBlock
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
         agentInputs.put(inputName, agentInput);
+
         label.add(agentInput);
+        System.out.println("codeBloc " + label.getComponents().length);
     }
 
     public  PrettyInput getInput(String name) {
