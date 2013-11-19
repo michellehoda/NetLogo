@@ -288,3 +288,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
+
+vision cone
+true
+2
+Polygon -955883 false true 150 150 30 60 60 30 90 15 150 0 210 15 240 30 270 60
