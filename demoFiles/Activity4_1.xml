@@ -3,7 +3,7 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="25" maxNumber="50">
+    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="5,10,15" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -19,7 +19,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="50" maxNumber="50">
+    <breed singular="bugs?" plural="bugs" setupNumber="50" setupNumbers="10,20,30,40,50" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -62,6 +62,10 @@
         ;set color gray
         ;set size parent-speed]
         </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
         <traitShape>vision cone</traitShape>
                 
     </trait>   
@@ -84,7 +88,11 @@
         ;set color gray
         ;set size parent-speed]
         </visualizeProcedure>
-        <traitShape>vision cone</traitShape>        
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>
     </trait>   
     
         
