@@ -1151,7 +1151,8 @@ public class DeltaTickTab
                 sliderWidget.minimumCode_$eq(CARRYING_CAPACITY_SLIDER_MIN_VALUE.toString());
                 sliderWidget.maximumCode_$eq(CARRYING_CAPACITY_SLIDER_MAX_VALUE.toString());
 
-                double value = (carryingCapacitySliderValues.containsKey(sliderName)) ? carryingCapacitySliderValues.get(sliderName) : CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE;
+                //double value = (carryingCapacitySliderValues.containsKey(sliderName)) ? carryingCapacitySliderValues.get(sliderName) : CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE;
+                double value = Double.parseDouble(bBlock.getSetupNumber());
                 sliderWidget.valueSetter(value);
 
                 // Set name
