@@ -351,7 +351,7 @@ public abstract class CodeBlock
 
     public void addAgentInput(String inputName, String defaultValue) {
         AgentInput agentInput = new AgentInput(this);
-        agentInput.setDocument(textFilter);
+        //agentInput.setDocument(textFilter);
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
         agentInputs.put(inputName, agentInput);
