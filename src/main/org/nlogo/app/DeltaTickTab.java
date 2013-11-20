@@ -300,8 +300,6 @@ public class DeltaTickTab
                 addDiveIn.setEnabled(true);
             }
 
-            addTrackSpecies.setEnabled(true);
-
             addClear.setEnabled(true);
             saveModelButton.setEnabled(true);
             buildPanel.removeRect();
@@ -460,6 +458,10 @@ public class DeltaTickTab
             }
             if (buildPanel.getMyBreeds().size() < buildPanel.getBgInfo().getMaxNumberSpeciesAllowed()) {
                 addBreed.setEnabled(true);
+            }
+            // If this was the last breed block, disable the Track Species button
+            if (buildPanel.breedCount() == 0) {
+                addTrackSpecies.setEnabled(false);
             }
         }
     }
@@ -622,6 +624,11 @@ public class DeltaTickTab
                     String message = new String("Oops! The species you selected already exists. Choose a different species.");
                     JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
                     return;
+                }
+                // Breed will now be created
+                // If this is the first breed, enable the addTrackSpecies button
+                if (buildPanel.breedCount() == 0) {
+                    addTrackSpecies.setEnabled(true);
                 }
                 // Create the breed block
                 breedBlock = makeBreedBlock(breedName, setupNumber);
@@ -1557,8 +1564,9 @@ public class DeltaTickTab
 
     class TrackSpeciesListener implements MouseListener {
         public void mouseReleased (MouseEvent e) {
-            trackSpeciesPopUp.show(e.getComponent(), e.getX(), e.getY());
-
+            if (addTrackSpecies.isEnabled()) {
+                trackSpeciesPopUp.show(e.getComponent(), e.getX(), e.getY());
+            }
         }
         public void mouseExited (MouseEvent e) {
         }
