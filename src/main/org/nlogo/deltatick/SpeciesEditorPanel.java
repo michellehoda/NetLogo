@@ -288,15 +288,22 @@ public class SpeciesEditorPanel extends JPanel {
             this.breedColorLabel = new JLabel("What color do you want it to be?");
             // Set up colors
             COLORS = new ArrayList<Color>();
-            COLORS.add(new Color(0x99, 0x99, 0x99)); // GRAY
-            COLORS.add(new Color(0xFF, 0x66, 0x66)); // RED
-            COLORS.add(new Color(0x66, 0x66, 0xFF)); // PURPLEBLUE
-            COLORS.add(new Color(0x66, 0xFF, 0x66)); // GREEN
-            COLORS.add(new Color(0xFF, 0xFF, 0x66)); // YELLOW
-            COLORS.add(new Color(0x66, 0xFF, 0xFF)); // CYAN
-            COLORS.add(new Color(0xFF, 0x66, 0xFF)); // PINK
-            COLORS.add(new Color(0x66, 0x00, 0x00)); // BROWN
-            COLORS.add(new Color(0xFF, 0x66, 0x00)); // ORANGE
+            COLORS.add(new Color(0x99, 0x00, 0x00));
+            COLORS.add(new Color(0x99, 0x4C, 0x00));
+            COLORS.add(new Color(0x99, 0x99, 0x00));
+            COLORS.add(new Color(0xCC, 0xCC, 0x00));
+            COLORS.add(new Color(0x66, 0xCC, 0x00));
+            COLORS.add(new Color(0x00, 0x99, 0x00));
+            COLORS.add(new Color(0x00, 0x99, 0x99));
+            COLORS.add(new Color(0x00, 0x4C, 0x99));
+            COLORS.add(new Color(0x00, 0x00, 0x99));
+            COLORS.add(new Color(0x4C, 0x00, 0x99));
+            COLORS.add(new Color(0x99, 0x00, 0x99));
+            COLORS.add(new Color(0x99, 0x00, 0x4C));
+            COLORS.add(new Color(0x99, 0x99, 0x99));
+            COLORS.add(new Color(0x40, 0x40, 0x40));
+            COLORS.add(new Color(0x20, 0x20, 0x20));
+            COLORS.add(new Color(0x00, 0x00, 0x00));
             this.breedColorComboBox = new JComboBox(COLORS.toArray());
             // Speies shape
             this.breedShapeLabel = new JLabel("What should it look like?");
