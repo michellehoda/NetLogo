@@ -127,14 +127,12 @@ public class TraitDistribution
 
             for (String variation : selectedVariations) {
                 if (addDummy) {
-                    JLabel leaf = new JLabel("all " + breed + " have " + variation + " " + trait);//JButton("all " + breed + " have " + variation + " " + trait);
+                    // String leafName = "all " + breed + " have " + variation + " " + trait;
+                    String leafName = "all " + " have " + variation + " " + trait;
+                    JLabel leaf = new JLabel(leafName);
                     leaf.setHorizontalAlignment(SwingConstants.CENTER);
-                    //leaf.setEnabled(false);
-                    //Slider leaf = new Slider("all " + breed + " have " + variation + " " + trait);
                     this.add(leaf, variation);
-                    //JButton dummy = new JButton("dummy");
                     JLabel dummy = new JLabel("dummy");
-                    //leaf.setPreferredSize(this.getMaximumSize());
                     dummy.setPreferredSize(new Dimension(0, 0));
 
                     ////dDiv = new MultiSplitLayout.Divider();
@@ -147,8 +145,7 @@ public class TraitDistribution
 
                 }
                 else {
-                    //JButton leaf = new JButton(variation + " " + breed);
-                    JLabel leaf = new JLabel(variation + " " + breed);
+                    JLabel leaf = new JLabel(variation);
                     leaf.setHorizontalAlignment(SwingConstants.CENTER);
                     leaf.setPreferredSize(new Dimension(5,5));
                     //leaf.setMargin(new Insets(0,0,0,0));

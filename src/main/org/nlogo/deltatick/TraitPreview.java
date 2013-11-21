@@ -349,7 +349,8 @@ public class TraitPreview extends JPanel {
         traitDistriPanel.setPreferredSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
         traitDistriPanel.setMinimumSize(new Dimension(TRAIT_DISTRIPANEL_WIDTH, TRAIT_DISTRIPANEL_HEIGHT));
         TitledBorder titleMidPanel;
-        titleMidPanel = BorderFactory.createTitledBorder("Variations in " + myBreedName);
+        //titleMidPanel = BorderFactory.createTitledBorder("Variations in " + myBreedName);
+        titleMidPanel = BorderFactory.createTitledBorder("Variations");
         traitDistriPanel.setBorder(titleMidPanel);
 
         traitDistribution = new TraitDistribution();
