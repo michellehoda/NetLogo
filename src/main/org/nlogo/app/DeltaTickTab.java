@@ -393,7 +393,11 @@ public class DeltaTickTab
     public BreedBlock makeBreedBlock(String plural, String setupNumber) {
         BreedBlock newBreed;// = new BreedBlock();
         buildPanel.removeRect();
-        Breed breed = buildPanel.availBreeds().get(0);
+        Breed breed = buildPanel.getBgInfo().getBreed(plural);
+        if (breed == null) {
+            System.out.println("Breed " + plural + " does not exist!");
+            System.exit(1);
+        }
 
         if( buildPanel.breedCount() == 0 ) {
             newBreed = new BreedBlock( breed , breed.plural(), workspace.getFrame() );
