@@ -110,9 +110,10 @@ public class DeltaTickTab
     private final int PLOTS_HEIGHT = 200;
     private final int PLOTS_SEPARATION = 10;
 
-    // HashMaps to store slider values
+    // HashMaps to store widget values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
     HashMap<String, Double> carryingCapacitySliderValues = new HashMap<String, Double>();
+    HashMap<String, String> labelChooserValues = new HashMap<String, String>();
 
     //InterfaceTab it;
     ProceduresTab pt;
@@ -1178,25 +1179,32 @@ public class DeltaTickTab
 
     public void populateLabelChooser() {
         // Remove chooserWidget
-        for (WidgetWrapper w : chooserWidgets.values()) {
-            interfacePanel.remove(w);
+        for (Map.Entry<String, WidgetWrapper> entry : chooserWidgets.entrySet()) {
+        labelChooserValues.put(entry.getKey(), (String) ((ChooserWidget) entry.getValue().widget()).value());
+        // for (WidgetWrapper w : chooserWidgets.values()) {
+            interfacePanel.remove(entry.getValue());
         }
         chooserWidgets.clear();
 
         // Now populate labels
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
             boolean putChooser = false;
-            String labelOptions = "\"none\"";
+            String labelOptions = "";
             for (TraitBlockNew tBlock : bBlock.getMyTraitBlocks()) {
-                labelOptions += "\"" + tBlock.getTraitName() + "\"";
                 labelOptions += "\"" + tBlock.getTraitName() + " visual\"";
+                labelOptions += "\"" + tBlock.getTraitName() + "\"";
                 putChooser = true;
             }
+            labelOptions += "\"none\"";
             if (putChooser) {
                 ChooserWidget chooserWidget = ((ChooserWidget) interfacePanel.makeWidget("CHOOSER", false));
                 String chooserWidgetName = new String(bBlock.plural() + "-label");
                 chooserWidget.name(chooserWidgetName);
                 chooserWidget.choicesWrapper(labelOptions);
+                if (labelChooserValues.containsKey(chooserWidgetName)) {
+                    String chooserValue = labelChooserValues.get(chooserWidgetName);
+                    chooserWidget.valueObject(chooserValue);
+                }
 
                 WidgetWrapper ww = interfacePanel.addWidget(chooserWidget, 0, (120 + interfaceSliderCount * 60), true, false);
                 interfaceSliderCount++;
