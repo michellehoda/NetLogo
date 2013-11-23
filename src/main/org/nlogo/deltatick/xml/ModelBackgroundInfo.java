@@ -275,13 +275,13 @@ public class ModelBackgroundInfo {
     }
 
     // If I give you a breed name, give me other information about that breed -A. (oct 17)
-    public Breed getBreed(String name) throws Exception {
+    public Breed getBreed(String name) {
         for (Breed breed : breeds) {
-            if (breed.plural() == name) {
+            if (breed.plural().equalsIgnoreCase(name)) {
                 return breed;
             }
         }
-        throw new Exception();
+        return null;
     }
 
     //get entire ArrayList -A. (oct 17)
