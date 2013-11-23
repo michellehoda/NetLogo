@@ -195,5 +195,11 @@
         <drawFeature>false</drawFeature>
         <stepIn>false</stepIn>
     </interface>
+
+	<miscProcedure type="reporter" name="catch-prey" parameters="breed-type,vision1">
+		<procedureCode>
+		report [who] of other turtles in-cone vision1 120 with [ breed = breed-type ]
+		</procedureCode>
+	</miscProcedure>
     
 </library>

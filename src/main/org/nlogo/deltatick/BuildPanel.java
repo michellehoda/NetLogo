@@ -511,6 +511,9 @@ public String newSaveAsXML() {
         for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
+        // Unpack misc supporting procedures
+        passBack += getBgInfo().unpackMiscProcedures();
+        passBack += "\n";
 
         // Unpack visualize procedures
         passBack += "\n";

@@ -251,6 +251,11 @@ public class LibraryReader {
                 deltaTickTab.getLibraryHolder().addToQuantityBlocksMap((QuantityBlock) block);
             }
 
+            NodeList miscProcedures = library.getElementsByTagName("miscProcedure");
+            if (miscProcedures.getLength() > 0) {
+                deltaTickTab.getBuildPanel().getBgInfo().addMiscProcedures(miscProcedures);
+            }
+
             NodeList breeds = library.getElementsByTagName("breed");
             NodeList globals = library.getElementsByTagName("global");
 
