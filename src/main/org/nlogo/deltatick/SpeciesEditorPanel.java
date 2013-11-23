@@ -195,6 +195,10 @@ public class SpeciesEditorPanel extends JPanel {
 
     }
 
+    public void removeBreedNameComboBox() {
+        topPanel.removeBreedNameComboBox();
+        myFrame.setTitle("Species Editor: " + topPanel.getSelectedBreed());
+    }
     public JButton getOkayButton() {
         return okayButton;
     }
@@ -399,6 +403,10 @@ public class SpeciesEditorPanel extends JPanel {
 
         }
 
+        public void removeBreedNameComboBox() {
+            breedNamesComboBox.setVisible(false);
+            breedNameLabel.setVisible(false);
+        }
         public String getSelectedBreed() {
             return (String) breedNamesComboBox.getSelectedItem();
         }

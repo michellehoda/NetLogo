@@ -642,6 +642,9 @@ public class DeltaTickTab
                 sePanel.setMakeNewBreedBlock(false);
                 // Add panel to HashMap
                 speciesEditorPanelHashMap.put(breedName, sePanel);
+                // Once breed block is created, the breed names combo box is not required
+                // when the species editor panel is opened from the species button
+                sePanel.removeBreedNameComboBox();
             }
 
             // Get the breed block

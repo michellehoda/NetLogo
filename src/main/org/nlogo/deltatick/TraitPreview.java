@@ -706,7 +706,7 @@ public class TraitPreview extends JPanel {
         // Display charts for only the existing traits
         traitDisplay.updateCharts(selectedTraitsMap);
 
-        ((TitledBorder) traitDistriPanel.getBorder()).setTitle("Variations in " + myBreedName);
+        ((TitledBorder) traitDistriPanel.getBorder()).setTitle("Variations");
         traitDistriPanel.remove(traitDistribution);
         traitDistriPanel.validate();
     }
