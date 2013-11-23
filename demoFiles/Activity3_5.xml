@@ -21,7 +21,8 @@
         <updateCode>
         set age age + 1
         set energy energy - 0.5
-        if energy &lt; 0 [die]
+        if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]]
+        die]
         </updateCode>
     </breed> 
 
@@ -41,6 +42,7 @@
         </setupCode>
         <updateCode>
         set age age + 1
+        set energy energy - .5
         </updateCode>
     </breed>
     
@@ -106,8 +108,8 @@
     
     <behavior name="move" traits="">
         <commands>
-        right (random-float 30)
-        left (random-float 30)
+        right (random-float 40)
+        left (random-float 40)
         fd .5        
         </commands>
     </behavior>
@@ -153,9 +155,11 @@
     <behavior name="have-babies" traits="" mutate="true">
         <commands>
         if 100 &lt; 101 [
-        set energy (energy / 2)
-        hatch 1 [set age 0 rt random 90 fd 1
-		         mutate]
+        ;set energy (energy / 2)
+        ifelse count out-link-neighbors > 0 [
+        hatch 1 [set age 0 rt random 180 fd 2 mutate set-sense-cone1]]
+        hatch 1 [set age 0 rt random 180 fd 2
+		         mutate]]
         </commands>
     </behavior>
     
