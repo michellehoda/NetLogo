@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Blocks Library" version="0.1">
+    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    
+    <breed singular="bird" plural="birds" setupNumber="10" setupNumbers="10,15" maxNumber="20">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+        
+        <ownVar name="energy">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 100</setupReporter>
+        </ownVar>            
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+    set color random color  
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        set energy energy - 0.5
+        if energy &lt; 0 [die]
+        </updateCode>
+    </breed> 
+
+    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="20,25,30" maxNumber="50">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+        <ownVar name="energy">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 100</setupReporter>
+        </ownVar>
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+    set color random color
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed>
+    
+    <trait name="vision">
+        <setupReporter>random 9</setupReporter>
+        <variation name="very-far" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="far" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="medium" value="3" color="" setupNumber="30"></variation>
+        <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
+        <message>How far can they see??</message>
+        <visualizeCode>set-sense-cone1</visualizeCode>
+        <visualizeProcedure>
+            let this-xcor xcor
+            let this-ycor ycor
+            let this-vision vision
+            let this-heading heading
+            hatch 1 [
+            set breed sense-cones
+            set shape "vision cone"
+            create-link-from myself [tie] ]            
+        </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask out-link-neighbors [set hidden? false]
+        </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>
+    </trait>   
+    
+        
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>        
+    </global>
+
+    <go>
+    if not any? turtles [ 
+			user-message (word "There are no more turtles!")
+			stop
+		]
+    </go>
+    
+    <condition name="any-here?" traits="">
+        <input name="breed-type" default="who?"></input>
+        <test>report any? other turtles-here with [ breed = breed-type ]</test>
+    </condition>
+    
+    <condition name="any-in-sight?" traits="vision">
+        <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
+        <input name="breed-type" default="who?"></input>
+        <test>report any? other turtles in-cone vision1 120 with [breed = breed-type ] ] > 0</test>
+    </condition>
+    
+      <condition name="no-energy?" traits="">
+        <test>report energy &lt; 0</test>
+    </condition>  
+    
+    
+    <condition name="age-more-than" traits="">
+        <input name="my-age" default="10"></input>        
+        <test>report age &gt; my-age</test>
+    </condition>
+    
+    <behavior name="move" traits="">
+        <commands>
+        right (random-float 30)
+        left (random-float 30)
+        fd .5        
+        </commands>
+    </behavior>
+       
+    
+    <behavior name="flee" traits="">
+        <agentInput name="prey" default ="who?" tooltip="Who do they run away from?"></agentInput>
+        <commands>
+        right (random-float 30)
+        left (random-float 30)
+        fd .1               
+        </commands>
+    </behavior>
+    
+    <behavior name="chase" traits="">
+        <agentInput name="prey" default ="who?" tooltip="Who do they chase?"></agentInput>
+        <commands>
+        rt (random-float 5 - random-float 5)
+        fd random-float speed1 * .25               
+        </commands>
+    </behavior>
+    
+    
+   <behavior name="eat-within-distance" traits="vision,hearing-range">
+        <behaviorInput name="vision-range" default="1" tooltip="At what distance can they see?"></behaviorInput>
+        <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
+        <commands>
+        ifelse any? turtles-here with [breed = prey] [
+    let food one-of turtles-here with [breed = prey]
+    ask food [die]]
+  [let target one-of other prey in-radius vision-range with-min [distance myself] 
+        if target != nobody [face target fd .5] ]      
+        </commands>
+    </behavior>
+
+    
+    <behavior name="die-with-chance" traits="">
+        <percentInput name="probability" default="1"></percentInput>	
+        <commands>if random-float 100 &lt; probability [die]       
+        </commands>            
+    </behavior>
+    
+    <behavior name="have-babies" traits="" mutate="true">
+        <commands>
+        if 100 &lt; 101 [
+        set energy (energy / 2)
+        hatch 1 [set age 0 rt random 90 fd 1
+		         mutate]
+        </commands>
+    </behavior>
+    
+    <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
+        <input name="breed-type" default="species"></input>	
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+    
+    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Average" runresult="true" istrait="true">
+        <input name="breed-type" default="species"></input>
+        <input name="variable" default="trait"  tooltip="Trait"></input>        
+        <reporter>
+			ifelse not any? turtles with [breed = breed-type] [
+				report 0
+			]
+			[
+				report mean [runresult variable] of turtles with [breed = breed-type]
+			]
+		</reporter>
+    </quantity>
+    
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
+        <input name="tBlock" default="species?"></input>
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+       
+    
+    <visualization name="set-sense-cone" trait="vision">
+        <commands>
+        enter code here
+        </commands>
+    </visualization>
+    
+    <interface>
+        <numberSpecies>2</numberSpecies>
+        <mutationSlider>true</mutationSlider>
+        <drawFeature>false</drawFeature>
+        <stepIn>false</stepIn>
+    </interface>
+    
+</library>

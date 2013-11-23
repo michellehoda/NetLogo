@@ -100,7 +100,7 @@ public strictfp class BehaviorBlock
         // May 27, 2013 hardcoded fix for reproduce block
         // Must be cleaned up later
         if (isMutate) {
-            passBack += "breedname ";
+            passBack += "[ breedname ]";
         }
 
         if (inputs.size() > 0) {
