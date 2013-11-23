@@ -232,11 +232,11 @@ public class TraitPreview extends JPanel {
 
     private void updateTraitDistriPanel(TableModel model, boolean readPercent) {
 
-        ArrayList <String> selectedVariations = new ArrayList<String>();
+        HashMap<String, String> selectedVariationsValues = new HashMap<String, String>();
         for (int row = 0; row < model.getRowCount(); row++) {
             if ((Boolean) model.getValueAt(row, VARCHECKBOX_COLUMN_INDEX) == true) {
-                selectedVariations.add((String) model.getValueAt(row, VARNAME_COLUMN_INDEX));
-                //selectedVariations.add((String) model.getValueAt(row, VARVALUE_COLUMN_INDEX));
+                selectedVariationsValues.put((String) model.getValueAt(row, VARNAME_COLUMN_INDEX),
+                        (String) model.getValueAt(row, VARVALUE_COLUMN_INDEX));
             }
         }
         traitDistriPanel.remove(traitDistribution);
@@ -245,10 +245,10 @@ public class TraitPreview extends JPanel {
             selectedTraitsMap.containsKey(selectedTraitName)) {
             //traitDistribution = new TraitDistribution(breed, selectedTraitName, selectedVariations);
             //TODO: do not use traitState.selectedVariationsHashMap. Instead create a temp map by iterating over traitState.variations (March 31, 2013)
-            traitDistribution = new TraitDistribution(myBreedName, selectedTraitName, selectedVariations, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
+            traitDistribution = new TraitDistribution(myBreedName, selectedTraitName, selectedVariationsValues, selectedTraitsMap.get(selectedTraitName).selectedVariationsPercent);
         }
         else {
-            traitDistribution = new TraitDistribution(myBreedName, selectedTraitName, selectedVariations);
+            traitDistribution = new TraitDistribution(myBreedName, selectedTraitName, selectedVariationsValues);
         }
         traitDistribution.addMouseMotionListener(new traitDistriMouseMotionListener());
         traitDistriPanel.add(traitDistribution);
