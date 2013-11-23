@@ -46,6 +46,9 @@ public class TraitDistribution
     public TraitDistribution(String breed, String trait, HashMap<String, String> selectedVariationsValues, HashMap<String, String>selectedVariationsPercent) {
         this.breed = breed;
         this.trait = trait;
+        this.selectedVariationsValues.clear();
+        this.selectedVariationsValues.putAll(selectedVariationsValues);
+        this.selectedVariationsPercent.clear();
         this.selectedVariationsPercent.putAll(selectedVariationsPercent);
         initComponents();
     }
