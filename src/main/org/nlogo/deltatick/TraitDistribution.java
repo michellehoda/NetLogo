@@ -8,6 +8,7 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,36 +24,30 @@ public class TraitDistribution
     MultiSplitLayout.Node modelRoot;
     String breed;
     String trait;
-    ArrayList<String> selectedVariations = new ArrayList<String>();
+    HashMap<String, String> selectedVariationsValues = new HashMap<String, String>();
     HashMap<String, String> selectedVariationsPercent = new HashMap<String, String>();
     MultiSplitLayout.Divider dDiv;
 
     public TraitDistribution() {
         this.breed = "filler";
         this.trait = "filler_trait";
-        this.selectedVariations.toString();
-        //this.selectedVariations.add("All " + breed);
-        //this.selectedVariations.add("No variations selected");
-
-        //initComponents(breed, trait, selectedVariations);
-        //this.setPreferredSize(new Dimension(350, 30));
         this.validate();
 
     }
 
-    public TraitDistribution(String breed, String trait, ArrayList<String> selectedVariations) {
+    public TraitDistribution(String breed, String trait, HashMap<String, String> selectedVariationsValues) {
         this.breed = breed;
         this.trait = trait;
-        this.selectedVariations = selectedVariations;
-        initComponents(breed, trait, selectedVariations);
+        this.selectedVariationsValues.clear();
+        this.selectedVariationsValues.putAll(selectedVariationsValues);
+        initComponents();
     }
 
-    public TraitDistribution(String breed, String trait, ArrayList<String> selectedVariations, HashMap<String, String>selectedVariationsPercent) {
+    public TraitDistribution(String breed, String trait, HashMap<String, String> selectedVariationsValues, HashMap<String, String>selectedVariationsPercent) {
         this.breed = breed;
         this.trait = trait;
-        this.selectedVariations = selectedVariations;
         this.selectedVariationsPercent.putAll(selectedVariationsPercent);
-        initComponents(breed, trait, selectedVariations);
+        initComponents();
     }
 
 
@@ -64,34 +59,21 @@ public class TraitDistribution
         this.trait = trait;
     }
 
-    public void setVariations (ArrayList<String> selectedVariations) {
-        this.selectedVariations = selectedVariations;
-    }
-
-    public ArrayList<String> getVariations() {
-        return selectedVariations;
-    }
-
-    public void initComponents(String breed, String trait, ArrayList<String> selectedVariations) {
-        boolean addDummy = (selectedVariations.size() == 1);
-        //this.setMinimumSize(new Dimension(traitDistributionWidth, 30));    //to fix size of trait distribution
-        //this.setMaximumSize(new Dimension(traitDistributionWidth, 30));
-
-        this.breed = breed;
-        this.trait = trait;
-        this.selectedVariations = selectedVariations;
+    private void initComponents() {
+        boolean addDummy = (selectedVariationsValues.size() == 1);
 
         String s = new String();
         String layout = new String();
         layout = "(ROW ";
-        //double weights = (double ) 1.0 / selectedVariations.size();
-        double weights = 1.0 / selectedVariations.size();
+        double weights = 1.0 / selectedVariationsValues.size();
         double totalWeight = 0.0;
 
         String totalWeightStr = "";
         String weightsStr = "";
 
-        for (String variation : selectedVariations) {
+        for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
+            String variation = entry.getKey();
+            String value = entry.getValue();
             s = s.concat(variation + " ");
 
             BigDecimal bd = new BigDecimal(totalWeight);
@@ -100,7 +82,7 @@ public class TraitDistribution
             //totalWeightStr = Float.toString(totalWeight);
             //weightsStr = Float.toString(weights);
 
-            if (selectedVariationsPercent.size() == selectedVariations.size()) {
+            if (selectedVariationsPercent.size() == selectedVariationsValues.size()) {
                 weights = Double.parseDouble(selectedVariationsPercent.get(variation)) / 100.0;
             }
 
@@ -121,14 +103,17 @@ public class TraitDistribution
             layout = layout + ")";
         }
 
-        if (selectedVariations.size() > 0) {
+        if (selectedVariationsValues.size() > 0) {
             modelRoot = MultiSplitLayout.parseModel(layout);
             this.getMultiSplitLayout().setModel(modelRoot);
 
-            for (String variation : selectedVariations) {
+            for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
+                String variation = entry.getKey();
+                String value = entry.getValue();
                 if (addDummy) {
                     // String leafName = "all " + breed + " have " + variation + " " + trait;
-                    String leafName = "all " + " have " + variation + " " + trait;
+                    // String leafName = "all " + " have " + variation + " " + trait;
+                    String leafName = "all " + " have " + value + " " + trait;
                     JLabel leaf = new JLabel(leafName);
                     leaf.setHorizontalAlignment(SwingConstants.CENTER);
                     this.add(leaf, variation);
@@ -145,7 +130,8 @@ public class TraitDistribution
 
                 }
                 else {
-                    JLabel leaf = new JLabel(variation);
+                    String leafName = value;
+                    JLabel leaf = new JLabel(leafName);
                     leaf.setHorizontalAlignment(SwingConstants.CENTER);
                     leaf.setPreferredSize(new Dimension(5,5));
                     //leaf.setMargin(new Insets(0,0,0,0));
@@ -156,9 +142,6 @@ public class TraitDistribution
                     this.getMultiSplitLayout().setDividerSize(20);
                 }
             }
-
-
-
 
             MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
             for (MultiSplitLayout.Node node : split.getChildren()){
@@ -185,27 +168,6 @@ public class TraitDistribution
     }
 
 
-
-//    //not used anymore
-//    public void calculatePercentage(Rectangle rect, List<MultiSplitLayout.Node> nodeList) {
-//        //MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
-//        for (MultiSplitLayout.Node node : nodeList){
-//            if (node instanceof MultiSplitLayout.Leaf) {
-//                //Rectangle rect = node.getBounds();
-//                int width = rect.width;
-//                int totalDivider = 1;
-//                if (selectedVariations.size() == 1) {
-//                    totalDivider = 2;
-//                    int percentage = (width/ (traitDistributionWidth - totalDivider)) * 100;
-//                }
-//                else {
-//                    totalDivider = (selectedVariations.size() - 1) * 2;
-//                    int percentage = (width/ (traitDistributionWidth - totalDivider));
-//                }
-//            }
-//        }
-//    }
-
     // This function is called when the divider is clicked-and-dragged to change widths
     // See TraitPreview. MouseMotionListener on traitDistribution
     public void updatePercentages() {
@@ -217,8 +179,8 @@ public class TraitDistribution
                 if (node instanceof MultiSplitLayout.Leaf) {
                     if (((MultiSplitLayout.Leaf) node).getName() != "dummy") {  //why is it entering dummy?
                         float totalDivider;
-                        if (this.getVariations().size() > 1) {
-                            totalDivider = (this.getVariations().size() - 1);
+                        if (this.selectedVariationsValues.size() > 1) {
+                            totalDivider = (this.selectedVariationsValues.size() - 1);
                         }
                         else {
                             totalDivider = 0;
