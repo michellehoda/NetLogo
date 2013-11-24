@@ -65,7 +65,7 @@ public class TraitDistribution
     private void initComponents() {
         boolean addDummy = (selectedVariationsValues.size() == 1);
 
-        String s = new String();
+        String nodeName = new String();
         String layout = new String();
         layout = "(ROW ";
         double weights = 1.0 / selectedVariationsValues.size();
@@ -77,7 +77,8 @@ public class TraitDistribution
         for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
             String variation = entry.getKey();
             String value = entry.getValue();
-            s = s.concat(variation + " ");
+            nodeName = variation.replace(' ', '_');
+            nodeName += " ";
 
             BigDecimal bd = new BigDecimal(totalWeight);
             BigDecimal rd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
@@ -100,7 +101,7 @@ public class TraitDistribution
 
         if (addDummy) {
             //layout = "(ROW weight = 1.0 " + s + " dummy)";
-            layout = "(ROW (LEAF name="+s+" weight=1.0) (LEAF name=dummy weight=0.0))";
+            layout = "(ROW (LEAF name="+nodeName+" weight=1.0) (LEAF name=dummy weight=0.0))";
         }
         else {
             layout = layout + ")";
@@ -175,6 +176,7 @@ public class TraitDistribution
     // See TraitPreview. MouseMotionListener on traitDistribution
     public void updatePercentages() {
         this.revalidate();
+        String nodeName = new String();
         if (this.getMultiSplitLayout().getModel().getParent() != null) {
             MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
 
@@ -195,7 +197,9 @@ public class TraitDistribution
                         BigDecimal p = per.setScale(3, BigDecimal.ROUND_HALF_EVEN);
                         String perc = p.toString();
 
-                        this.savePercentages(((MultiSplitLayout.Leaf) node).getName(), perc);
+                        nodeName = ((MultiSplitLayout.Leaf) node).getName();
+                        String variation = nodeName.replace('_', ' ');
+                        this.savePercentages(variation, perc);
                         //System.out.println("ln 178 " + p + " " + percentage + " ");
                     }
                 }
