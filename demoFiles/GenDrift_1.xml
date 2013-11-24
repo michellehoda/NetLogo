@@ -3,11 +3,12 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="deer?" plural="deer" setupNumber="25,30" setupNumbers="25,30,35,40" maxNumber="50">
+    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="5,10,15" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
-        </ownVar>            
+        </ownVar>
+            
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
@@ -17,29 +18,16 @@
         set age age + 1
         </updateCode>
     </breed> 
-    
-    <breed singular="rabbit" plural="rabbits" setupNumber="25" setupNumbers="25,30,35,40" maxNumber="50">
-        <ownVar name="age">
-            <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
-        </ownVar>            
-        <setupCode>
-    setxy random-xcor random-ycor
-    set size 1.5
-        </setupCode>
-        <updateCode>
-        set age age + 1
-        </updateCode>
-    </breed> 
 
-    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="25,30,35,40" maxNumber="50">
+    <breed singular="bugs?" plural="bugs" setupNumber="50" setupNumbers="20,30,40,50" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
         </ownVar>
+
         <setupCode>
     setxy random-xcor random-ycor
-    set size 1.5    
+    set size 1.5
         </setupCode>
         <updateCode>
         set age age + 1
@@ -57,35 +45,53 @@
     
     <trait name="speed">
         <setupReporter>random 9</setupReporter>
-        <variation name="Very long legs" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="Long legs" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="Medium-length legs" value="3" color="" setupNumber="30"></variation>
-        <variation name="Short legs" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="Very short legs" value="1" color=" + 2 " setupNumber="10"></variation>
+        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="medium" value="3" color="" setupNumber="30"></variation>
+        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
         <message>What is their speed?</message>
-        <visualizeCode>set-sense-cone</visualizeCode>
-        <visualizeProcedure>        
-        let this-xcor xcor
-        let this-ycor ycor
-        let this-speed speed
-        let this-heading heading
-        hatch 1 [
-          set breed sense-cones
-        create-link-from myself [tie] ]
-              
-        let this-arrowhead out-link-neighbors
-        ask this-arrowhead [
-          set xcor this-xcor
-    set ycor this-ycor
-    set heading this-heading
-    fd .5 + this-speed / 2
-    set hidden? true]        
-    </visualizeProcedure>
-    <visualizeGoCode>show-sense-cone</visualizeGoCode>
-    <visualizeGoProcedure>
-    ask my-out-links [set hidden? false]
-    </visualizeGoProcedure>
-        <traitShape>vision cone</traitShape>                
+        <visualizeCode>set-sense-speed</visualizeCode>
+        <visualizeProcedure>
+        ;let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>
+                
+    </trait>   
+    
+    <trait name="vision">
+        <setupReporter>random 9</setupReporter>
+        <variation name="very-far" value="5" color=" - 2 " setupNumber="25"></variation>
+        <variation name="far" value="4" color=" - 1 " setupNumber="15"></variation>
+        <variation name="medium" value="3" color="" setupNumber="30"></variation>
+        <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
+        <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
+        <message>How far can they see?</message>
+        <visualizeCode>set-sense-vision</visualizeCode>
+        <visualizeProcedure>
+        ;let parent-speed speed
+        ;hatch 1 [
+        ;set breed sense-cones
+        ;create-link-from myself [tie]
+        ;set shape "box"
+        ;set color gray
+        ;set size parent-speed]
+        </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeGoProcedure>
+            ask my-out-links [set hidden? false]
+        </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>
     </trait>   
     
         
@@ -93,40 +99,10 @@
         <setupReporter>count turtles</setupReporter>
         <updateReporter>count turtles</updateReporter>        
     </global>
-    
-    <global name="total-speed1-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-speed1-caught</updateReporter>        
-    </global>
-    
-    <global name="total-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-caught</updateReporter>        
-    </global>
-    
-    <global name="total-speed2-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-speed2-caught</updateReporter>        
-    </global>
-    
-    <global name="total-speed3-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-speed3-caught</updateReporter>        
-    </global>
-    
-    <global name="total-speed4-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-speed4-caught</updateReporter>        
-    </global>
-    
-    <global name="total-speed5-caught">
-        <setupReporter>0</setupReporter>
-        <updateReporter>total-speed5-caught</updateReporter>        
-    </global>
 
     <go>
     if not any? turtles [ 
-			user-message (word "All species died out!")
+			user-message (word "There are no more turtles!")
 			stop
 		]
     </go>
@@ -136,7 +112,7 @@
         <test>report any? other turtles-here with [ breed = breed-type ]</test>
     </condition>
     
-    <condition name="any-within-distance?" traits="">
+    <condition name="any-in-sight?" traits="vision">
         <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
         <input name="breed-type" default="who?"></input>
         <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
@@ -146,6 +122,10 @@
     <condition name="age-more-than" traits="">
         <input name="my-age" default="10"></input>        
         <test>report age &gt; my-age</test>
+    </condition>
+    
+       <condition name="barrier-ahead" traits="vision">
+        <test>report painted?</test>
     </condition>   
     
 
@@ -157,24 +137,20 @@
         </commands>
     </behavior>
     
+    <behavior name="turn-around" traits="">
+        <commands>
+        set heading (heading + 180)
+        fd 4
+        </commands>
+    </behavior>
+    
     
     <behavior name="eat" traits="">        
         <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
         <commands>
         if any? other turtles-here with [breed = prey] [
     let food one-of turtles-here with [breed = prey]
-    ask food [
-    if speed = 1 [set total-speed1-caught total-speed1-caught + 1
-    set total-caught total-caught + 1]
-    if speed = 2 [set total-speed2-caught total-speed2-caught + 1
-    set total-caught total-caught + 1]
-    if speed = 3 [set total-speed3-caught total-speed3-caught + 1
-    set total-caught total-caught + 1]
-    if speed = 4 [set total-speed4-caught total-speed4-caught + 1
-    set total-caught total-caught + 1]
-    if speed = 5 [set total-speed5-caught total-speed5-caught + 1
-    set total-caught total-caught + 1]
-     die]]  
+    ask food [die]]  
         </commands>
     </behavior>
     
@@ -184,11 +160,12 @@
         </commands>            
     </behavior>
     
-    <behavior name="have-babies" traits="" mutate="true">
+    <behavior name="have-babies-with-chance" traits="" mutate="true">
+        <percentInput name="probability" default="1"></percentInput>
         <commands>
-        ifelse count out-link-neighbors > 0 [ 
-        hatch 1 [set age 0 rt random 180 fd 1 set-sense-cone]]
-        [hatch 1 [set age 0 rt random 180 fd 1]]
+        if random-float 1 &lt; probability [
+        hatch 1 [set age 0 fd 1
+		         mutate]
         </commands>
     </behavior>
     
@@ -207,6 +184,25 @@
         report mouse-down?   
         </reporterCode>
     </diveIn>
+    
+    <draw>
+    if mouse-down?
+  [ if barrier-type = "highway" [
+      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
+    if barrier-type = "river" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
+    if barrier-type = "city" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
+  ]
+  if barrier-type = "mountain" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
+    </draw>
+    
+    <erase>
+    if mouse-down? [
+    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
+    </erase>
+    
     
     
     
@@ -232,10 +228,6 @@
         <input name="tBlock" default="species?"></input>
         <reporter>report count turtles with [ breed = breed-type ]</reporter>
     </quantity>
-    
-    <quantity name="prey-caught" histo="false" xlabel="Time" ylabel="# prey caught" istrait="false">        
-        <reporter>report total-caught</reporter>
-    </quantity>
        
     
     <visualization name="set-sense-cone" trait="vision">
@@ -244,12 +236,11 @@
         </commands>
     </visualization>
     
-    
     <interface>
-        <numberSpecies>1</numberSpecies>
+        <numberSpecies>2</numberSpecies>
         <mutationSlider>false</mutationSlider>
-        <drawFeature>false</drawFeature>
-        <stepIn>true</stepIn>
+        <drawFeature>true</drawFeature>
+        <stepIn>false</stepIn>
     </interface>
     
 </library>
