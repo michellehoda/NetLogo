@@ -127,7 +127,7 @@
         </commands>
     </behavior>
 
-    <behavior name="eat" traits="">
+    <behavior name="eat" traits="" inputReporter="catch-prey">
         <agentInput name="prey1" default="who?" tooltip="Who do they eat?"></agentInput>
         <commands>
 		ifelse is-agentset? prey1 [
@@ -143,6 +143,7 @@
 				face food fd .5
 				if distance food &lt; 1 [
 					ask food [die]
+					set energy energy + 2
 				]
 			]
 		]
@@ -217,7 +218,7 @@
         <stepIn>false</stepIn>
     </interface>
 
-	<miscProcedure type="reporter" name="catch-prey" parameters="breed-type,vision1">
+	<miscProcedure isReporter="true" name="catch-prey" parameters="breed-type,vision1">
 		<procedureCode>
 		report [who] of other turtles in-cone vision1 120 with [ breed = breed-type ]
 		</procedureCode>

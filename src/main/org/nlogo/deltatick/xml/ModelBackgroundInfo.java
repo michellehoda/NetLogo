@@ -394,27 +394,22 @@ public class ModelBackgroundInfo {
     public boolean getEnableMutationSlider() {
         return enableMutationSlider;
     }
-    public String unpackMiscProcedures() {
+    public String unPackMiscProcedures() {
         String passBack = "";
         for (MiscProcedure miscProcedure : miscProcedures) {
-            passBack += miscProcedure.unpackAsProcedure();
+            passBack += miscProcedure.unPackAsProcedure();
         }
         return passBack;
     }
     private class MiscProcedure {
         String name;
-        String type;
+        boolean isReporter;
         String paramters;
         String procedureCode;
 
-        MiscProcedure(String name, String type, String procedureCode) {
-            this.name = new String(name);
-            this.type = new String(type);
-            this.procedureCode = new String(procedureCode);
-        }
         MiscProcedure(Node procedureNode) {
             this.name = new String (procedureNode.getAttributes().getNamedItem("name").getTextContent());
-            this.type = new String (procedureNode.getAttributes().getNamedItem("type").getTextContent());
+            this.isReporter = procedureNode.getAttributes().getNamedItem("isReporter").getTextContent().equalsIgnoreCase("true");
             String aParamters = procedureNode.getAttributes().getNamedItem("parameters").getTextContent();
             this.paramters = new String (aParamters.replace(',', ' '));
             NodeList childNodes = procedureNode.getChildNodes();
@@ -427,29 +422,26 @@ public class ModelBackgroundInfo {
         public String getName() {
             return name;
         }
-        public String getType() {
-            return type;
-        }
         public String getProcedureCode() {
             return procedureCode;
         }
-        public String unpackAsProcedure() {
-            String code = "";
+        public String unPackAsProcedure() {
+            String passBack = "";
             // Check type
-            if (type.equalsIgnoreCase("reporter")) {
-                code += "to-report ";
+            if (isReporter) {
+                passBack += "to-report ";
             }
             else {
-                code += "to ";
+                passBack += "to ";
             }
             // Procedure name and parameters
-            code += name;
-            code += " [ " + paramters + " ]\n";
+            passBack += name;
+            passBack += " [ " + paramters + " ]\n";
             // Procedure code
-            code += "\t" + procedureCode + "\n";
+            passBack += "\t" + procedureCode + "\n";
 
-            code += "end\n";
-            return code;
+            passBack += "end\n";
+            return passBack;
         }
     }
 }

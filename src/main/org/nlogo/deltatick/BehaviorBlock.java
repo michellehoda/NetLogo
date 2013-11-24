@@ -25,6 +25,8 @@ public strictfp class BehaviorBlock
     boolean isTrait = false;
     boolean waitingForTrait = false;
     boolean isMutate;
+    boolean useInputReporter = false;
+    String inputReporter = new String();
     JCharNumberNoSpaceFieldFilter textInputDocument; // TO enforce restrictions on textfields (i.e.agent inputs)
     //TraitBlockNew tBlockNew = null; // TODO need this to have trait Block work as an input in code (March, 25, 2013)
                                     // Do we really need a full trait block or just the trait name? (09/30/2013)
@@ -200,11 +202,37 @@ public strictfp class BehaviorBlock
         if (isMutate) {
             passBack += getMyBreedBlock().plural() + " ";
         }
-        // Fix done
+
+        if (myParent instanceof ConditionBlock) {
+            if (useInputReporter) {
+                passBack += inputReporter + " ";
+                for (JTextField agentInput : agentInputs.values()) {
+                    passBack += agentInput.getText() + " ";
+                }
+                passBack += ((ConditionBlock) myParent).unPackBehaviorInputs();
+            }
+            else {
+                // No input reporter
+                // Use inputs as normal
+                passBack += unPackInputs();
+            }
+        }
+        else {
+            // Not in a condition block
+            // Use inputs as normal
+            passBack += unPackInputs();
+        }
+
+        passBack += "\n";
+
+        return passBack;
+    }
+
+    private String unPackInputs() {
+        String passBack = "";
         for (JTextField input : inputs.values()) {
             passBack += input.getText() + " ";
         }
-
         for (JTextField agentInput : agentInputs.values()) {
             passBack += agentInput.getText() + " ";
         }
@@ -220,12 +248,8 @@ public strictfp class BehaviorBlock
         for (JTextField percentInput : percentInputs.values()) {
             passBack += percentInput.getText() + " ";
         }
-
-        passBack += "\n";
-
         return passBack;
     }
-
     public void die() {
         super.die();
         if (isMutate) {
@@ -407,6 +431,11 @@ public strictfp class BehaviorBlock
 
     public boolean isTraitApplicable(String traitName) {
         return applicableTraits.contains(traitName);
+    }
+
+    public void setInputReporter(String inputReporter) {
+        this.useInputReporter = true;
+        this.inputReporter = inputReporter;
     }
 
     public JToolTip createToolTip() {

@@ -90,7 +90,18 @@ public strictfp class ConditionBlock
         return passBack;
     }
 
-    ;
+    public String unPackBehaviorInputs() {
+        String passBack = "";
+        if (isTrait) {
+            passBack += traitName;
+        }
+        else {
+            for (PrettyInput behaviorInput : behaviorInputs.values()) {
+                passBack += behaviorInput.getText() + " ";
+            }
+        }
+        return passBack;
+    }
 
     //this shows up as a separate procedure (Feb 15, 2012)
     public String unPackAsProcedure() {
