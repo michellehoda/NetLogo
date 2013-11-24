@@ -77,30 +77,25 @@ public class TraitDistribution
         for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
             String variation = entry.getKey();
             String value = entry.getValue();
-            nodeName = variation.replace(' ', '_');
+            nodeName = variation.replace(' ', 'X');
             nodeName += " ";
 
             BigDecimal bd = new BigDecimal(totalWeight);
             BigDecimal rd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
             totalWeight = rd.doubleValue();
-            //totalWeightStr = Float.toString(totalWeight);
-            //weightsStr = Float.toString(weights);
-
             if (selectedVariationsPercent.size() == selectedVariationsValues.size()) {
                 weights = Double.parseDouble(selectedVariationsPercent.get(variation)) / 100.0;
             }
-
 
             if (totalWeight + weights > 1.0) {
                 weights = 1.0 - totalWeight;
                 System.out.println("error");
             }
-            layout = layout + "(LEAF name="+variation+ " weight="+weights+ ") ";
+            layout = layout + "(LEAF name="+nodeName+ " weight="+weights+ ") ";
             totalWeight = totalWeight + weights;
         } // for
 
         if (addDummy) {
-            //layout = "(ROW weight = 1.0 " + s + " dummy)";
             layout = "(ROW (LEAF name="+nodeName+" weight=1.0) (LEAF name=dummy weight=0.0))";
         }
         else {
@@ -114,21 +109,15 @@ public class TraitDistribution
             for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
                 String variation = entry.getKey();
                 String value = entry.getValue();
+                nodeName = variation.replace(' ', 'X');
+
                 if (addDummy) {
-                    // String leafName = "all " + breed + " have " + variation + " " + trait;
-                    // String leafName = "all " + " have " + variation + " " + trait;
                     String leafName = "all " + " have " + value + " " + trait;
                     JLabel leaf = new JLabel(leafName);
                     leaf.setHorizontalAlignment(SwingConstants.CENTER);
-                    this.add(leaf, variation);
+                    this.add(leaf, nodeName);
                     JLabel dummy = new JLabel("dummy");
                     dummy.setPreferredSize(new Dimension(0, 0));
-
-                    ////dDiv = new MultiSplitLayout.Divider();
-                    ////List children = Arrays.asList(leaf, dDiv, dummy);
-
-                    ///List children = Arrays.asList(leaf, new MultiSplitLayout.Divider(), dummy);
-
                     // For dummy, make divider zero-size
                     this.getMultiSplitLayout().setDividerSize(0);
 
@@ -140,7 +129,7 @@ public class TraitDistribution
                     leaf.setPreferredSize(new Dimension(5,5));
                     //leaf.setMargin(new Insets(0,0,0,0));
                     leaf.setBounds(0, 0, 0, 0);
-                    this.add(leaf, variation);
+                    this.add(leaf, nodeName);
 
                     // More than one variation
                     this.getMultiSplitLayout().setDividerSize(20);
@@ -155,16 +144,11 @@ public class TraitDistribution
                 else if ((addDummy == false) &&
                          (node instanceof MultiSplitLayout.Divider)) {
                     this.getDividerPainter().paint(this.getGraphics(), (MultiSplitLayout.Divider) node);
-
-
-                    //System.out.println("TD 167: Setting Divider Paint");
                 }
             }
             //calculatePercentage();
             this.setVisible(true);
             this.revalidate();
-
-
         }
         else {
             this.setVisible(false);
@@ -182,7 +166,7 @@ public class TraitDistribution
 
             for (MultiSplitLayout.Node node : split.getChildren()) {
                 if (node instanceof MultiSplitLayout.Leaf) {
-                    if (((MultiSplitLayout.Leaf) node).getName() != "dummy") {  //why is it entering dummy?
+                    if (! ((MultiSplitLayout.Leaf) node).getName().equalsIgnoreCase("dummy")) {  //why is it entering dummy?
                         float totalDivider;
                         if (this.selectedVariationsValues.size() > 1) {
                             totalDivider = (this.selectedVariationsValues.size() - 1);
@@ -198,9 +182,8 @@ public class TraitDistribution
                         String perc = p.toString();
 
                         nodeName = ((MultiSplitLayout.Leaf) node).getName();
-                        String variation = nodeName.replace('_', ' ');
+                        String variation = nodeName.replace('X', ' ');
                         this.savePercentages(variation, perc);
-                        //System.out.println("ln 178 " + p + " " + percentage + " ");
                     }
                 }
             }
