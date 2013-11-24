@@ -152,7 +152,8 @@
     <behavior name="move" traits="speed">
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
-        rt (random-float 5 - random-float 5)
+        right (random-float 30)
+        left (random-float 30)
         fd random-float speed1 * .25        
         </commands>
     </behavior>

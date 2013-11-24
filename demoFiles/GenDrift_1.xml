@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
 <library name="Blocks Library" version="0.1">
-    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    <numberSpecies number="1" message="You need only 2 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="5,10,15" maxNumber="50">
+    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="15,20,25,30,35" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -12,14 +12,13 @@
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
-    set color random color  
         </setupCode>
         <updateCode>
         set age age + 1
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="50" setupNumbers="20,30,40,50" maxNumber="50">
+    <breed singular="bug" plural="bugs" setupNumber="50" setupNumbers="30,40,50,70" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -43,23 +42,26 @@
     </envt>  
     
     
-    <trait name="speed">
+    <trait name="spots-on-back">
         <setupReporter>random 9</setupReporter>
-        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="medium" value="3" color="" setupNumber="30"></variation>
-        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
-        <message>What is their speed?</message>
-        <visualizeCode>set-sense-speed</visualizeCode>
+        <variation name="five-spots" value="5" color="" setupNumber="25"></variation>
+        <variation name="four-spots" value="4" color="" setupNumber="15"></variation>
+        <variation name="three-spots" value="3" color="" setupNumber="30"></variation>
+        <variation name="two-spots" value="2" color="" setupNumber="20"></variation>
+        <variation name="one-spot" value="1" color="" setupNumber="10"></variation>
+        <message>How many spots do they have on their body?</message>
+        <visualizeCode>set-spots</visualizeCode>
         <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
+        let spot-number spots-on-back
+        hatch 1 [
+        set breed sense-cones
+        set size 1
+        fd 1
+        create-link-from myself [tie]
+        set shape "circle"
+        set color (spot-number * 20) + 5
+        set label spot-number
+        set label-color black]
         </visualizeProcedure>
         <visualizeGoCode>show-sense-cone</visualizeGoCode>
         <visualizeGoProcedure>
@@ -68,32 +70,6 @@
         <traitShape>vision cone</traitShape>
                 
     </trait>   
-    
-    <trait name="vision">
-        <setupReporter>random 9</setupReporter>
-        <variation name="very-far" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="far" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="medium" value="3" color="" setupNumber="30"></variation>
-        <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
-        <message>How far can they see?</message>
-        <visualizeCode>set-sense-vision</visualizeCode>
-        <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
-        </visualizeProcedure>
-        <visualizeGoCode>show-sense-cone</visualizeGoCode>
-        <visualizeGoProcedure>
-            ask my-out-links [set hidden? false]
-        </visualizeGoProcedure>
-        <traitShape>vision cone</traitShape>
-    </trait>   
-    
         
     <global name="turtles-last-tick">
         <setupReporter>count turtles</setupReporter>
@@ -130,10 +106,10 @@
     
 
     <behavior name="move" traits="speed">
-        <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
-        rt (random-float 5 - random-float 5)
-        fd random-float speed1 * .25        
+        right (random-float 40)
+        left (random-float 40)
+        fd .3        
         </commands>
     </behavior>
     
