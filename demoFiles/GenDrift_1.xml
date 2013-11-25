@@ -51,8 +51,8 @@
         <variation name="five-spots" value="5" color="" setupNumber="25"></variation>
         <variation name="four-spots" value="4" color="" setupNumber="15"></variation>
         <variation name="three-spots" value="3" color="" setupNumber="30"></variation>
-        <variation name="two-spots" value="2" color="" setupNumber="20"></variation>
-        <variation name="one-spot" value="1" color="" setupNumber="10"></variation>
+        <variation name="two spots" value="2" color="" setupNumber="20"></variation>
+        <variation name="one spot" value="1" color="" setupNumber="10"></variation>
         <message>How many spots do they have on their body?</message>
         <visualizeCode>set-spots</visualizeCode>
         <visualizeProcedure>
