@@ -19,6 +19,7 @@ public class ModelBackgroundInfo {
     ArrayList<Envt> envts = new ArrayList<Envt>();
     ArrayList<Trait> traits = new ArrayList<Trait>();
     ArrayList<DiveIn> diveIns = new ArrayList<DiveIn>();
+    ArrayList<MiscProcedure> miscProcedures = new ArrayList<MiscProcedure>();
     String setup;
     String go;
 
@@ -146,6 +147,12 @@ public class ModelBackgroundInfo {
             this.version = library.item(0).getAttributes().getNamedItem("version").getTextContent();
         } catch (Exception e) {
             throw new Exception("Malformed XML file!" + e);
+        }
+    }
+
+    public void addMiscProcedures(NodeList miscProcedureNodes) {
+        for (int i = 0; i < miscProcedureNodes.getLength(); i++) {
+            miscProcedures.add(new MiscProcedure(miscProcedureNodes.item(i)));
         }
     }
 
@@ -386,5 +393,55 @@ public class ModelBackgroundInfo {
 
     public boolean getEnableMutationSlider() {
         return enableMutationSlider;
+    }
+    public String unPackMiscProcedures() {
+        String passBack = "";
+        for (MiscProcedure miscProcedure : miscProcedures) {
+            passBack += miscProcedure.unPackAsProcedure();
+        }
+        return passBack;
+    }
+    private class MiscProcedure {
+        String name;
+        boolean isReporter;
+        String paramters;
+        String procedureCode;
+
+        MiscProcedure(Node procedureNode) {
+            this.name = new String (procedureNode.getAttributes().getNamedItem("name").getTextContent());
+            this.isReporter = procedureNode.getAttributes().getNamedItem("isReporter").getTextContent().equalsIgnoreCase("true");
+            String aParamters = procedureNode.getAttributes().getNamedItem("parameters").getTextContent();
+            this.paramters = new String (aParamters.replace(',', ' '));
+            NodeList childNodes = procedureNode.getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                if (childNodes.item(i).getNodeName().equalsIgnoreCase("procedureCode")) {
+                    this.procedureCode = new String(childNodes.item(i).getTextContent());
+                }
+            }
+        }
+        public String getName() {
+            return name;
+        }
+        public String getProcedureCode() {
+            return procedureCode;
+        }
+        public String unPackAsProcedure() {
+            String passBack = "";
+            // Check type
+            if (isReporter) {
+                passBack += "to-report ";
+            }
+            else {
+                passBack += "to ";
+            }
+            // Procedure name and parameters
+            passBack += name;
+            passBack += " [ " + paramters + " ]\n";
+            // Procedure code
+            passBack += "\t" + procedureCode + "\n";
+
+            passBack += "end\n";
+            return passBack;
+        }
     }
 }

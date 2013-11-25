@@ -173,6 +173,11 @@ public class LibraryReader {
 
             );
 
+            NodeList miscProcedures = library.getElementsByTagName("miscProcedure");
+            if (miscProcedures.getLength() > 0) {
+                deltaTickTab.getBuildPanel().getBgInfo().addMiscProcedures(miscProcedures);
+            }
+
             NodeList behaviors = library.getElementsByTagName("behavior");
 
             for (int i = 0; i < behaviors.getLength(); i++) {
@@ -185,6 +190,11 @@ public class LibraryReader {
                     if (b) {
                         ((BehaviorBlock) block).setIsMutate(true);
                     }
+                }
+                if (behavior.getAttributes().getNamedItem("inputReporter") != null) {
+                    // Get reporter from bg info and add it to behavior block
+                    String inputReporter = behavior.getAttributes().getNamedItem("inputReporter").getTextContent();
+                    ((BehaviorBlock) block).setInputReporter(inputReporter);
                 }
                 seekAndAttachInfo(behavior);
                 deltaTickTab.getLibraryHolder().addToBehaviorBlocksList((BehaviorBlock) block);

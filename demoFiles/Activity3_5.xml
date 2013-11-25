@@ -126,7 +126,29 @@
         fd random-float speed1 * .25               
         </commands>
     </behavior>
-    
+
+    <behavior name="eat" traits="" inputReporter="catch-prey">
+        <agentInput name="prey1" default="who?" tooltip="Who do they eat?"></agentInput>
+        <commands>
+		ifelse is-agentset? prey1 [
+			if any? other turtles-here with [breed = prey1] [
+				let food one-of turtles-here with [breed = prey1]
+				ask food [die]
+				set energy energy + 2
+			]
+		]
+		[
+			if prey1 != nobody and not empty? prey1 [
+				let food turtle item 0 prey1
+				face food fd .5
+				if distance food &lt; 1 [
+					ask food [die]
+					set energy energy + 2
+				]
+			]
+		]
+        </commands>
+    </behavior>
     
    <behavior name="eat-w-dist" traits="vision,hearing-range">
         <behaviorInput name="vision-range" default="1" tooltip="At what distance can they see?"></behaviorInput>
@@ -195,5 +217,11 @@
         <drawFeature>false</drawFeature>
         <stepIn>false</stepIn>
     </interface>
+
+	<miscProcedure isReporter="true" name="catch-prey" parameters="breed-type,vision1">
+		<procedureCode>
+		report [who] of other turtles in-cone vision1 120 with [ breed = breed-type ]
+		</procedureCode>
+	</miscProcedure>
     
 </library>

@@ -4,7 +4,6 @@ import org.nlogo.deltatick.xml.*;
 import org.nlogo.window.GUIWorkspace;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -511,6 +510,9 @@ public String newSaveAsXML() {
         for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
+        // Unpack misc supporting procedures
+        passBack += getBgInfo().unPackMiscProcedures();
+        passBack += "\n";
 
         // Unpack visualize procedures
         passBack += "\n";

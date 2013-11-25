@@ -460,6 +460,8 @@ public strictfp class BreedBlock
     public String update() {
         String code = "";
         if (breed.needsUpdateBlock()) {
+            // This enables changing labels even when the model is running
+            // code += setupTraitVisualization();
             code += "ask " + plural() + " [\n";
             if (breed.getUpdateCommands() != null) {
                 code += breed.getUpdateCommands();
