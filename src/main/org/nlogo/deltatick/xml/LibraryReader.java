@@ -323,17 +323,20 @@ public class LibraryReader {
             }
 
             else if (behaviorInfo.item(j).getNodeName() == "behaviorInput") {
-                block.addBehaviorInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("tooltip").getTextContent());
+                String name = behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent();
+                String defaultValue = behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent();
+                String tooltip = behaviorInfo.item(j).getAttributes().getNamedItem("tooltip").getTextContent();
+                block.addBehaviorInput(name, defaultValue, tooltip);
             }
             else if (behaviorInfo.item(j).getNodeName() == "distanceInput") {
                 block.addDistanceInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
                         behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
             }
             else if (behaviorInfo.item(j).getNodeName() == "agentInput") {
-                block.addAgentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),
-                        behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent());
+                String name = behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent();
+                String defaultValue = behaviorInfo.item(j).getAttributes().getNamedItem("default").getTextContent();
+                String tooltip = behaviorInfo.item(j).getAttributes().getNamedItem("tooltip").getTextContent();
+                block.addAgentInput(name, defaultValue, tooltip);
             }
             else if (behaviorInfo.item(j).getNodeName() == "percentInput") {
                 block.addPercentInput(behaviorInfo.item(j).getAttributes().getNamedItem("name").getTextContent(),

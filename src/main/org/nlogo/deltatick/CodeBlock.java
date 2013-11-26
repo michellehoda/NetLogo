@@ -349,15 +349,14 @@ public abstract class CodeBlock
         label.add(behaviorInput);
     }
 
-    public void addAgentInput(String inputName, String defaultValue) {
+    public void addAgentInput(String inputName, String defaultValue, String toolTipString) {
         AgentInput agentInput = new AgentInput(this);
         //agentInput.setDocument(textFilter);
         agentInput.setName(inputName);
         agentInput.setText(defaultValue);
+        agentInput.setToolTipText("<html><font size=\"4\">" + toolTipString + "</font></html>");
         agentInputs.put(inputName, agentInput);
-
         label.add(agentInput);
-        System.out.println("codeBloc " + label.getComponents().length);
     }
 
     public  PrettyInput getInput(String name) {
