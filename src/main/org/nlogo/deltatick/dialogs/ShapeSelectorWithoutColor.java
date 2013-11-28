@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.String;
 
 
 public class ShapeSelectorWithoutColor
@@ -98,6 +99,7 @@ public class ShapeSelectorWithoutColor
         javax.swing.Action okayAction =
                 new javax.swing.AbstractAction("Okay") {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
+                        prevIcon = list.getSelectedIndex();
                         dispose();
                     }
                 };
@@ -180,7 +182,11 @@ public class ShapeSelectorWithoutColor
     public int getChosenValue() {
         return list.getSelectedIndex();
     }
-
+    public void setChosenShape(String chosenShape) {
+        list.clearSelection();
+        list.selectShapeName(chosenShape);
+        prevIcon = list.getSelectedIndex();
+    }
 //    public void setColorName(String name) {
 //        shapeParser.setColorName(name);
 //    }

@@ -238,11 +238,26 @@ public class SpeciesEditorPanel extends JPanel {
     public Color getMyBreedColor() {
         return topPanel.getBreedColor();
     }
+    public int getMyBreedColorRGB() {
+        return  topPanel.getBreedColorRGB();
+    }
     public HashMap<String, TraitState> getTraitStateMap() {
         return traitPreview.getTraitStateMap();
     }
     public TraitPreview getTraitPreview() {
         return traitPreview;
+    }
+    public void setSelectedBreed(String breedName) {
+        topPanel.setSelectedBreed(breedName);
+    }
+    public void setSetupNumber(String setupNumber) {
+        topPanel.setSetupNumer(setupNumber);
+    }
+    public void setBreedShape(String breedShape) {
+        topPanel.setBreedShape(breedShape);
+    }
+    public void setBreedColor(int colorRGB) {
+        topPanel.setBreedColor(colorRGB);
     }
 
     private class SpeciesEditorTopPanel extends JPanel {
@@ -309,14 +324,18 @@ public class SpeciesEditorPanel extends JPanel {
             COLORS.add(new Color(0x20, 0x20, 0x20));
             COLORS.add(new Color(0x00, 0x00, 0x00));
             this.breedColorComboBox = new JComboBox(COLORS.toArray());
-            // Speies shape
+            this.breedColorComboBox.setSelectedIndex(0);
+            // Species shape
             this.breedShapeLabel = new JLabel("What should it look like?");
-            this.breedShapeButton = new JButton(new ShapeIcon(org.nlogo.shape.VectorShape.getDefaultShape()));
+            this.breedShapeButton = new JButton();
             breedShapeButtonActionListener = new BreedShapeButtonActionListener(myFrame,
                     breedShapeButton,
                     breedColorComboBox,
                     breedNamesComboBox.getSelectedItem().toString(),
                     breedShape);
+            ShapeIcon breedShapeIcon = new ShapeIcon(breedShapeButtonActionListener.getShape());
+            breedShapeIcon.setColor((Color) breedColorComboBox.getSelectedItem());
+            this.breedShapeButton.setIcon(breedShapeIcon);
 
             // Do the layout
             setupLayout();
@@ -407,6 +426,41 @@ public class SpeciesEditorPanel extends JPanel {
             breedNamesComboBox.setVisible(false);
             breedNameLabel.setVisible(false);
         }
+        public void setSelectedBreed(String breedName) {
+            for (int i = 0; i < breedNamesComboBox.getItemCount(); i++) {
+                if (((String) breedNamesComboBox.getItemAt(i)).equalsIgnoreCase(breedName)) {
+                    breedNamesComboBox.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+        public void setSetupNumer(String setupNumer) {
+            for (int i = 0; i < breedSetupNumberComboBox.getItemCount(); i++) {
+                if (((String) breedSetupNumberComboBox.getItemAt(i)).equalsIgnoreCase(setupNumer)) {
+                    breedSetupNumberComboBox.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+        public void setBreedShape(String breedShape) {
+            breedShapeButtonActionListener.setBreedShape(breedShape);
+            // Update breed shape button icon and color
+            ShapeIcon breedShapeIcon = new ShapeIcon(breedShapeButtonActionListener.getShape());
+            breedShapeIcon.setColor((Color) breedColorComboBox.getSelectedItem());
+            breedShapeButton.setIcon(breedShapeIcon);
+        }
+        public void setBreedColor(int breedColorRGB) {
+            for (int i = 0; i < breedColorComboBox.getItemCount(); i++) {
+                if (((Color) breedColorComboBox.getItemAt(i)).getRGB() == breedColorRGB) {
+                    breedColorComboBox.setSelectedIndex(i);
+                    // Update breed shape button icon and color
+                    ShapeIcon breedShapeIcon = new ShapeIcon(breedShapeButtonActionListener.getShape());
+                    breedShapeIcon.setColor((Color) breedColorComboBox.getSelectedItem());
+                    breedShapeButton.setIcon(breedShapeIcon);
+                    break;
+                }
+            }
+        }
         public String getSelectedBreed() {
             return (String) breedNamesComboBox.getSelectedItem();
         }
@@ -426,6 +480,10 @@ public class SpeciesEditorPanel extends JPanel {
             Color selectedColor = (Color) breedColorComboBox.getSelectedItem();
             int colorARGB = 0xff000000 + selectedColor.getRGB();
             return org.nlogo.api.Color.getClosestColorNameByARGB(colorARGB);
+        }
+        public int getBreedColorRGB() {
+            Color selectedColor = (Color) breedColorComboBox.getSelectedItem();
+            return selectedColor.getRGB();
         }
         private class breedNamesComboBoxActionListener implements ItemListener {
             @Override
@@ -497,8 +555,10 @@ public class SpeciesEditorPanel extends JPanel {
             return breedShape;
         }
         public VectorShape getShape() {
-
             return myShapeSelector.getShape();
+        }
+        public void setBreedShape(String breedShape) {
+            myShapeSelector.setChosenShape(breedShape);
         }
     }
 

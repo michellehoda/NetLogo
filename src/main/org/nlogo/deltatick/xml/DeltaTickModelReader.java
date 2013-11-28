@@ -2,9 +2,12 @@ package org.nlogo.deltatick.xml;
 
 //import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.app.DeltaTickTab;
+import org.nlogo.app.DeltaTickTab.SpeciesEditorPanelOkayListener;
+import org.nlogo.app.DeltaTickTab.SpeciesPanelCancelListener;
 import org.nlogo.deltatick.*;
 import org.nlogo.deltatick.dnd.AgentInput;
 import org.nlogo.deltatick.dnd.BehaviorDropTarget;
+import org.nlogo.deltatick.dnd.ConditionDropTarget;
 import org.nlogo.deltatick.dnd.PlantedCodeBlockDragSource;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.w3c.dom.Document;
@@ -84,23 +87,23 @@ public class DeltaTickModelReader {
 
                 NodeList behaviorChildNodes = node.getChildNodes();
                 for (int m = 0; m < behaviorChildNodes.getLength(); m++) {
-                    if (behaviorChildNodes.item(m).getNodeName() == "agentInput") {
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("agentInput")) {
                         String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
                         String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
                         // Set corresponding agent input's value
                         ((BehaviorBlock) o).getAgentInput(inputName).setText(defaultValue);
                     }
-                    if (behaviorChildNodes.item(m).getNodeName() == "percentInput") {
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("percentInput")) {
                         String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
                         String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
                         // Set corresponding percent input's value
                         ((BehaviorBlock) o).getPercentInput(inputName).setText(defaultValue);
                     }
-                    if (behaviorChildNodes.item(m).getNodeName() == "energyInput") {
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("energyInput")) {
                         ((BehaviorBlock) o).addInputEnergy(behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent(),
                                 behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent());
                     }
-                    if (behaviorChildNodes.item(m).getNodeName() == "behaviorInput") {
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("behaviorInput")) {
                        String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
                         String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
                         // Set corresponding behavior input's value
@@ -143,6 +146,83 @@ public class DeltaTickModelReader {
 
     }
 
+    // myBreedBlock is the associated breed block for this condition block
+    // codeBlock is the block that physically contains the condition block -- can be breed block or condition block
+    public void makeAttachConditionBlock(BreedBlock myBreedBlock, CodeBlock codeBlock, Node node)
+            throws IOException, UnsupportedFlavorException {
+        // Name of condition block
+        String condition = node.getAttributes().getNamedItem("name").getTextContent();
+        for (ConditionBlock conditionBlock : deltaTickTab.getLibraryHolder().getConditionBlocksList()) {
+            if (conditionBlock.getName().equalsIgnoreCase(condition)) {
+                // Found matching condition block
+                Object o = DeepCopyStream.deepClone(conditionBlock.getTransferData(CodeBlock.codeBlockFlavor));
+                // addCodeBlock stuff from DropTarget for codeBlock (physical container)
+                codeBlock.addBlock((ConditionBlock) o);
+                new PlantedCodeBlockDragSource((ConditionBlock) o);
+                codeBlock.doLayout();
+                codeBlock.validate();
+                codeBlock.repaint();
+                ((ConditionBlock) o).enableInputs();
+                ((ConditionBlock) o).showInputs();
+
+                // Make a drop target
+                deltaTickTab.addCondition((ConditionBlock) o);
+
+                // Process the inputs of the condition block
+                NodeList conditionChildNodes = node.getChildNodes();
+                for (int n = 0; n < conditionChildNodes.getLength(); n++) {
+                    if (conditionChildNodes.item(n).getNodeName().equalsIgnoreCase("input")) {
+                        String inputName = conditionChildNodes.item(n).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = conditionChildNodes.item(n).getAttributes().getNamedItem("default").getTextContent();
+                        ((ConditionBlock) o).getInput(inputName).setText(defaultValue);
+                    }
+                    else if (conditionChildNodes.item(n).getNodeName().equalsIgnoreCase("agentInput")) {
+                        String inputName = conditionChildNodes.item(n).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = conditionChildNodes.item(n).getAttributes().getNamedItem("default").getTextContent();
+                        ((ConditionBlock) o).getAgentInput(inputName).setText(defaultValue);
+                    }
+                    // PROCESS BEHAVIOR BLOCKS AFTER TRAITS ARE PROCESSED FOR THE CONDITION BLOCK
+                }
+
+                // Check if this codnition block has a trait associated with it
+                String isTrait = node.getAttributes().getNamedItem("isTrait").getTextContent();
+                if (isTrait.equalsIgnoreCase("true")) {
+                    // There is a trait associated with this condition block
+                    String traitName = node.getAttributes().getNamedItem("traitName").getTextContent();
+                    // Get the traitblock and put it here
+                    TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName);
+                    // Make a copy of the trait block
+                    TraitBlockNew t = (TraitBlockNew) DeepCopyStream.deepClone(traitBlock.getTransferData(CodeBlock.codeBlockFlavor));
+                    // Attach the trait block to this condition block
+                    // Perform ncessary add/validate functions (see DropTarget::addCodeBlock() )
+                    ((ConditionBlock) o).addBlock(t);
+                    new PlantedCodeBlockDragSource(t);
+                    ((ConditionBlock) o).doLayout();
+                    ((ConditionBlock) o).validate();
+                    ((ConditionBlock) o).repaint();
+                    ((ConditionBlock) o).enableInputs();
+                    // Other stuff related to the newly created traitblock
+                    // see ConditionDropTarget
+                    t.hideRemoveButton();
+                    ((ConditionBlock) o).setTrait(traitName);
+                    ((ConditionBlock) o).removeBehaviorInput();
+                }
+
+                // Now process child blocks
+                for (int n = 0; n < conditionChildNodes.getLength(); n++) {
+                    if (conditionChildNodes.item(n).getNodeName().equalsIgnoreCase("behaviorBlock")) {
+                        makeAttachBehaviorBlock(myBreedBlock, (ConditionBlock) o, conditionChildNodes.item(n));
+                    }
+                    else if (conditionChildNodes.item(n).getNodeName().equalsIgnoreCase("conditionBlock")) {
+                        makeAttachConditionBlock(myBreedBlock, (ConditionBlock) o, conditionChildNodes.item(n));
+                    }
+                }
+                    // Processed the condition block. No need to further iterate through the loop.
+                break;
+            }
+        }
+    }
+
     // Opens a model file
     public void openModel(File modelFile) {
         try {
@@ -163,6 +243,8 @@ public class DeltaTickModelReader {
                 Node breedBlockNode = breedBlockNodes.item(i);
                 String plural = breedBlockNode.getAttributes().getNamedItem("plural").getTextContent();
                 String number = breedBlockNode.getAttributes().getNamedItem("number").getTextContent();
+                String shape = breedBlockNode.getAttributes().getNamedItem("shape").getTextContent();
+                String color = breedBlockNode.getAttributes().getNamedItem("color").getTextContent();
                 String maxAge = new String();
                 String maxEnergy = new String();
                 String traitName = new String("");
@@ -172,18 +254,40 @@ public class DeltaTickModelReader {
                 //BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
                 //CodeBlock bBlock = (BreedBlock) deltaTickTab.makeBreedBlock(plural, number);
                 CodeBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
+                // Create the species editor
+                SpeciesEditorPanel speciesEditorPanel = deltaTickTab.createSpeciesEditorPanel();
+                speciesEditorPanel.getMyFrame().setTitle("Species Editor: " + plural);
+                // Set breed name
+                speciesEditorPanel.setSelectedBreed(plural);
+                // Set setup number
+                speciesEditorPanel.setSetupNumber(number);
+                // Set shape
+                speciesEditorPanel.setBreedShape(shape);
+                // Set color
+                speciesEditorPanel.setBreedColor((int) Long.parseLong(color, 16));
+                // Other setup
+                speciesEditorPanel.setMakeNewBreedBlock(false);
+                speciesEditorPanel.setMyBreedBlock((BreedBlock) bBlock);
+                // Add this species editor panel to deltaticktab's hashmap
+                deltaTickTab.putSpeciesEditorPanelInHashMap(plural, speciesEditorPanel);
+                // Update breedblock
+                ((BreedBlock) bBlock).setBreedShape(shape);
+                ((BreedBlock) bBlock).setInspectSpeciesButtonShapeColor(speciesEditorPanel.getMyBreedVectorShape(), speciesEditorPanel.getMyBreedColor());
+                ((BreedBlock) bBlock).setColorName(speciesEditorPanel.getMyBreedColorName());
+                ((BreedBlock) bBlock).setColorRGB(speciesEditorPanel.getMyBreedColorRGB());
+                ((BreedBlock) bBlock).setSetupNumber(number);
 
                 NodeList breedBlockChildNodes = breedBlockNode.getChildNodes();
 
                 // Process Ownvar childnodes for age & energy
                 for (int j = 0; j < breedBlockChildNodes.getLength(); j++) {
-                    if (breedBlockChildNodes.item(j).getNodeName() == "ownVar") {
+                    if (breedBlockChildNodes.item(j).getNodeName().equalsIgnoreCase("ownVar")) {
                         Node ownVar = breedBlockChildNodes.item(j);
-                        if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("age")) {
+                        if (ownVar.getAttributes().getNamedItem("name").getTextContent().equalsIgnoreCase("age")) {
                             maxAge = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
                             ((BreedBlock) bBlock).setMaxAge(maxAge);
                         }
-                        if (ownVar.getAttributes().getNamedItem("name").getTextContent().equals("energy")) {
+                        if (ownVar.getAttributes().getNamedItem("name").getTextContent().equalsIgnoreCase("energy")) {
                             maxEnergy = ownVar.getAttributes().getNamedItem("maxReporter").getTextContent();
                             ((BreedBlock) bBlock).setMaxEnergy(maxEnergy);
                         }
@@ -192,7 +296,7 @@ public class DeltaTickModelReader {
                 // Process selectedLabels
                 for (int j = 0; j < breedBlockChildNodes.getLength(); j++) {
                     // Check if any labels/traitlabels had been selected
-                    if (breedBlockChildNodes.item(j).getNodeName() == "selectedLabel") {
+                    if (breedBlockChildNodes.item(j).getNodeName().equalsIgnoreCase("selectedLabel")) {
                         Node labelNode = breedBlockChildNodes.item(j);
                         String labelName = labelNode.getAttributes().getNamedItem("name").getTextContent();
                         selectedLabels.add(labelName);
@@ -203,7 +307,7 @@ public class DeltaTickModelReader {
                 // Behavior blocks assume that all trait blocks have been created
                 for (int j = 0; j < breedBlockChildNodes.getLength(); j++) {
                     //TraitChildNodes for trait of breeds
-                    if (breedBlockChildNodes.item(j).getNodeName() == "trait") {
+                    if (breedBlockChildNodes.item(j).getNodeName().equalsIgnoreCase("trait")) {
                         Node trait = breedBlockChildNodes.item(j);
                         traitName = new String(trait.getAttributes().getNamedItem("name").getTextContent()); //traitname
                         NodeList variationNodes = trait.getChildNodes();
@@ -211,14 +315,14 @@ public class DeltaTickModelReader {
                         HashMap<String, Variation> selectedVariationsHashMap = new HashMap<String, Variation>();
 
 
-                        for (Trait newTrait : deltaTickTab.getBuildPanel().getBgInfo().getTraits()) {
-                            if (traitName.equalsIgnoreCase(newTrait.getNameTrait())) {
+                        for (Trait libTrait : deltaTickTab.getBuildPanel().getBgInfo().getTraits()) {
+                            if (traitName.equalsIgnoreCase(libTrait.getNameTrait())) {
                                 for (int k = 0; k < variationNodes.getLength(); k++) {
-                                    if (variationNodes.item(k).getNodeName() == "variation") {
+                                    if (variationNodes.item(k).getNodeName().equalsIgnoreCase("variation")) {
                                         Node variationNode = variationNodes.item(k);
                                         String varName = variationNode.getAttributes().getNamedItem("name").getTextContent();
-                                        String varValue = variationNode.getAttributes().getNamedItem("value").getTextContent();
-                                        String varColor = variationNode.getAttributes().getNamedItem("color").getTextContent();
+                                        String varValue = new String(libTrait.getVariationHashMap().get(varName).value);
+                                        String varColor = new String(libTrait.getVariationHashMap().get(varName).color);
                                         String percentage = variationNode.getAttributes().getNamedItem("percent").getTextContent();
                                         int percent = Integer.parseInt(percentage);
                                         Variation variation = new Variation(traitName, varName, varValue, varColor, percent);
@@ -226,7 +330,7 @@ public class DeltaTickModelReader {
                                         selectedVariationsPercent.put(varName, percentage);
                                     }
                                 }
-                                TraitState traitState = new TraitState(newTrait, selectedVariationsPercent);
+                                TraitState traitState = new TraitState(libTrait, selectedVariationsPercent);
                                 traitState.getVariationHashMap().clear();
                                 traitState.getVariationHashMap().putAll(selectedVariationsHashMap);
                                 selectedTraitStateMap.put(traitName, traitState);
@@ -254,48 +358,26 @@ public class DeltaTickModelReader {
                 // Now process behavior block nodes. All trait nodes MUST be processed and traitBlocks MADE prior to this.
                 for (int j = 0; j < breedBlockChildNodes.getLength(); j++) {
                     //behaviorBlocks as childNodes for a breedBlock
-                    if (breedBlockChildNodes.item(j).getNodeName() == "behaviorBlock") {
+                    if (breedBlockChildNodes.item(j).getNodeName().equalsIgnoreCase("behaviorBlock")) {
                         makeAttachBehaviorBlock((BreedBlock) bBlock, bBlock, breedBlockChildNodes.item(j));
                     }
-                }
-
-                // Now process condition block nodes
-                for (int j = 0; j < breedBlockChildNodes.getLength(); j++) {
-                    //ConditionBlocks as childNodes for a breedBlock
-                    if (breedBlockChildNodes.item(j).getNodeName() == "conditionBlock") {
-                        String condition = breedBlockChildNodes.item(j).getAttributes().getNamedItem("name").getTextContent();
-                        for (ConditionBlock conditionBlock : deltaTickTab.getLibraryHolder().getConditionBlocksList()) {
-                            if (conditionBlock.getName().equalsIgnoreCase(condition)) {
-                                Object o = conditionBlock.getTransferData(CodeBlock.codeBlockFlavor);
-                                bBlock.addBlock((ConditionBlock) o);
-                                NodeList childNodesCondition = breedBlockChildNodes.item(j).getChildNodes();
-                                for (int n = 0; n < childNodesCondition.getLength(); n++) {
-                                    if (childNodesCondition.item(n).getNodeName() == "input") {
-                                        //TODO add code here
-                                    }
-                                    if (childNodesCondition.item(n).getNodeName() == "behaviorBlock") {
-                                        makeAttachBehaviorBlock((BreedBlock) bBlock, conditionBlock, childNodesCondition.item(n));
-                                        deltaTickTab.addCondition((ConditionBlock) o);
-                                        //make behaviorBlock and attach to conditionBlock
-
-                                    }
-                                }
-                            }
-                        }
+                    else if (breedBlockChildNodes.item(j).getNodeName().equalsIgnoreCase("conditionBlock")) {
+                        makeAttachConditionBlock((BreedBlock) bBlock, bBlock, breedBlockChildNodes.item(j));
                     }
                 }
+
                 // Processing of breedchild nodes of this breedblock done
                 // Set labels/traitLabels for that BreedBlock
                 ((BreedBlock) bBlock).setTraitLabels(selectedLabels);
 
                 // Udate species inspector panel
-                SpeciesInspectorPanel speciesInspectorPanel = deltaTickTab.getSpeciesInspectorPanel(((BreedBlock) bBlock));
-                speciesInspectorPanel.getTraitPreview().setSelectedTraitsMap(selectedTraitStateMap);
-                speciesInspectorPanel.getTraitPreview().setSelectedTrait(traitName);
-                speciesInspectorPanel.updateTraitDisplay();
-                speciesInspectorPanel.getTraitPreview().updateCheckBoxes(selectedTraitStateMap);
+                //SpeciesEditorPanel speciesEditorPanel = deltaTickTab.getSpeciesEditorPanel(((BreedBlock) bBlock).plural());
+                speciesEditorPanel.getTraitPreview().setSelectedTraitsMap(selectedTraitStateMap);
+                speciesEditorPanel.getTraitPreview().setSelectedTrait(traitName);
+                speciesEditorPanel.updateTraitDisplay();
+                speciesEditorPanel.getTraitPreview().updateCheckBoxes(selectedTraitStateMap);
                 // Set the checkboxes in speciesInspectorPanel.labelPanel to true
-                speciesInspectorPanel.getTraitPreview().getLabelPanel().setSelectedLabels(selectedLabels);
+                speciesEditorPanel.getTraitPreview().getLabelPanel().setSelectedLabels(selectedLabels);
             }
 
             // Now process Plot Blocks
@@ -312,7 +394,7 @@ public class DeltaTickModelReader {
                 // Iterate over Quantity Blocks
                 NodeList plotChildNodes = plotBlockNode.getChildNodes();
                 for (int j = 0; j < plotChildNodes.getLength(); j++) {
-                    if (plotChildNodes.item(j).getNodeName() == "quantityBlock") {
+                    if (plotChildNodes.item(j).getNodeName().equalsIgnoreCase("quantityBlock")) {
                         Node quantityBlockNode = plotChildNodes.item(j);
                         // Read name of the quantity block
                         String quantityBlockName = quantityBlockNode.getAttributes().getNamedItem("name").getTextContent();
@@ -334,7 +416,7 @@ public class DeltaTickModelReader {
                         // Now iterate over inputs of quantity blocks and set the values accordingly
                         NodeList quantityBlockChildNodes = quantityBlockNode.getChildNodes();
                         for (int k = 0; k < quantityBlockChildNodes.getLength(); k++) {
-                            if (quantityBlockChildNodes.item(k).getNodeName() == "input") {
+                            if (quantityBlockChildNodes.item(k).getNodeName().equalsIgnoreCase("input")) {
                                 Node inputNode = quantityBlockChildNodes.item(k);
                                 // Read the input name and value from XML
                                 String inputName = inputNode.getAttributes().getNamedItem("name").getTextContent();
@@ -380,6 +462,8 @@ public class DeltaTickModelReader {
                 breedBlockElement.setAttribute("singular", bBlock.singular());
                 breedBlockElement.setAttribute("plural", bBlock.plural());
                 breedBlockElement.setAttribute("number", bBlock.getNumber());
+                breedBlockElement.setAttribute("shape", bBlock.getBreedShape());
+                breedBlockElement.setAttribute("color", Integer.toHexString(bBlock.getColorRGB()));
 
                 // Save labels (traitLabels)
                 for (String traitLabel : bBlock.getTraitLabels()) {
@@ -396,7 +480,6 @@ public class DeltaTickModelReader {
                     for (Variation variation : traitBlockNew.getVariationHashMap().values()) {
                         Element variationElement = doc.createElement("variation");
                         variationElement.setAttribute("name", variation.name);
-                        variationElement.setAttribute("value", variation.value);
                         variationElement.setAttribute("percent", Integer.toString(variation.percent));
                         // Add variationElement to traitElement
                         traitElement.appendChild(variationElement);
@@ -413,16 +496,25 @@ public class DeltaTickModelReader {
                     }
 
                     if (codeBlock instanceof ConditionBlock) {
-                        Element conditionBlock = doc.createElement("conditionBlock");
+                        Element conditionBlock = makeElementFromConditionBlock(doc, (ConditionBlock) codeBlock);
                         breedBlockElement.appendChild(conditionBlock);
-                        conditionBlock.setAttribute("name", codeBlock.getName());
-                        //mutate attribute
-
-                        // Process behavior block (child of condition block)
-                        for (CodeBlock cBlock : ((ConditionBlock) codeBlock).getMyBlocks()) {
-                            Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) cBlock);
-                            conditionBlock.appendChild(behaviorBlock);
-                        }
+//                        Element conditionBlock = doc.createElement("conditionBlock");
+//                        ConditionBlock block = (ConditionBlock) codeBlock;
+//                        conditionBlock.setAttribute("name", block.getName());
+//                        // Traits
+//                        String isTrait = (block.getIsTrait()) ? "true" : "false";
+//                        conditionBlock.setAttribute("isTrait", isTrait);
+//                        if (block.getIsTrait()) {
+//                            String traitName = block.getTraitName();
+//                            conditionBlock.setAttribute("traitName", traitName);
+//                        }
+//                        //mutate attribute
+//
+//                        // Process behavior block (child of condition block)
+//                        for (CodeBlock cBlock : block.getMyBehaviorBlocks()) {
+//                            Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) cBlock);
+//                            conditionBlock.appendChild(behaviorBlock);
+//                        }
                     }
                 }
             }
@@ -498,6 +590,52 @@ public class DeltaTickModelReader {
 	  }
     }
 
+    public Element makeElementFromConditionBlock(Document doc, ConditionBlock block) {
+        Element conditionBlock = doc.createElement("conditionBlock");
+        conditionBlock.setAttribute("name", block.getName());
+        // Traits
+        String isTrait = (block.getIsTrait()) ? "true" : "false";
+        conditionBlock.setAttribute("isTrait", isTrait);
+        if (block.getIsTrait()) {
+            String traitName = block.getTraitName();
+            conditionBlock.setAttribute("traitName", traitName);
+        }
+        // Process PrettyInputs (INPUTS)
+        for (Map.Entry entry : block.getInputs().entrySet()) {
+            Element inputElement = doc.createElement("input");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            conditionBlock.appendChild(inputElement);
+        }
+        // Process PrettyInputs (BEHAVIOR INPUTS)
+        for (Map.Entry entry : block.getBehaviorInputs().entrySet()) {
+            Element inputElement = doc.createElement("behaviorInput");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            conditionBlock.appendChild(inputElement);
+        }
+        // Process PrettyInputs (AGENT INPUTS)
+        for (Map.Entry entry : block.getAgentInputs().entrySet()) {
+            Element inputElement = doc.createElement("agentInput");
+            inputElement.setAttribute("name", (String) entry.getKey());
+            inputElement.setAttribute("default", ((PrettyInput) entry.getValue()).getText() );
+            conditionBlock.appendChild(inputElement);
+        }
+        //mutate attribute
+
+        // Process behavior block (child of condition block)
+        for (CodeBlock cBlock : block.getMyBlocks()) {
+            if (cBlock instanceof BehaviorBlock) {
+                Element childBehaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) cBlock);
+                conditionBlock.appendChild(childBehaviorBlock);
+            }
+            else if (cBlock instanceof ConditionBlock) {
+                Element childCOnditionBlock = makeElementFromConditionBlock(doc, (ConditionBlock) cBlock);
+                conditionBlock.appendChild(childCOnditionBlock);
+            }
+        }
+        return conditionBlock;
+    }
     public Element makeElementFromBehaviorBlock(Document doc, BehaviorBlock block) {
 
         Element behaviorBlock = doc.createElement("behaviorBlock");
@@ -512,6 +650,13 @@ public class DeltaTickModelReader {
         if (block.getIsTrait()) {
             String traitName = block.getTrait();
             behaviorBlock.setAttribute("traitName", traitName);
+        }
+        // Uses Input reporter
+        String usesInputReporter = (block.usesInputReporter())? "true" : "false";
+        behaviorBlock.setAttribute("usesInputReporter", usesInputReporter);
+        if (block.usesInputReporter()) {
+            String inputReporter = block.getInputReporter();
+            behaviorBlock.setAttribute("inputReporter", inputReporter);
         }
 
         // Process PrettyInputs (INPUTS)

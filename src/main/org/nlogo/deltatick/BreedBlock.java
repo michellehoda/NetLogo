@@ -78,6 +78,7 @@ public strictfp class BreedBlock
     String maxAge;
     String maxEnergy;
     String colorName = new String("gray");
+    int colorRGB;
     //ShapeSelector myShapeSelector;
     int id;
     transient String trait;
@@ -554,7 +555,12 @@ public strictfp class BreedBlock
     public void setColorName(String color) {
         colorName = color;
     }
-
+    public int getColorRGB() {
+        return this.colorRGB;
+    }
+    public void setColorRGB(int colorRGB) {
+        this.colorRGB = colorRGB;
+    }
     public void addToTraitLabels(String trait) {
         traitLabels.add(trait);
     }
