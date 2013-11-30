@@ -126,18 +126,18 @@ public class ModelBackgroundInfo {
                 NodeList iNodes = interfaceNode.getChildNodes();
                 for (int j = 0; j < iNodes.getLength(); j++) {
                     Node iNode = iNodes.item(j);
-                    if (iNode.getNodeName() == "numberSpecies") {
+                    if (iNode.getNodeName().equalsIgnoreCase("numberSpecies")) {
                         maxNumberSpecies = iNode.getTextContent();
                     }
-                    if (iNode.getNodeName() == "stepIn") {
+                    if (iNode.getNodeName().equalsIgnoreCase("stepIn")) {
                         String tempActivateStepIn = new String(iNode.getTextContent());
                         activateStepIn = Boolean.parseBoolean(tempActivateStepIn);
                     }
-                    if (iNode.getNodeName() == "drawFeature") {
+                    if (iNode.getNodeName().equalsIgnoreCase("drawFeature")) {
                         String temp = new String(iNode.getTextContent());
                         isThereDraw = Boolean.parseBoolean(temp);
                     }                                            //
-                    if (iNode.getNodeName() == "mutationSlider") {
+                    if (iNode.getNodeName().equalsIgnoreCase("mutationSlider")) {
                         enableMutationSlider = Boolean.parseBoolean(iNode.getTextContent());
                     }
                 }
@@ -352,11 +352,11 @@ public class ModelBackgroundInfo {
 
             NodeList info = globalNode.getChildNodes();
             for (int i = 0; i < info.getLength(); i++) {
-                if (info.item(i).getNodeName() == "setupReporter") {
+                if (info.item(i).getNodeName().equalsIgnoreCase("setupReporter")) {
                     setupReporter = info.item(i).getTextContent();
                 }
 
-                if (info.item(i).getNodeName() == "updateReporter") {
+                if (info.item(i).getNodeName().equalsIgnoreCase("updateReporter")) {
                     updateReporter = info.item(i).getTextContent();
                 }
             }
