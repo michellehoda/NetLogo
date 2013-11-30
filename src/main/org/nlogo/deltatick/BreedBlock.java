@@ -92,6 +92,7 @@ public strictfp class BreedBlock
     boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
     boolean reproduceUsed = false;
+    boolean carryingCapacitySliderEnabled = false;
     int curIconIndex;
     Color curColor;
     JNumberFieldFilter numberDocument;
@@ -916,6 +917,10 @@ public strictfp class BreedBlock
 
     public boolean getReproduceUsed () {
         return reproduceUsed;
+    }
+
+    public boolean isCarryingCapacitySliderEnabled() {
+        return carryingCapacitySliderEnabled;
     }
 
     public String getNumber() {
