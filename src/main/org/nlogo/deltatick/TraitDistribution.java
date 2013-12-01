@@ -20,7 +20,7 @@ import java.util.Map;
 public class TraitDistribution
         extends MultiSplitPane {
 
-    final int traitDistributionWidth = 350;
+    final int traitDistributionWidth = TraitPreview.TRAITPREVIEW_TOTAL_WIDTH;
     MultiSplitLayout.Node modelRoot;
     String breed;
     String trait;
