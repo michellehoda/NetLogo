@@ -129,6 +129,8 @@
 		]
     </go>
     
+    <setup>ask patches [ set pcolor green ]</setup>
+
     <condition name="any-here?" traits="">
         <input name="breed-type" default="who?"></input>
         <test>report any? other turtles-here with [ breed = breed-type ]</test>

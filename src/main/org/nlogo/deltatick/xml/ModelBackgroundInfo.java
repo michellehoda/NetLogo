@@ -183,7 +183,7 @@ public class ModelBackgroundInfo {
         code += "  clear-all\n";
         //code += "ask patches [set pcolor white]\n";
         if (setup != null) {
-            code += setup;
+            code += setup + "\n";
         }
 
         if (draw != null) {
