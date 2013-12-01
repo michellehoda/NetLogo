@@ -66,6 +66,9 @@ public class TraitBlockNew
 
         java.util.List<Component> componentList = new ArrayList<Component>();
         breedName.setText(" of " + breedBlock.plural());
+        java.awt.Font font = breedName.getFont();
+        breedName.setFont(new java.awt.Font("Arial", font.getStyle(), 12));
+
         componentList.add(breedName);
 
         //int y = 0;
