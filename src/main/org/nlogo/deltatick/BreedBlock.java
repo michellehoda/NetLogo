@@ -481,8 +481,19 @@ public strictfp class BreedBlock
 
             // Update labels
             for (TraitBlockNew tBlock : myTraitBlocks) {
-                code += tBlock.getVisualizeGoCode();
+                code += "\task " + plural() + "[ ";
+                code += "if " + tBlock.getBreedName() + "-label = \"" +
+                        tBlock.getName() + " visual\" [" ;
+                code += "set label \"\"" + tBlock.getVisualizeGoCode() + "]\n";
+                code += "if " + tBlock.getBreedName() + "-label = \"" +
+                        tBlock.getName() + "\" [ set label runresult " + plural() + "-label set label-color black]\n";
+                code += "if (" + plural() + "-label = \"none\")\n\t" +
+                    "[set label \"\" ]  \n";
+                code += " \n";
             }
+            code += "\n]";
+                //code += tBlock.getVisualizeGoCode();   // revert to this if above update visualize code doesn't wrk
+            //}
 
 //           // Need this code so labels update for offspring if their trait mutates from their parents' (May 8, 2013)
 //            if (traitLabels.size() >= 1) {
