@@ -81,7 +81,7 @@ public strictfp class QuantityBlock
 
         JLabel name = new JLabel(getName());
         if (histo) {
-            name.setText("count");
+            name.setText("count by");
         }
         java.awt.Font font = name.getFont();
         name.setFont(new java.awt.Font("Arial", font.getStyle(), 12));

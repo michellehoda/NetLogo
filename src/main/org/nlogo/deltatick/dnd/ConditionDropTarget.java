@@ -3,6 +3,7 @@ package org.nlogo.deltatick.dnd;
 import org.nlogo.api.Patch;
 import org.nlogo.deltatick.*;
 
+import javax.swing.JOptionPane;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -24,7 +25,26 @@ public class ConditionDropTarget
             throws IOException, UnsupportedFlavorException {
         Object o = transferable.getTransferData(CodeBlock.codeBlockFlavor);
         if (o instanceof Component) {
-            if (o instanceof BehaviorBlock) {
+            // Check if behavior or condition block can be added
+            if ((o instanceof ConditionBlock) ||
+                    (o instanceof BehaviorBlock)) {
+                if (!cBlock.canAddBlock()) {
+                    // Display error message
+                    String message = new String("Oops! You can only add one block here.");
+                    JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+                    return false;
+                }
+            }
+            if (o instanceof TraitBlockNew) {
+                if (cBlock.isTraitApplicable(((TraitBlockNew)o).getTraitName())) {
+                    addCodeBlock((TraitBlockNew) o);
+                    cBlock.setTrait(((TraitBlockNew) o).getTraitName());
+                    cBlock.removeBehaviorInput();
+                    ((TraitBlockNew) o).hideRemoveButton();
+                    return true;
+                }
+            }
+            else if (o instanceof BehaviorBlock) {
 
                 if (((ConditionBlock) block).addedRectPanel) {
                     ((ConditionBlock) block).hideRectPanel();
@@ -55,7 +75,7 @@ public class ConditionDropTarget
                 new BehaviorDropTarget((BehaviorBlock) o);
                 return true;
             }
-            if (o instanceof ConditionBlock) {
+            else if (o instanceof ConditionBlock) {
 
                 if (((ConditionBlock) block).addedRectPanel) {
                     ((ConditionBlock) block).hideRectPanel();
@@ -66,17 +86,9 @@ public class ConditionDropTarget
                 new ConditionDropTarget((ConditionBlock) o);
                 return true;
             }
-            if (o instanceof PatchBlock) {
+            else if (o instanceof PatchBlock) {
                 addCodeBlock((PatchBlock) o);
                 //new ConditionDropTarget((PatchBlock) o);
-                return true;
-            }
-            if (o instanceof TraitBlockNew) {
-                addCodeBlock((TraitBlockNew) o);
-                cBlock.setTrait(((TraitBlockNew) o).getTraitName());
-                cBlock.removeBehaviorInput();
-                ((TraitBlockNew) o).hideRemoveButton();
-
                 return true;
             }
             //return false; - commented out by A. (nov 27)
@@ -86,8 +98,10 @@ public class ConditionDropTarget
     public void dragEnter(DropTargetDragEvent dtde) {
         if ((dtde.isDataFlavorSupported(CodeBlock.behaviorBlockFlavor)) ||
                 (dtde.isDataFlavorSupported(CodeBlock.conditionBlockFlavor))) {
-            ((ConditionBlock) block).showRectPanel();
-            ((ConditionBlock) block).addedRectPanel = true;
+            if (((ConditionBlock) block).canAddBlock()) {
+                ((ConditionBlock) block).showRectPanel();
+                ((ConditionBlock) block).addedRectPanel = true;
+            }
         }
     }
 

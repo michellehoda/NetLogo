@@ -1151,7 +1151,8 @@ public class DeltaTickTab
 
         // Now re-populate carrying capacity sliders
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            if (bBlock.getReproduceUsed()) {
+            if (bBlock.getReproduceUsed() &&
+                    bBlock.isCarryingCapacitySliderEnabled()) {
                 // Put the slider
                 String sliderName = "max-number-of-" + bBlock.plural();
                 SliderWidget sliderWidget = ((SliderWidget) interfacePanel.makeWidget("SLIDER", false));

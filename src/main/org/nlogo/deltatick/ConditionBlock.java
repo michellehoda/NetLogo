@@ -1,14 +1,11 @@
 package org.nlogo.deltatick;
 
 import org.nlogo.deltatick.dnd.PrettyInput;
-import org.nlogo.window.Widget;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.*;
 import java.util.List;
 
@@ -24,6 +21,8 @@ public strictfp class ConditionBlock
     List<BehaviorBlock> myBehaviorBlocks = new ArrayList<BehaviorBlock>();
     List<ConditionBlock> myConditionBlocks = new ArrayList<ConditionBlock>();
     TraitBlockDisplayPanel traitBlockDisplayPanel;
+    private final static int MAX_NUM_BEHAVIOR_BLOCKS = 1;
+    private final static int MAX_NUM_CONDITION_BLOCKS = 1;
 
     public ConditionBlock(String name, String aTraits) {
         super(name, ColorSchemer.getColor(1));
@@ -314,5 +313,13 @@ public strictfp class ConditionBlock
 
     public boolean isTraitApplicable(String traitName) {
         return applicableTraits.contains(traitName);
+    }
+    public boolean canAddBlock() {
+        boolean result = ((myBehaviorBlocks.size() < MAX_NUM_BEHAVIOR_BLOCKS) &&
+                (myConditionBlocks.size() < MAX_NUM_CONDITION_BLOCKS));
+        for (ConditionBlock conditionBlock : myConditionBlocks) {
+            result = result && conditionBlock.canAddBlock();
+        }
+        return result;
     }
 }

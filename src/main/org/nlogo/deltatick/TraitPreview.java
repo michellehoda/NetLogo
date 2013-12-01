@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,6 +23,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.Color;
@@ -76,12 +78,12 @@ public class TraitPreview extends JPanel {
     public static final int NUMBER_COLUMNS = 3;
     // column index where value is stored/displayed
     public static final int VARVALUE_COLUMN_INDEX = 1;
-    public static final int VARVALUE_COLUMN_WIDTH = 50;
+    public static final int VARVALUE_COLUMN_WIDTH = 75;
     // column index where variation name is stored/displayed
     public static final int VARNAME_COLUMN_INDEX = 0;
-    public static final int VARNAME_COLUMN_WIDTH = 75;
+    public static final int VARNAME_COLUMN_WIDTH = 125;
     public static final int VARCHECKBOX_COLUMN_INDEX = 2;
-    public static final int VARCHECKBOX_COLUMN_WIDTH = 75;
+    public static final int VARCHECKBOX_COLUMN_WIDTH = 100;
 
     public static final int TRAIT_TEXT_HEIGHT = 20;
     public static final int TRAIT_SCROLLPANE_WIDTH = 150;
@@ -449,7 +451,7 @@ public class TraitPreview extends JPanel {
             //((TraitTableModel) traitInfoTable.getModel()).setTraitData(tempTableData);
             ((TraitTableModel) traitInfoTable.getModel()).setTraitData(tmpTableData);
             ((TraitTableModel) traitInfoTable.getModel()).setColumnName(VARVALUE_COLUMN_INDEX, getSelectedTraitName());
-            traitInfoTable.validate();
+            traitInfoTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
             // Pre-sort the table
             traitInfoTable.setAutoCreateRowSorter(true);
@@ -462,12 +464,17 @@ public class TraitPreview extends JPanel {
 
             // Set center alignment
             DefaultTableCellRenderer dctr = new DefaultTableCellRenderer();
-            dctr.setHorizontalAlignment(JLabel.CENTER);
-            dctr.setHorizontalTextPosition(JLabel.CENTER);
+            dctr.setHorizontalAlignment(SwingConstants.CENTER);
+            dctr.setHorizontalTextPosition(SwingConstants.CENTER);
             traitInfoTable.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setCellRenderer(dctr);
+            traitInfoTable.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setHeaderRenderer(dctr);
+            traitInfoTable.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setResizable(false);
+            traitInfoTable.getColumnModel().getColumn(VARVALUE_COLUMN_INDEX).setResizable(false);
+            traitInfoTable.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setResizable(false);
             //traitInfoTable.getColumnModel().getColumn(VARNAME_COLUMN_INDEX).setCellRenderer(dctr);
             //traitInfoTable.getColumnModel().getColumn(VARCHECKBOX_COLUMN_INDEX).setCellRenderer(dctr);
 
+            initColumnSizes(traitInfoTable);
 
             // Can/Must read percentages from selectedTraitsMaps or from memory based on what was previously done
             updateTraitDistriPanel(traitInfoTable.getModel(), true);
@@ -712,10 +719,3 @@ public class TraitPreview extends JPanel {
     }
 
 }
-
-
-
-
-
-
-
