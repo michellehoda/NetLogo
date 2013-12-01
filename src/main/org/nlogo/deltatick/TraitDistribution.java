@@ -160,6 +160,7 @@ public class TraitDistribution
     // See TraitPreview. MouseMotionListener on traitDistribution
     public void updatePercentages() {
         this.revalidate();
+        int traitDistriWidth = this.getWidth();
         String nodeName = new String();
         if (this.getMultiSplitLayout().getModel().getParent() != null) {
             MultiSplitLayout.Split split = (MultiSplitLayout.Split) this.getMultiSplitLayout().getModel().getParent().getChildren().get(0);
@@ -176,7 +177,7 @@ public class TraitDistribution
                         }
                         Rectangle rect = node.getBounds();
                         float width = rect.width;
-                        double percentage = ((double) width / (double) (traitDistributionWidth - (totalDivider * this.getMultiSplitLayout().getDividerSize()))) * 100.0;
+                        double percentage = ((double) width / (double) (traitDistriWidth - (totalDivider * this.getMultiSplitLayout().getDividerSize()))) * 100.0;
                         BigDecimal per = new BigDecimal(percentage);
                         BigDecimal p = per.setScale(3, BigDecimal.ROUND_HALF_EVEN);
                         String perc = p.toString();
