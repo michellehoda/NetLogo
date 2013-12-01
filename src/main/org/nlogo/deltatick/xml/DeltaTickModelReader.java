@@ -336,17 +336,6 @@ public class DeltaTickModelReader {
                                 selectedTraitStateMap.put(traitName, traitState);
                             }
                         }
-
-//                        // Udate species inspector panel
-//                        SpeciesInspectorPanel speciesInspectorPanel = deltaTickTab.getSpeciesInspectorPanel(((BreedBlock) bBlock));
-//                        speciesInspectorPanel.getTraitPreview().setSelectedTraitsMap(selectedTraitStateMap);
-//                        speciesInspectorPanel.getTraitPreview().setSelectedTrait(traitName);
-//                        speciesInspectorPanel.updateTraitDisplay();
-
-//                        // Create the traitblock
-//                        for (TraitState traitState : selectedTraitStateMap.values()) {
-//                            deltaTickTab.makeTraitBlock(((BreedBlock) bBlock), traitState);
-//                        }
                     }
                 }
 
@@ -373,6 +362,7 @@ public class DeltaTickModelReader {
                 // Udate species inspector panel
                 //SpeciesEditorPanel speciesEditorPanel = deltaTickTab.getSpeciesEditorPanel(((BreedBlock) bBlock).plural());
                 speciesEditorPanel.getTraitPreview().setSelectedTraitsMap(selectedTraitStateMap);
+                speciesEditorPanel.getTraitPreview().saveOrigSelectedTraitsMap();
                 speciesEditorPanel.getTraitPreview().setSelectedTrait(traitName);
                 speciesEditorPanel.updateTraitDisplay();
                 speciesEditorPanel.getTraitPreview().updateCheckBoxes(selectedTraitStateMap);
@@ -425,9 +415,7 @@ public class DeltaTickModelReader {
                                 // Set the corresponding value in the quantity block
                                 quantityBlock.getInput(inputName).setText(inputValue);
                             }
-
                         }
-
                     }
                 }
             }
@@ -498,23 +486,6 @@ public class DeltaTickModelReader {
                     if (codeBlock instanceof ConditionBlock) {
                         Element conditionBlock = makeElementFromConditionBlock(doc, (ConditionBlock) codeBlock);
                         breedBlockElement.appendChild(conditionBlock);
-//                        Element conditionBlock = doc.createElement("conditionBlock");
-//                        ConditionBlock block = (ConditionBlock) codeBlock;
-//                        conditionBlock.setAttribute("name", block.getName());
-//                        // Traits
-//                        String isTrait = (block.getIsTrait()) ? "true" : "false";
-//                        conditionBlock.setAttribute("isTrait", isTrait);
-//                        if (block.getIsTrait()) {
-//                            String traitName = block.getTraitName();
-//                            conditionBlock.setAttribute("traitName", traitName);
-//                        }
-//                        //mutate attribute
-//
-//                        // Process behavior block (child of condition block)
-//                        for (CodeBlock cBlock : block.getMyBehaviorBlocks()) {
-//                            Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) cBlock);
-//                            conditionBlock.appendChild(behaviorBlock);
-//                        }
                     }
                 }
             }
