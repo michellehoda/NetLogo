@@ -110,6 +110,7 @@ public class DeltaTickTab
     private final int PLOTS_HEIGHT = 200;
     private final int PLOTS_SEPARATION = 10;
 
+    private final int MAX_DIVEIN_BLOCKS = 1;
     // HashMaps to store widget values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
     HashMap<String, Double> carryingCapacitySliderValues = new HashMap<String, Double>();
@@ -849,7 +850,14 @@ public class DeltaTickTab
     private final Action diveInAction =
             new AbstractAction( "Add yourself as predator") {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
-                    makeDiveInBlock();
+                    if (buildPanel.getMyDiveIns().size() == MAX_DIVEIN_BLOCKS) {
+                        String message = new String("Oops! Your predator block has already been added.");
+                        JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    else {
+                        makeDiveInBlock();
+                    }
                 }
             };
 

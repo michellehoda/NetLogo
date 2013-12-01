@@ -405,7 +405,9 @@ public String newSaveAsXML() {
     public Collection<BreedBlock> getMyBreeds() {
         return myBreeds;
     }
-
+    public List<DiveInBlock> getMyDiveIns() {
+        return myDiveIns;
+    }
     public List<PlotBlock> getMyPlots() {
         return myPlots;
     }
