@@ -442,6 +442,12 @@ public strictfp class BehaviorBlock
         this.useInputReporter = true;
         this.inputReporter = inputReporter;
     }
+    public boolean usesInputReporter() {
+        return useInputReporter;
+    }
+    public String getInputReporter() {
+        return inputReporter;
+    }
 
     public JToolTip createToolTip() {
         toolTip = super.createToolTip();

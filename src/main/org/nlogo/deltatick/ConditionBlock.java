@@ -230,6 +230,9 @@ public strictfp class ConditionBlock
     public boolean getIsTrait() {
         return isTrait;
     }
+    public String getTraitName() {
+        return traitName;
+    }
 
     public void removeBehaviorInput() {
         for ( Map.Entry<String, PrettyInput> map : behaviorInputs.entrySet()) {

@@ -105,16 +105,6 @@ Polygon -10899396 true false 132 85 134 64 107 51 108 17 150 2 192 18 192 52 169
 Polygon -10899396 true false 85 204 60 233 54 254 72 266 85 252 107 210
 Polygon -7500403 true true 119 75 179 75 209 101 224 135 220 225 175 261 128 261 81 224 74 135 88 99
 
-circle
-false
-0
-Circle -7500403 true true 0 0 300
-
-pentagon
-false
-0
-Polygon -7500403 true true 150 15 15 120 60 285 240 285 285 120
-
 rabbit
 false
 0
@@ -146,16 +136,6 @@ Polygon -7500403 true true 25 72 40 80 42 98 22 91
 Line -16777216 false 270 137 251 122
 Line -16777216 false 266 90 254 90
 
-square
-false
-0
-Rectangle -7500403 true true 30 30 270 270
-
-triangle
-false
-0
-Polygon -7500403 true true 150 30 15 255 285 255
-
 wolf
 false
 0
@@ -185,3 +165,13 @@ Polygon -16777216 true false 230 67 228 54 222 62 224 72
 Line -16777216 false 246 67 234 64
 Line -16777216 false 229 45 235 68
 Line -16777216 false 30 150 30 165
+
+square
+false
+0
+Rectangle -7500403 true true 30 30 270 270
+
+triangle
+false
+0
+Polygon -7500403 true true 150 30 15 255 285 255

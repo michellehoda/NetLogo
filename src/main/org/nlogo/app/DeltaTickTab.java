@@ -110,6 +110,7 @@ public class DeltaTickTab
     private final int PLOTS_HEIGHT = 200;
     private final int PLOTS_SEPARATION = 10;
 
+    private final int MAX_DIVEIN_BLOCKS = 1;
     // HashMaps to store widget values
     HashMap<String, Double> mutationSliderValues = new HashMap<String, Double>();
     HashMap<String, Double> carryingCapacitySliderValues = new HashMap<String, Double>();
@@ -345,18 +346,8 @@ public class DeltaTickTab
                 // Disable the AddBreed button until Okay/Cancel is clicked
                 addBreed.setEnabled(false);
                 // Create the species editor
-                JFrame someFrame = new JFrame("Species Editor");
-                someFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                SpeciesEditorPanel speciesEditorPanel = new SpeciesEditorPanel(buildPanel.getBgInfo().getBreedNames(),
-                                                                               buildPanel.getBgInfo().getBreedSetupNumbers(),
-                                                                               buildPanel.getBgInfo().getTraits(),
-                                                                               someFrame);
-                speciesEditorPanel.getOkayButton().addActionListener(new SpeciesEditorPanelOkayListener(speciesEditorPanel));
-                speciesEditorPanel.getCancelButton().addActionListener(new SpeciesEditorPanelCancelListener(speciesEditorPanel));
-                speciesEditorPanel.setVisible(true);
-                someFrame.setResizable(false);
-                someFrame.pack();
-                someFrame.setVisible(true);
+                SpeciesEditorPanel speciesEditorPanel = createSpeciesEditorPanel();
+                speciesEditorPanel.getMyFrame().setVisible(true);
 
                 // if more than 1 breed available in XML -A. (oct 5)
                 //Commented this out because I'm not using breedTypeSelector anymore -Aditi (March 31, 2013)
@@ -390,6 +381,23 @@ public class DeltaTickTab
                 //newBreed.inspectSpeciesButton.addActionListener(new SpeciesButtonListener(newBreed));
             //}
       };
+
+    public SpeciesEditorPanel createSpeciesEditorPanel() {
+        JFrame someFrame = new JFrame("Species Editor");
+        someFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        SpeciesEditorPanel speciesEditorPanel = new SpeciesEditorPanel(buildPanel.getBgInfo().getBreedNames(),
+                buildPanel.getBgInfo().getBreedSetupNumbers(),
+                buildPanel.getBgInfo().getTraits(),
+                someFrame);
+        speciesEditorPanel.getOkayButton().addActionListener(new SpeciesEditorPanelOkayListener(speciesEditorPanel));
+        speciesEditorPanel.getCancelButton().addActionListener(new SpeciesEditorPanelCancelListener(speciesEditorPanel));
+        speciesEditorPanel.setVisible(true);
+        someFrame.setResizable(false);
+        someFrame.pack();
+        // someFrame.setVisible(true);
+
+        return speciesEditorPanel;
+    }
 
     public BreedBlock makeBreedBlock(String plural, String setupNumber) {
         BreedBlock newBreed;// = new BreedBlock();
@@ -440,6 +448,12 @@ public class DeltaTickTab
         return newBreed;
     }
 
+    public SpeciesEditorPanel getSpeciesEditorPanel(String breedName) {
+        return speciesEditorPanelHashMap.get(breedName);
+    }
+    public void putSpeciesEditorPanelInHashMap(String breedName, SpeciesEditorPanel sePanel) {
+        speciesEditorPanelHashMap.put(breedName, sePanel);
+    }
     private final javax.swing.Action removeBreedAction =
             new javax.swing.AbstractAction( "Remove Species" ) {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
@@ -588,21 +602,22 @@ public class DeltaTickTab
 //        }
 //    }
 //
+
     public class SpeciesPanelCancelListener implements ActionListener {
-    BreedBlock myParent;
+        BreedBlock myParent;
 
-    SpeciesPanelCancelListener(BreedBlock myParent) {
-        this.myParent = myParent;
-    }
+        SpeciesPanelCancelListener(BreedBlock myParent) {
+            this.myParent = myParent;
+        }
 
-    public void actionPerformed(ActionEvent e) {
-        //SpeciesInspectorPanel
-        speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
-        speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
-        speciesInspectorPanel.updateTraitDisplay();
-        speciesInspectorPanel.getMyFrame().setVisible(false);
+        public void actionPerformed(ActionEvent e) {
+            //SpeciesInspectorPanel
+            speciesInspectorPanel = speciesInspectorPanelMap.get(myParent);
+            speciesInspectorPanel.getTraitPreview().loadOrigSelectedTraitsMap();
+            speciesInspectorPanel.updateTraitDisplay();
+            speciesInspectorPanel.getMyFrame().setVisible(false);
+        }
     }
-}
 
     public class SpeciesEditorPanelOkayListener implements ActionListener {
         // The Species Editor Panel corresponding to this listener
@@ -681,6 +696,8 @@ public class DeltaTickTab
             breedBlock.setInspectSpeciesButtonShapeColor(sePanel.getMyBreedVectorShape(), sePanel.getMyBreedColor());
             // Set the color
             breedBlock.setColorName(sePanel.getMyBreedColorName());
+            // Set the color RGB - required by save model
+            breedBlock.setColorRGB(sePanel.getMyBreedColorRGB());
             // Set the setup number
             breedBlock.setSetupNumber(sePanel.getMySetupNumber());
 
@@ -849,7 +866,14 @@ public class DeltaTickTab
     private final Action diveInAction =
             new AbstractAction( "Add yourself as predator") {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
-                    makeDiveInBlock();
+                    if (buildPanel.getMyDiveIns().size() == MAX_DIVEIN_BLOCKS) {
+                        String message = new String("Oops! Your predator block has already been added.");
+                        JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    else {
+                        makeDiveInBlock();
+                    }
                 }
             };
 

@@ -58,10 +58,10 @@ public class Trait implements Serializable {
 
         NodeList traitNodes = traitNode.getChildNodes();
         for (int i = 0; i < traitNodes.getLength(); i++) {
-            if (traitNodes.item(i).getNodeName() == "setupReporter") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("setupReporter")) {
                 setupReporter = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "variation") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("variation")) {
                 Node variationNode = traitNodes.item(i);
                 String name = variationNode.getAttributes().getNamedItem("name").getTextContent();
                 String value = variationNode.getAttributes().getNamedItem("value").getTextContent();
@@ -70,19 +70,19 @@ public class Trait implements Serializable {
                 Variation variation = new Variation(traitName, name, value, color, Integer.parseInt(setupNumber));
                 variationHashMap.put(name, variation);
             }
-            if (traitNodes.item(i).getNodeName() == "visualizeCode") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("visualizeCode")) {
                 visualizeCode = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "visualizeProcedure") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("visualizeProcedure")) {
                 visualizeProcedure = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "visualizeGoCode") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("visualizeGoCode")) {
                 visualizeGoCode = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "visualizeGoProcedure") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("visualizeGoProcedure")) {
                 visualizeGoProceudre = traitNodes.item(i).getTextContent();
             }
-            if (traitNodes.item(i).getNodeName() == "message") {
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("message")) {
                 message = traitNodes.item(i).getTextContent();
             }
             /*if (traitNodes.item(i).getNodeName() == "mutateCode") {
