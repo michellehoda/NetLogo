@@ -353,7 +353,7 @@ public strictfp class BreedBlock
             //code += setupTraitLabels();
             code += setupTraitVisualization();
             code += setupBreedShape();
-            code += "ask patches [set pcolor white]\n";
+            //code += "ask patches [set pcolor white]\n";
             int i;
         }
         return code;
@@ -491,8 +491,9 @@ public strictfp class BreedBlock
                 code += "if (" + plural() + "-label = \"none\")\n\t" +
                     "[set label \"\" ]  \n";
                 code += " \n";
+                code += "\n]";
             }
-            code += "\n]";
+
                 //code += tBlock.getVisualizeGoCode();   // revert to this if above update visualize code doesn't wrk
             //}
 
