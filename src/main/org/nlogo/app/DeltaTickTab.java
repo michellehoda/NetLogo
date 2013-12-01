@@ -847,7 +847,7 @@ public class DeltaTickTab
 
 
     private final Action diveInAction =
-            new AbstractAction( "Add click") {
+            new AbstractAction( "Add yourself as predator") {
                 public void actionPerformed( java.awt.event.ActionEvent e ) {
                     makeDiveInBlock();
                 }
@@ -1100,7 +1100,7 @@ public class DeltaTickTab
         mutationSliderValues.clear();
 
         //make a note only once (March 29, 2013)
-        if (putNoteWidget) {
+        /*if (putNoteWidget) {
             NoteWidget noteWidget = ((NoteWidget) interfacePanel.makeWidget("NOTE", false));
             WidgetWrapper widgetw = interfacePanel.addWidget(noteWidget, 0, 80, true, false);
             String note = "Chance of mutation in";
@@ -1108,7 +1108,7 @@ public class DeltaTickTab
             noteWidget.text_$eq(note);
             //noteWidget.validate();
             noteWidgets.put("MutationNote", widgetw);
-        }
+        }*/
     }
 
     public void removeMutationSlider() {

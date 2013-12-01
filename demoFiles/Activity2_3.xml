@@ -188,7 +188,7 @@
         <commands>
         ifelse count out-link-neighbors > 0 [ 
         hatch 1 [set age 0 rt random 180 fd 1 set-sense-cone]]
-        [hatch 1 [set age 0 rt random 180 fd 1]]
+        [hatch 1 [set age 0 rt random 180 fd 1]
         </commands>
     </behavior>
     
