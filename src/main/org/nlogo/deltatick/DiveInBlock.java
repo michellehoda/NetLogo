@@ -57,7 +57,7 @@ public strictfp class DiveInBlock
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
         rectPanel.setBackground(getBackground());
         JLabel label = new JLabel();
-        label.setText("Add blocks here");
+        label.setText("Add \"eat\" block here");
         rectPanel.add(label);
         add(rectPanel);
         validate();
