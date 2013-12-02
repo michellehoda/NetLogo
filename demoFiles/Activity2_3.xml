@@ -57,7 +57,7 @@
         <setupReporter>random 9</setupReporter>
         <variation name="Very long legs" value="5" color="" setupNumber="25"></variation>
         <variation name="Long legs" value="4" color="" setupNumber="15"></variation>
-        <variation name="Medium-length legs" value="3" color="" setupNumber="30"></variation>
+        <variation name="Medium length legs" value="3" color="" setupNumber="30"></variation>
         <variation name="Short legs" value="2" color="" setupNumber="20"></variation>
         <variation name="Very short legs" value="1" color="" setupNumber="10"></variation>
         <message>What is their speed?</message>
