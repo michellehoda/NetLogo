@@ -74,22 +74,22 @@ public class TraitDistribution
         String totalWeightStr = "";
         String weightsStr = "";
 
+        int i = 0;
         for (Map.Entry<String, String> entry : selectedVariationsValues.entrySet()) {
             String variation = entry.getKey();
             String value = entry.getValue();
             nodeName = variation.replace(' ', 'X');
             nodeName += " ";
 
-            BigDecimal bd = new BigDecimal(totalWeight);
-            BigDecimal rd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
-            totalWeight = rd.doubleValue();
+//            BigDecimal bd = new BigDecimal(totalWeight);
+//            BigDecimal rd = bd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+//            totalWeight = rd.doubleValue();
             if (selectedVariationsPercent.size() == selectedVariationsValues.size()) {
                 weights = Double.parseDouble(selectedVariationsPercent.get(variation)) / 100.0;
             }
 
             if (totalWeight + weights > 1.0) {
-                weights = 1.0 - totalWeight;
-                System.out.println("error");
+                weights = 0.99 - totalWeight;
             }
             layout = layout + "(LEAF name="+nodeName+ " weight="+weights+ ") ";
             totalWeight = totalWeight + weights;
