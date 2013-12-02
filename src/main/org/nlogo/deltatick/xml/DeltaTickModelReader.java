@@ -283,6 +283,57 @@ public class DeltaTickModelReader {
         ((QuantityBlock) o).repaint();
     }
 
+    public void makeAttachBehaviorBlock(DiveInBlock diveInBlock, Node node)
+            throws IOException, UnsupportedFlavorException {
+        String behavior = node.getAttributes().getNamedItem("name").getTextContent();
+        for (BehaviorBlock behaviorBlock : deltaTickTab.getLibraryHolder().getBehaviorBlocksList()) {
+            if (behaviorBlock.getName().equalsIgnoreCase(behavior)) {
+                Object o = DeepCopyStream.deepClone(behaviorBlock.getTransferData(CodeBlock.codeBlockFlavor));
+
+                // addCodeBlock stuff from DropTarget for codeBlock (physical container)
+                diveInBlock.addBlock((BehaviorBlock) o);
+                new PlantedCodeBlockDragSource((BehaviorBlock) o);
+                diveInBlock.doLayout();
+                diveInBlock.validate();
+                diveInBlock.repaint();
+                ((BehaviorBlock) o).enableInputs();
+                ((BehaviorBlock) o).showInputs();
+
+                NodeList behaviorChildNodes = node.getChildNodes();
+                for (int m = 0; m < behaviorChildNodes.getLength(); m++) {
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("agentInput")) {
+                        String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
+                        // Set corresponding agent input's value
+                        ((BehaviorBlock) o).getAgentInput(inputName).setText(defaultValue);
+                    }
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("percentInput")) {
+                        String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
+                        // Set corresponding percent input's value
+                        ((BehaviorBlock) o).getPercentInput(inputName).setText(defaultValue);
+                    }
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("energyInput")) {
+                        ((BehaviorBlock) o).addInputEnergy(behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent(),
+                                behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent());
+                    }
+                    if (behaviorChildNodes.item(m).getNodeName().equalsIgnoreCase("behaviorInput")) {
+                        String inputName = behaviorChildNodes.item(m).getAttributes().getNamedItem("name").getTextContent();
+                        String defaultValue = behaviorChildNodes.item(m).getAttributes().getNamedItem("default").getTextContent();
+                        // Set corresponding behavior input's value
+                        ((BehaviorBlock) o).getBehaviorInput(inputName).setText(defaultValue);
+                    }
+                }
+
+                // There cannot be a trait associated with this behaviro block
+                // because it is within a divein blocks
+
+                ((BehaviorBlock) o).validate();
+                ((BehaviorBlock) o).repaint();
+            }
+        }
+    }
+
     // Opens a model file
     public void openModel(File modelFile) {
         try {
@@ -336,6 +387,9 @@ public class DeltaTickModelReader {
                 ((BreedBlock) bBlock).setColorName(speciesEditorPanel.getMyBreedColorName());
                 ((BreedBlock) bBlock).setColorRGB(speciesEditorPanel.getMyBreedColorRGB());
                 ((BreedBlock) bBlock).setSetupNumber(number);
+
+                // BreedBlock now created, enable TrackSpeciesButton
+                deltaTickTab.getAddTrackSpecies().setEnabled(true);
 
                 NodeList breedBlockChildNodes = breedBlockNode.getChildNodes();
 
@@ -452,6 +506,22 @@ public class DeltaTickModelReader {
             }
             //// Plot block processing complete
 
+            // Process DiveIn blocks
+            NodeList diveInBlockNodes = model.getElementsByTagName("diveInBlock");
+            for (int i = 0; i < diveInBlockNodes.getLength(); i++) {
+                Node diveInBlockNode = diveInBlockNodes.item(i);
+                // Create the DiveIn Block
+                DiveInBlock diveInBlock = deltaTickTab.makeDiveInBlock();
+                // Process child behavior blocks
+                NodeList diveInChildNodes = diveInBlockNode.getChildNodes();
+                for (int j = 0; j < diveInChildNodes.getLength(); j++) {
+                    if (diveInChildNodes.item(j).getNodeName().equalsIgnoreCase("behaviorBlock")) {
+                        makeAttachBehaviorBlock(diveInBlock, diveInChildNodes.item(j));
+                    }
+                }
+            }
+            // DiveIn blocks processing complete
+
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -559,8 +629,21 @@ public class DeltaTickModelReader {
             }
             // Processing of plot blocks done
 
+            // Process DiveIn Blocks
+            for (DiveInBlock diveInBlock : deltaTickTab.getBuildPanel().getMyDiveIns()) {
+                Element diveInBlockElement = doc.createElement("diveInBlock");
+                rootElement.appendChild(diveInBlockElement);
+                // DiveIn has no attributes
 
-
+                for (CodeBlock codeBlock : diveInBlock.getMyBlocks()) {
+                    // Process behavior block (child of breed block)
+                    if (codeBlock instanceof BehaviorBlock) {
+                        Element behaviorBlock = makeElementFromBehaviorBlock(doc, (BehaviorBlock) codeBlock);
+                        diveInBlockElement.appendChild(behaviorBlock);
+                    }
+                }
+            }
+            // Processing of DiveIn blocks done
 
             //// Convert DOM to XML ////
             Transformer transformer = TransformerFactory.newInstance().newTransformer();

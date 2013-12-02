@@ -403,7 +403,8 @@ public class DeltaTickTab
         buildPanel.removeRect();
         Breed breed = buildPanel.getBgInfo().getBreed(plural);
         if (breed == null) {
-            System.out.println("Breed " + plural + " does not exist!");
+            String message = "FATAL: Breed " + plural + " does not exist! Check the breed name in the library/model.";
+            JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
 
@@ -446,7 +447,9 @@ public class DeltaTickTab
         contentPanel.validate();
         return newBreed;
     }
-
+    public JButton getAddTrackSpecies() {
+        return addTrackSpecies;
+    }
     public SpeciesEditorPanel getSpeciesEditorPanel(String breedName) {
         return speciesEditorPanelHashMap.get(breedName);
     }
