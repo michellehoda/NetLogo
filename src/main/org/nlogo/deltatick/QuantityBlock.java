@@ -119,7 +119,7 @@ public strictfp class QuantityBlock
         }
     }
 
-    public void setHistoTrait (TraitBlockNew tBlock) {
+    public void setTrait(TraitBlockNew tBlock) {
         this.tBlock = tBlock;
     }
 
@@ -433,7 +433,7 @@ public strictfp class QuantityBlock
         return retLabel;
     }
 
-    public String getHistoTrait() {
+    public String getTrait() {
         return tBlock.getTraitName();
     }
 

@@ -213,9 +213,22 @@ public class TraitPreview extends JPanel {
         if (someVariationSelected) {
             TraitState tmpTraitState = new TraitState(selectedTrait, traitDistribution.getSelectedVariationsPercent());
             // Now set the percentages in tmpVarHashMap from traitDistribution.getSelectedVariationsPercent()
+            int i = 0;
+            int totalPercent = 0;
             for (Map.Entry<String, String> entry: traitDistribution.getSelectedVariationsPercent().entrySet()) {
                 if (tmpVarHashMap.containsKey(entry.getKey())) {
-                    tmpVarHashMap.get(entry.getKey()).percent = (int) Math.round(Double.parseDouble(entry.getValue()));
+                    int thisPercent = 0;
+                    // If this is the last element, set its percent to 100 - total
+                    if (i == traitDistribution.getSelectedVariationsPercent().size() - 1) {
+                        thisPercent = 100 - totalPercent;
+                    }
+                    else {
+                        thisPercent= (int) Math.round(Double.parseDouble(entry.getValue()));
+                    }
+                    tmpVarHashMap.get(entry.getKey()).percent = thisPercent;
+                    // Update total percent
+                    totalPercent += thisPercent;
+                    i++;
                 }
             }
             tmpTraitState.getVariationHashMap().clear();
