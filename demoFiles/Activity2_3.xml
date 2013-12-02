@@ -19,7 +19,7 @@
         <updateCode>
         set age age + 1
         set energy energy - 1
-        if (energy &lt; 0) [ask out-link-neighbors [die] die]
+        if (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
         </updateCode>
     </breed> 
 
@@ -40,7 +40,7 @@
         <updateCode>
         set age age + 1
         set energy energy - 1
-        if (energy &lt; 0) [ask out-link-neighbors [die] die]
+        if (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
         </updateCode>
     </breed>
     
