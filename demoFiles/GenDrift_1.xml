@@ -3,7 +3,7 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 2 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="15,20,25,30,35" maxNumber="50">
+    <breed singular="wolf" plural="wolves" setupNumber="25" setupNumbers="15,20,25,30,35" maxNumber="50">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -17,8 +17,38 @@
         set age age + 1
         </updateCode>
     </breed> 
+    
+    <breed singular="bird" plural="birds" setupNumber="25" setupNumbers="15,20,25,30,35" maxNumber="50">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+            
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed> 
+    
+    <breed singular="rabbit" plural="rabbits" setupNumber="50" setupNumbers="30,40,50,60" maxNumber="60">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
 
-    <breed singular="bug" plural="bugs" setupNumber="50" setupNumbers="30,40,50,70" maxNumber="50">
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        </updateCode>
+    </breed>
+
+    <breed singular="bug" plural="bugs" setupNumber="50" setupNumbers="30,40,50,60" maxNumber="60">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -34,7 +64,7 @@
     </breed>
     
     <setup>
-        ask patches [ if random 5 &lt; 4 [ set pcolor green ] ]
+        ask patches [ ifelse random 5 &lt; 4 [ set pcolor green + 3 ][set pcolor brown + 2] ]
     </setup>
     
     <envt envtName="barrier">

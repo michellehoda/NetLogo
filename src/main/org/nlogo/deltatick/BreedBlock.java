@@ -429,9 +429,9 @@ public strictfp class BreedBlock
             for (TraitBlockNew tBlock : myTraitBlocks) {
                 code += "if " + tBlock.getBreedName() + "-label = \"" +
                         tBlock.getName() + " visual\" [" ;
-                code += tBlock.getVisualizeCode() + "]\n";
+                code += tBlock.getVisualizeCode() + " " + tBlock.getVisualizeGoCode() + " ]\n";
                 code += "if " + tBlock.getBreedName() + "-label = \"" +
-                        tBlock.getName() + "\" [ set label runresult " + plural() + "-label set label-color black]\n";
+                        tBlock.getName() + "\" [ " + tBlock.getVisualizeCode() + " set label runresult " + plural() + "-label set label-color black]\n";
                 code += "if (" + plural() + "-label = \"none\")\n\t" +
                     "[set label \"\" ]  \n";
                 code += " \n";
@@ -485,9 +485,9 @@ public strictfp class BreedBlock
                 code += "\task " + plural() + "[ ";
                 code += "if " + tBlock.getBreedName() + "-label = \"" +
                         tBlock.getName() + " visual\" [" ;
-                code += "set label \"\"" + tBlock.getVisualizeGoCode() + "]\n";
+                code += "set label \"\" " + tBlock.getVisualizeGoCode() + "]\n";
                 code += "if " + tBlock.getBreedName() + "-label = \"" +
-                        tBlock.getName() + "\" [ set label runresult " + plural() + "-label set label-color black]\n";
+                        tBlock.getName() + "\" [ if any? my-out-links [ask my-out-links [set hidden? true]] set label runresult " + plural() + "-label set label-color black]\n";
                 code += "if (" + plural() + "-label = \"none\")\n\t" +
                     "[set label \"\" ]  \n";
                 code += " \n";

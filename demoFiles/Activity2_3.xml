@@ -3,7 +3,7 @@
 <library name="Blocks Library" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
-    <breed singular="rabbit" plural="rabbits" setupNumber="25" setupNumbers="25,30,35,40" maxNumber="40">
+    <breed singular="rabbit" plural="rabbits" setupNumber="25" setupNumbers="30,35,40,45" maxNumber="45">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -23,7 +23,7 @@
         </updateCode>
     </breed> 
 
-    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="25,30,35,40" maxNumber="40">
+    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="30,35,40,45" maxNumber="45">
         <ownVar name="age">
             <maxReporter>100</maxReporter>
             <setupReporter>random 3</setupReporter>
@@ -77,7 +77,8 @@
     set ycor this-ycor
     set heading this-heading
     fd .5 + this-speed / 2
-    set hidden? true]        
+    set hidden? true] 
+    ask my-out-links [set hidden? true]        
     </visualizeProcedure>
     <visualizeGoCode>show-sense-cone</visualizeGoCode>
     <visualizeGoProcedure>
@@ -129,7 +130,7 @@
 		]
     </go>
     
-    <setup>ask patches [ set pcolor green ]</setup>
+    <setup>ask patches [ set pcolor green + 2 ]</setup>
 
     <condition name="any-here?" traits="">
         <input name="breed-type" default="who?"></input>
@@ -139,8 +140,7 @@
     <behavior name="move" traits="speed">
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
-        right (random-float 30)
-        left (random-float 30)
+        rt (random-float 5 - random-float 5)
         fd random-float speed1 * .25        
         </commands>
     </behavior>
@@ -181,7 +181,7 @@
     <diveIn>
         <setupCode>
         create-predators 1 [
-        set size 2
+        set size 2.5
         set shape "x"]
         </setupCode>
         <reporterCode>
