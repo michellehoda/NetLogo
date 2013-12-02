@@ -158,7 +158,7 @@ public class BuildPanel
                     int i = qBlock.getHistoVariation().size();
                     for (Variation var : qBlock.getHistoVariation().values()) {
                         String breed = qBlock.getHistoBreed();
-                        String trait = qBlock.getHistoTrait();
+                        String trait = qBlock.getTrait();
                         String variation = var.value;
                         passBack += "to-report " + qBlock.getName() + i + " [" + breed + variation + "]\n";
                         passBack += "report count " + breed + " with [" + trait + " = " + variation + "]";

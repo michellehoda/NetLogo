@@ -1,11 +1,9 @@
 package org.nlogo.deltatick.dnd;
 
-import org.nlogo.deltatick.BehaviorBlock;
 import org.nlogo.deltatick.CodeBlock;
 import org.nlogo.deltatick.QuantityBlock;
 import org.nlogo.deltatick.TraitBlockNew;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -36,7 +34,7 @@ public class QuantityDropTarget
                             addCodeBlock((TraitBlockNew) o);
                             ((TraitBlockNew) o).setMyParent(qBlock);
                             ((TraitBlockNew) o).hideRemoveButton();
-                            qBlock.setHistoTrait((TraitBlockNew) o);
+                            qBlock.setTrait((TraitBlockNew) o);
                             qBlock.removeInput();
                             qBlock.removeTraitblockPanel();
                             qBlock.validate();

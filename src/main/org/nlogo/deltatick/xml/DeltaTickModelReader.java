@@ -2,18 +2,13 @@ package org.nlogo.deltatick.xml;
 
 //import com.sun.tools.javac.tree.Pretty;
 import org.nlogo.app.DeltaTickTab;
-import org.nlogo.app.DeltaTickTab.SpeciesEditorPanelOkayListener;
-import org.nlogo.app.DeltaTickTab.SpeciesPanelCancelListener;
 import org.nlogo.deltatick.*;
-import org.nlogo.deltatick.dnd.AgentInput;
 import org.nlogo.deltatick.dnd.BehaviorDropTarget;
-import org.nlogo.deltatick.dnd.ConditionDropTarget;
 import org.nlogo.deltatick.dnd.PlantedCodeBlockDragSource;
 import org.nlogo.deltatick.dnd.PrettyInput;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +19,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
@@ -223,6 +217,72 @@ public class DeltaTickModelReader {
         }
     }
 
+    // myPlotBlock is the associated plot block for this quantity block
+    public void makeAttachQuantityBlock(PlotBlock plotBlock, Node quantityBlockNode)
+            throws IOException, UnsupportedFlavorException {
+
+        // Read name of the quantity block
+        String quantityBlockName = quantityBlockNode.getAttributes().getNamedItem("name").getTextContent();
+        QuantityBlock qBlockFromLib = deltaTickTab.getLibraryHolder().getQuantityBlocksMap().get(quantityBlockName);
+        // Create copy of the quantity block
+        Object o = DeepCopyStream.deepClone(qBlockFromLib.getTransferData(CodeBlock.quantityBlockFlavor));
+        QuantityBlock quantityBlock = (QuantityBlock) o;
+
+        // "Drop" this new quantity block in the plot block
+        // From DropTarget
+        plotBlock.addBlock(quantityBlock);
+        new PlantedCodeBlockDragSource(quantityBlock);
+        plotBlock.removeQuantityblockPanel();
+        plotBlock.doLayout();
+        plotBlock.validate();
+        plotBlock.repaint();
+        plotBlock.enableInputs();
+
+        // Now iterate over inputs of quantity blocks and set the values accordingly
+        NodeList quantityBlockChildNodes = quantityBlockNode.getChildNodes();
+        for (int k = 0; k < quantityBlockChildNodes.getLength(); k++) {
+            if (quantityBlockChildNodes.item(k).getNodeName().equalsIgnoreCase("input")) {
+                Node inputNode = quantityBlockChildNodes.item(k);
+                // Read the input name and value from XML
+                String inputName = inputNode.getAttributes().getNamedItem("name").getTextContent();
+                String inputValue = inputNode.getAttributes().getNamedItem("default").getTextContent();
+
+                // Set the corresponding value in the quantity block
+                quantityBlock.getInput(inputName).setText(inputValue);
+            }
+        }
+
+        // Check if this behavior block has a trait associated with it
+        String isTrait = quantityBlockNode.getAttributes().getNamedItem("isTrait").getTextContent();
+        if (isTrait.equalsIgnoreCase("true")) {
+            // There is a trait associated with this behavior block
+            String traitName = quantityBlockNode.getAttributes().getNamedItem("traitName").getTextContent();
+            // Get the traitblock and put it here
+            TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName);
+            // Make a copy of the trait block
+            TraitBlockNew t = (TraitBlockNew) DeepCopyStream.deepClone(traitBlock.getTransferData(CodeBlock.codeBlockFlavor));
+            // Attach the trait block to this behavior block
+            // Perform ncessary add/validate functions (see DropTarget::addCodeBlock() )
+            ((QuantityBlock) o).addBlock(t);
+            new PlantedCodeBlockDragSource(t);
+            ((QuantityBlock) o).doLayout();
+            ((QuantityBlock) o).validate();
+            ((QuantityBlock) o).repaint();
+            ((QuantityBlock) o).enableInputs();
+            // Other stuff related to the newly created traitblock
+            // see QuantityDropTarget
+            t.setMyParent((QuantityBlock) o);
+            t.hideRemoveButton();
+            ((QuantityBlock) o).setTrait(t);
+            ((QuantityBlock) o).removeInput();
+            ((QuantityBlock) o).removeTraitblockPanel();
+        }
+
+        // Refresh block
+        ((QuantityBlock) o).validate();
+        ((QuantityBlock) o).repaint();
+    }
+
     // Opens a model file
     public void openModel(File modelFile) {
         try {
@@ -386,36 +446,7 @@ public class DeltaTickModelReader {
                 for (int j = 0; j < plotChildNodes.getLength(); j++) {
                     if (plotChildNodes.item(j).getNodeName().equalsIgnoreCase("quantityBlock")) {
                         Node quantityBlockNode = plotChildNodes.item(j);
-                        // Read name of the quantity block
-                        String quantityBlockName = quantityBlockNode.getAttributes().getNamedItem("name").getTextContent();
-                        QuantityBlock qBlockFromLib = deltaTickTab.getLibraryHolder().getQuantityBlocksMap().get(quantityBlockName);
-                        // Create copy of the quantity block
-                        Object o = DeepCopyStream.deepClone(qBlockFromLib.getTransferData(CodeBlock.quantityBlockFlavor));
-                        QuantityBlock quantityBlock = (QuantityBlock) o;
-
-                        // "Drop" this new quantity block in the plot block
-                        // From DropTarget
-                        plotBlock.addBlock(quantityBlock);
-                        new PlantedCodeBlockDragSource(quantityBlock);
-                        plotBlock.removeQuantityblockPanel();
-                        plotBlock.doLayout();
-                        plotBlock.validate();
-                        plotBlock.repaint();
-                        plotBlock.enableInputs();
-
-                        // Now iterate over inputs of quantity blocks and set the values accordingly
-                        NodeList quantityBlockChildNodes = quantityBlockNode.getChildNodes();
-                        for (int k = 0; k < quantityBlockChildNodes.getLength(); k++) {
-                            if (quantityBlockChildNodes.item(k).getNodeName().equalsIgnoreCase("input")) {
-                                Node inputNode = quantityBlockChildNodes.item(k);
-                                // Read the input name and value from XML
-                                String inputName = inputNode.getAttributes().getNamedItem("name").getTextContent();
-                                String inputValue = inputNode.getAttributes().getNamedItem("default").getTextContent();
-
-                                // Set the corresponding value in the quantity block
-                                quantityBlock.getInput(inputName).setText(inputValue);
-                            }
-                        }
+                        makeAttachQuantityBlock(plotBlock, quantityBlockNode);
                     }
                 }
             }
@@ -507,6 +538,13 @@ public class DeltaTickModelReader {
                     Element quantityBlockElement = doc.createElement("quantityBlock");
                     // Set Attributes
                     quantityBlockElement.setAttribute("name", quantityBlock.getName());
+                    // If this block has a trait associated, save that as well
+                    String isTrait = quantityBlock.getIsTrait() ? "true" : "false";
+                    quantityBlockElement.setAttribute("isTrait", isTrait);
+                    if (quantityBlock.getIsTrait()) {
+                        String traitName = quantityBlock.getTrait();
+                        quantityBlockElement.setAttribute("traitName", traitName);
+                    }
                     // Append to plotblock
                     plotBlockElement.appendChild(quantityBlockElement);
 

@@ -9,7 +9,6 @@ import org.nlogo.deltatick.*;
 import org.nlogo.deltatick.dialogs.*;
 import org.nlogo.deltatick.dnd.*;
 import org.nlogo.deltatick.xml.*;
-import org.nlogo.widget.NoteWidget;
 import org.nlogo.window.*;
 import org.nlogo.deltatick.SpeciesEditorPanel;
 
@@ -1249,7 +1248,7 @@ public class DeltaTickTab
                 for (QuantityBlock qBlock : mBlock.getMyBlocks()) {
 
                     if (qBlock.getHisto() == true) {
-                        String trait = qBlock.getHistoTrait();
+                        String trait = qBlock.getTrait();
                         String breed = qBlock.getHistoBreed();
                         ArrayList<String> variations = new ArrayList<String>();
                         for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
