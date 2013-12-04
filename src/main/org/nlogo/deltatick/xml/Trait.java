@@ -107,7 +107,7 @@ public class Trait implements Serializable {
         return visualizeGoCode;
     }
 
-    public String getVisualizeGoProceudre() {
+    public String getVisualizeGoProcedure() {
         return visualizeGoProceudre;
     }
 

@@ -401,6 +401,62 @@ public class ModelBackgroundInfo {
         }
         return passBack;
     }
+    public String unPackVisualizeProcedures() {
+        String passBack = "";
+        for (Trait trait : traits) {
+            passBack += unPackVisualizeProcedure(trait.getNameTrait());
+        }
+        return passBack;
+    }
+    public String unPackVisualizeGoProcedures() {
+        String passBack = "";
+        for (Trait trait : traits) {
+            passBack += unPackVisualizeGoProcedure(trait.getNameTrait());
+        }
+        return passBack;
+    }
+    public String unPackVisualizeProcedure(String traitName) {
+        String passBack = "";
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equalsIgnoreCase(traitName)) {
+                passBack += "to " + trait.getVisualizeCode() + "\n";
+                passBack += trait.getVisualizeProcedure();
+                passBack += "\nend\n";
+            }
+        }
+        return passBack;
+    }
+    public String unPackVisualizeGoProcedure(String traitName) {
+        String passBack = "";
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equalsIgnoreCase(traitName)) {
+                passBack += "to " + trait.getVisualizeGoCode() + "\n";
+                passBack += trait.getVisualizeGoProcedure();
+                passBack += "\nend\n";
+            }
+        }
+        return passBack;
+    }
+    public String unPackBlankVisualizeProcedure(String traitName) {
+        String passBack = "";
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equalsIgnoreCase(traitName)) {
+                passBack += "to " + trait.getVisualizeCode() + "\n";
+                passBack += "\nend\n";
+            }
+        }
+        return passBack;
+    }
+    public String unPackBlankVisualizeGoProcedure(String traitName) {
+        String passBack = "";
+        for (Trait trait : traits) {
+            if (trait.getNameTrait().equalsIgnoreCase(traitName)) {
+                passBack += "to " + trait.getVisualizeGoCode() + "\n";
+                passBack += "\nend\n";
+            }
+        }
+        return passBack;
+    }
     private class MiscProcedure {
         String name;
         boolean isReporter;

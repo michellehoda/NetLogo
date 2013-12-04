@@ -159,11 +159,13 @@ public strictfp class BehaviorBlock
             // This is a reproduce behavior block
             //String carryingCapacitySliderName = myBreedBlock.plural() + "-carrying-capacity";
             passBack += "\n";
-            if (myBreedBlock.isCarryingCapacitySliderEnabled()) {
-                passBack += "\tif count breedname  < runresult (word \"max-number-of-\" breedname) [\n";
-            }
-            else {
-                passBack += "\tif count breedname < " + myBreedBlock.getSetupNumber() + " [\n";
+            if (myParent != null) {
+                if (myBreedBlock.isCarryingCapacitySliderEnabled()) {
+                    passBack += "\tif count breedname  < runresult (word \"max-number-of-\" breedname) [\n";
+                }
+                else {
+                    passBack += "\tif count breedname < " + myBreedBlock.getSetupNumber() + " [\n";
+                }
             }
             //passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
 // Commented May 27, 2013 for OOJH Activity1

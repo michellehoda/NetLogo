@@ -1,13 +1,10 @@
 package org.nlogo.deltatick;
 
-import org.nlogo.deltatick.xml.Trait;
 import org.nlogo.deltatick.xml.Variation;
 
 //import javax.swing;
 //import java.awt.*;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
@@ -60,7 +57,7 @@ public class TraitBlockNew
         this.visualizeCode = traitState.getVisualizeCode();
         this.visualizeProcedure = traitState.getVisualizeProcedure();
         this.visualizeGoCode = traitState.getVisualizeGoCode();
-        this.visualizeGoProcedure = traitState.getVisualizeGoProceudre();
+        this.visualizeGoProcedure = traitState.getVisualizeGoProcedure();
 
         myBreedBlock = breedBlock;
 

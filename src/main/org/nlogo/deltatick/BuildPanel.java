@@ -512,6 +512,15 @@ public String newSaveAsXML() {
         for (String name : procedureCollection.keySet()) {
             passBack += procedureCollection.get(name).unPackAsProcedure();
         }
+        // Unpack visualize procedure even if the trait is now present
+        // This prevents the NetLogo code error "nothing named set-sense-cone is defined"
+        for (Trait trait : getBgInfo().getTraits()) {
+            if (! traitExists(trait.getNameTrait())) {
+                passBack += getBgInfo().unPackBlankVisualizeProcedure(trait.getNameTrait());
+                passBack += getBgInfo().unPackBlankVisualizeGoProcedure(trait.getNameTrait());
+            }
+        }
+
         // Unpack misc supporting procedures
         passBack += getBgInfo().unPackMiscProcedures();
         passBack += "\n";
@@ -607,6 +616,16 @@ public String newSaveAsXML() {
         return retVal;
     }
 
+    public boolean traitExists(String name) {
+        boolean exists = false;
+        for (TraitBlockNew traitBlockNew : myTraitsNew) {
+            if (traitBlockNew.getTraitName().equalsIgnoreCase(name)) {
+                exists = true;
+                break;
+            }
+        }
+        return exists;
+    }
     public String[] getbreedNames() {
         String [] names = new String [myBreeds.size()];
         int i = 0;
