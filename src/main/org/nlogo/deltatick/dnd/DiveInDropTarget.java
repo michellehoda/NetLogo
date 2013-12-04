@@ -31,12 +31,18 @@ public class DiveInDropTarget
         if (o instanceof Component) {
             if (o instanceof BehaviorBlock) {
                 if (diveInBlock.getMyBlocks().size() == 1) {
-                    String message = "Oops! You can perform only one action on clicking!";
+                    String message = "Oops! You can add only one block here!";
                     JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else {
+                    if (diveInBlock.isBehaviorApplicable(((BehaviorBlock) o).getName())) {
                     addCodeBlock((BehaviorBlock) o);
                     return true;
+                    }
+                    else {
+                        String message = "Oops! Predators can only eat prey";
+                        JOptionPane.showMessageDialog(null, message, "Oops!", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         }

@@ -38,10 +38,15 @@ public strictfp class DiveInBlock
     JPanel rectPanel = new JPanel();
     Boolean removedRectPanel = false;
     public boolean addedRectPanel = false; //!< If true, rectPanel will appear/disappear as block is moved over breedblock
+    Set<String> applicableBehaviorBlocks = new HashSet<String>();
 
     public DiveInBlock (DiveIn diveIn, Frame frame) {
         super(diveIn.getName(), ColorSchemer.getColor(3));
-        setBorder(org.nlogo.swing.Utils.createWidgetBorder());this.diveIn = diveIn;
+        setBorder(org.nlogo.swing.Utils.createWidgetBorder());
+        this.diveIn = diveIn;
+        if (diveIn.getApplicableBehaviorBlocks() != null) {
+            applicableBehaviorBlocks = new HashSet<String>(Arrays.asList(diveIn.getApplicableBehaviorBlocks().split(",")));
+        }
         this.addMouseMotionListener(this);
         this.parentFrame = frame;
         this.addMouseListener(this);
@@ -52,6 +57,14 @@ public strictfp class DiveInBlock
         //curColor = Color.GRAY;
     }
 
+    public boolean isBehaviorApplicable(String behaviorName) {
+        for (String aBehBlock : applicableBehaviorBlocks) {
+            if (aBehBlock.equalsIgnoreCase(behaviorName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public void addRect() {
         rectPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         rectPanel.setPreferredSize(new Dimension(this.getWidth(), 40));
