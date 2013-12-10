@@ -84,6 +84,10 @@
 			stop
 		]
     </go>
+	
+	<setup>
+	ask patches [ set pcolor white ]
+	</setup>
     
     <condition name="any-here?" traits="">
         <input name="breed-type" default="who?"></input>

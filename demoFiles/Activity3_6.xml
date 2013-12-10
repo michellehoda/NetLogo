@@ -21,8 +21,9 @@
         <updateCode>
         set age age + 1
         set energy energy - 0.5
-        if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]]
-        die]
+        if (count birds = 1) and (energy &lt; 0) [user-message (word "Nearly all the birds died out! They lost energy because they weren't eating prey.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
         </updateCode>
     </breed> 
 
@@ -42,7 +43,10 @@
         <updateCode>
         set age age + 1
         set energy energy - .5
-        </updateCode>
+		if (count bugs = 1) and (energy &lt; 0) [user-message (word "Nearly all the bugs died out! They either all got caught by the predator or lost energy because they weren't eating grass.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]           
+		if (count bugs &gt; 1) and (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		</updateCode>
     </breed>
     
     <trait name="vision">
@@ -108,6 +112,10 @@
         </commands>
     </behavior>
        
+    <behavior name="eat-grass" traits="">
+        <commands>set energy energy + 10</commands>
+    </behavior>
+    
     
     <behavior name="flee" traits="">
         <agentInput name="predator" default ="from who?" tooltip="Who do they run away from?"></agentInput>
