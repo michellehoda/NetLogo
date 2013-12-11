@@ -145,7 +145,7 @@
 		ifelse is-agentset? prey1 [
 			if any? other turtles-here with [breed = prey1] [
 				let food one-of turtles-here with [breed = prey1]
-				ask food [if any? out-link-neighbors [ask out-link-neighbors [die]]die]
+				ask food [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
 				set energy energy + 10
 			]
 		]
@@ -154,7 +154,7 @@
 				let food turtle item 0 prey1
 				face food fd .5 * speed-factor
 				if distance food &lt; 1 [
-					ask food [die]
+					ask food [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
 					set energy energy + 10
 				]
 			]
