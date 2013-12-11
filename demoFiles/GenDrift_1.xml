@@ -11,8 +11,7 @@
         <ownVar name="energy">
             <maxReporter>100</maxReporter>
             <setupReporter>random 100</setupReporter>
-        </ownVar>
-            
+        </ownVar>            
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
@@ -54,7 +53,6 @@
             <maxReporter>100</maxReporter>
             <setupReporter>random 100</setupReporter>
         </ownVar>
-
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
@@ -75,7 +73,6 @@
             <maxReporter>100</maxReporter>
             <setupReporter>random 100</setupReporter>
         </ownVar>
-
         <setupCode>
     setxy random-xcor random-ycor
     set size 1.5
@@ -164,7 +161,7 @@
         <commands>
         if any? other turtles-here with [breed = prey] [
     let food one-of turtles-here with [breed = prey]
-    ask food [if any? out-link-neighbors [ask out-link-neighbors [die] die]]]
+    ask food [if any? out-link-neighbors [ask out-link-neighbors [die]] die]]
     set energy energy + 100  
         </commands>
     </behavior>
@@ -186,22 +183,6 @@
         [hatch 1 [set age 0 rt random 180 fd 1]
         </commands>
     </behavior>
-    
-    <diveIn>
-        <setupCode>
-        create-predators 1 [
-        set size 2
-        set shape "x"]
-        </setupCode>
-        <reporterCode>
-        hide-turtle
-        setxy mouse-xcor mouse-ycor
-        ;; only show the predator if the mouse pointer is
-        ;; actually inside the view
-        set hidden? not mouse-inside?
-        report mouse-down?   
-        </reporterCode>
-    </diveIn>
     
     <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
         <input name="breed-type" default="species"></input>	
@@ -232,6 +213,25 @@
         enter code here
         </commands>
     </visualization>
+    
+    <draw>
+    if mouse-down?
+  [ if barrier-type = "highway" [
+      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
+    if barrier-type = "river" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
+    if barrier-type = "city" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
+  ]
+  if barrier-type = "mountain" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
+    </draw>
+    
+    <erase>
+    if mouse-down? [
+    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
+    </erase>
+
     
     <interface>
         <numberSpecies>2</numberSpecies>

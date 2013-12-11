@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
-<library name="Blocks Library" version="0.1">
+<library name="Blocks Libraryx" version="0.1">
     <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
     
     <breed singular="rabbit" plural="rabbits" setupNumber="25" setupNumbers="30,35,40,45" maxNumber="45">
@@ -229,6 +229,25 @@
         enter code here
         </commands>
     </visualization>
+    
+    <draw>
+    if mouse-down?
+  [ if barrier-type = "highway" [
+      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
+    if barrier-type = "river" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
+    if barrier-type = "city" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
+  ]
+  if barrier-type = "mountain" [
+       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
+    </draw>
+    
+    <erase>
+    if mouse-down? [
+    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
+    </erase>
+
     
     
     <interface>
