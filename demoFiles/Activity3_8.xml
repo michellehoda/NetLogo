@@ -4,11 +4,6 @@
     <numberSpecies number="2" message="You need only 2 species in this activity"></numberSpecies>
     
     <breed singular="bird" plural="birds" setupNumber="10" setupNumbers="15,20,25" maxNumber="20">
-        <ownVar name="age">
-            <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
-        </ownVar>
-        
         <ownVar name="energy">
             <maxReporter>100</maxReporter>
             <setupReporter>100</setupReporter>
@@ -19,7 +14,6 @@
 		set color random color  
         </setupCode>
         <updateCode>
-        set age age + 1
         ;set energy energy - 0.5
         if (count birds = 1) and (energy &lt; 0) [user-message (word "Nearly all the birds died out! They lost energy because they weren't eating prey.")
 			if any? out-link-neighbors [ask out-link-neighbors [die]] die]
@@ -28,10 +22,6 @@
     </breed> 
 
     <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="40,45,50" maxNumber="50">
-        <ownVar name="age">
-            <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
-        </ownVar>
         <ownVar name="energy">
             <maxReporter>100</maxReporter>
             <setupReporter>random 100</setupReporter>
@@ -41,7 +31,6 @@
 		set size 1.5    
         </setupCode>
         <updateCode>
-        set age age + 1
         set energy energy - .5
 		if (count bugs = 1) and (energy &lt; 0) [user-message (word "Nearly all the bugs died out! They either all got caught by the predator or lost energy because they weren't eating grass.")
 			if any? out-link-neighbors [ask out-link-neighbors [die]] die]           
@@ -103,11 +92,6 @@
         <test>report any? other turtles in-cone vision 120 with [breed = breed-type ]</test>
     </condition>
     
-    <condition name="age-more-than" traits="">
-        <input name="my-age" default="10"></input>        
-        <test>report age &gt; my-age</test>
-    </condition>
-    
     <behavior name="move" traits="">
         <commands>
         right (random-float 30 * 0.05 / speed-factor)
@@ -164,7 +148,7 @@
    
     <behavior name="die-with-chance" traits="">
         <percentInput name="probability" default="1"></percentInput>	
-        <commands>if random-float 100 &lt; probability [die]       
+        <commands>if random-float 100 &lt; probability [if any? out-link-neighbors [ask out-link-neighbors [die]] die]       
         </commands>            
     </behavior>
     
@@ -173,8 +157,8 @@
         ask one-of breedname with-max [energy] [
         ;set energy (energy / 2)
         ifelse count out-link-neighbors > 0 [
-        hatch 1 [set age 0 rt random 180 fd 5 mutate set-sense-cone1]]
-        [hatch 1 [set age 0 rt random 180 fd 5
+        hatch 1 [rt random 180 fd 5 mutate set-sense-cone1]]
+        [hatch 1 [rt random 180 fd 5
 		         mutate]]
         </commands>
     </behavior>
