@@ -82,11 +82,7 @@
 	ask patches [ set pcolor green + 2 ]
 	</setup>
     
-    <condition name="any-here?" traits="">
-        <input name="breed-type" default="who?"></input>
-        <test>report any? other turtles-here with [ breed = breed-type ]</test>
-    </condition>
-    
+
     <condition name="any-in-sight?" traits="vision">
         <input name="breed-type" default="who?"></input>
         <test>report any? other turtles in-cone vision 120 with [breed = breed-type ]</test>
