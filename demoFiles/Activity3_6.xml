@@ -21,8 +21,9 @@
         <updateCode>
         set age age + 1
         set energy energy - 0.5
-        if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]]
-        die]
+        if (count birds = 1) and (energy &lt; 0) [user-message (word "Nearly all the birds died out! They lost energy because they weren't eating prey.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
         </updateCode>
     </breed> 
 
@@ -42,7 +43,10 @@
         <updateCode>
         set age age + 1
         set energy energy - .5
-        </updateCode>
+		if (count bugs = 1) and (energy &lt; 0) [user-message (word "Nearly all the bugs died out! They either all got caught by the predator or lost energy because they weren't eating grass.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]           
+		if (count bugs &gt; 1) and (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		</updateCode>
     </breed>
     
     <trait name="vision">
@@ -79,14 +83,10 @@
     </global>
 
     <go>
-    if not any? turtles [ 
-			user-message (word "There are no more turtles!")
-			stop
-		]
     </go>
-	
+
 	<setup>
-	ask patches [ set pcolor white ]
+	ask patches [ set pcolor white]
 	</setup>
     
     <condition name="any-here?" traits="">
@@ -95,9 +95,8 @@
     </condition>
     
     <condition name="any-in-sight?" traits="vision">
-        <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
         <input name="breed-type" default="who?"></input>
-        <test>report any? other turtles in-cone vision1 120 with [breed = breed-type ]</test>
+        <test>report any? other turtles in-cone vision 120 with [breed = breed-type ]</test>
     </condition>
     
     <condition name="age-more-than" traits="">
@@ -113,6 +112,10 @@
         </commands>
     </behavior>
        
+    <behavior name="eat-grass" traits="">
+        <commands>set energy energy + 10</commands>
+    </behavior>
+    
     
     <behavior name="flee" traits="">
         <agentInput name="predator" default ="from who?" tooltip="Who do they run away from?"></agentInput>
@@ -222,9 +225,9 @@
         <stepIn>false</stepIn>
     </interface>
 
-	<miscProcedure isReporter="true" name="catch-prey" parameters="breed-type,vision1">
+	<miscProcedure isReporter="true" name="catch-prey" parameters="breed-type">
 		<procedureCode>
-		report [who] of other turtles in-cone vision1 120 with [ breed = breed-type ]
+		report [who] of other turtles in-cone vision 120 with [ breed = breed-type ]
 		</procedureCode>
 	</miscProcedure>
     

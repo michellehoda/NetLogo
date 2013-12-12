@@ -492,7 +492,9 @@ public class ModelBackgroundInfo {
             }
             // Procedure name and parameters
             passBack += name;
-            passBack += " [ " + paramters + " ]\n";
+            if (!paramters.equalsIgnoreCase("")) {
+                passBack += " [ " + paramters + " ]\n";
+            }
             // Procedure code
             passBack += "\t" + procedureCode + "\n";
 

@@ -102,7 +102,7 @@ public strictfp class BehaviorBlock
         // May 27, 2013 hardcoded fix for reproduce block
         // Must be cleaned up later
         if (isMutate) {
-            passBack += "[ breedname ]";
+            passBack += "[ breedname maxnumber ]";
         }
 
         if (inputs.size() > 0) {
@@ -164,7 +164,8 @@ public strictfp class BehaviorBlock
                     passBack += "\tif count breedname  < runresult (word \"max-number-of-\" breedname) [\n";
                 }
                 else {
-                    passBack += "\tif count breedname < " + myBreedBlock.getSetupNumber() + " [\n";
+                    //passBack += "\tif count breedname < " + myBreedBlock.getSetupNumber() + " [\n";
+                    passBack += "\tif count breedname < maxnumber" + " [\n";
                 }
             }
             //passBack += "\tif count " + myBreedBlock.plural() + " < " + carryingCapacitySliderName +" [\n";
@@ -207,7 +208,7 @@ public strictfp class BehaviorBlock
         // May 27, 2013 Hardcoded fix for reproduce block
 
         if (isMutate) {
-            passBack += getMyBreedBlock().plural() + " ";
+            passBack += getMyBreedBlock().plural() + " " + getMyBreedBlock().getSetupNumber();
         }
 
         if (myParent instanceof ConditionBlock) {

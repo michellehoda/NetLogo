@@ -561,18 +561,24 @@ public String newSaveAsXML() {
         for (BreedBlock breedBlock : myBreeds)  {
             if (breedBlock.getReproduceUsed()) {
 
-                passBack += "\t\tif breed = " + breedBlock.plural() + " [\n";
+//                passBack += "\tif breed = " + breedBlock.plural() + " [\n";
                 // Foreach trait of that breed
                 for (TraitBlockNew traitBlock: breedBlock.getMyTraitBlocks()) {
                     String traitName = traitBlock.getTraitName();
-                    passBack += "if random-float 100 < " + breedBlock.plural() + "-" + traitBlock.getTraitName() + "-mutation [";
-                    passBack += "ifelse random-float 100 < 50 [";
-                    passBack += "\nset " + traitName + " (" + traitName + " + .5 )]\n";
-                    passBack += "\n[set " + traitName + " (" + traitName + " - .5 )]\n";
-                    passBack += "if " + traitName + " < 0 [set " + traitName + " 0]\n";
-                    passBack += "\n]";
+                    String mutateProcedureName = "mutate-breed-" + traitName;
+                    String mutateBreed = breedBlock.plural();
+                    String mutateProbabilty = breedBlock.plural() + "-" + traitName + "-mutation";
+                    String mutateParameters = mutateBreed + " " + mutateProbabilty;
+                    passBack += "\t" + mutateProcedureName + " " + mutateParameters + "\n";
+//                    passBack += "\t\tif random-float 100 < " + breedBlock.plural() + "-" + traitBlock.getTraitName() + "-mutation [ ";
+//                    passBack += "ifelse random-float 100 < 50\n";
+//                    passBack += "\t\t[set " + traitName + " (" + traitName + " + .5 )]\n";
+//                    passBack += "\t\t[set " + traitName + " (" + traitName + " - .5 )]\n";
+//                    passBack += "\tif " + traitName + " < 0 [set " + traitName + " 0]\n";
+//                    passBack += "\tif " + traitName + " > 10 [set " + traitName + " 10]\n";
+//                    passBack += "\t\t]\n";
                 }
-                passBack += "\t\t]\n"; // corresponds to if condition
+//                passBack += "\t]\n"; // corresponds to if condition
             }
         }
         return  passBack;
