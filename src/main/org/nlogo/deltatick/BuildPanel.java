@@ -565,7 +565,11 @@ public String newSaveAsXML() {
                 // Foreach trait of that breed
                 for (TraitBlockNew traitBlock: breedBlock.getMyTraitBlocks()) {
                     String traitName = traitBlock.getTraitName();
-                    passBack += "\tmutate-" + breedBlock.plural() + "-" + traitName + "\n";
+                    String mutateProcedureName = "mutate-breed-" + traitName;
+                    String mutateBreed = breedBlock.plural();
+                    String mutateProbabilty = breedBlock.plural() + "-" + traitName + "-mutation";
+                    String mutateParameters = mutateBreed + " " + mutateProbabilty;
+                    passBack += "\t" + mutateProcedureName + " " + mutateParameters + "\n";
 //                    passBack += "\t\tif random-float 100 < " + breedBlock.plural() + "-" + traitBlock.getTraitName() + "-mutation [ ";
 //                    passBack += "ifelse random-float 100 < 50\n";
 //                    passBack += "\t\t[set " + traitName + " (" + traitName + " + .5 )]\n";
