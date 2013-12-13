@@ -379,6 +379,7 @@ public class DeltaTickModelReader {
                 // Other setup
                 speciesEditorPanel.setMakeNewBreedBlock(false);
                 speciesEditorPanel.setMyBreedBlock((BreedBlock) bBlock);
+                speciesEditorPanel.removeBreedNameComboBox();
                 // Add this species editor panel to deltaticktab's hashmap
                 deltaTickTab.putSpeciesEditorPanelInHashMap(plural, speciesEditorPanel);
                 // Update breedblock
