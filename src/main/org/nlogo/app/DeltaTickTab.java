@@ -1252,7 +1252,7 @@ public class DeltaTickTab
 
                     if (qBlock.getHisto() == true) {
                         String trait = qBlock.getTrait();
-                        String breed = qBlock.getHistoBreed();
+                        String breed = qBlock.getTraitBreed();
                         ArrayList<String> variations = new ArrayList<String>();
                         for (TraitBlockNew tBlock : buildPanel.getMyTraits()) {
                             if (tBlock.getName().equalsIgnoreCase(trait)) {
