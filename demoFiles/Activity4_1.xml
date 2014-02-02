@@ -1,96 +1,62 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
 <library name="Blocks Library" version="0.1">
-    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    <numberSpecies number="2" message="You need only 2 species in this activity"></numberSpecies>
     
-    <breed singular="predator" plural="predators" setupNumber="25" setupNumbers="5,10,15" maxNumber="50">
-        <ownVar name="age">
+    <breed singular="bird" plural="birds" setupNumber="10" setupNumbers="15,20,25" maxNumber="20">
+        <ownVar name="energy">
             <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
-        </ownVar>
-            
+            <setupReporter>100</setupReporter>
+        </ownVar>            
         <setupCode>
-    setxy random-xcor random-ycor
-    set size 1.5
-    set color random color  
+		setxy random-xcor random-ycor
+		set size 1.5
+		set color random color  
         </setupCode>
         <updateCode>
-        set age age + 1
+        ;set energy energy - 0.5
+        if (count birds = 1) and (energy &lt; 0) [user-message (word "Nearly all the birds died out! They lost energy because they weren't eating prey.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		if energy &lt; 0 [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
         </updateCode>
     </breed> 
 
-    <breed singular="bugs?" plural="bugs" setupNumber="50" setupNumbers="10,20,30,40,50" maxNumber="50">
-        <ownVar name="age">
+    <breed singular="bug" plural="bugs" setupNumber="25" setupNumbers="40,45,50" maxNumber="50">
+        <ownVar name="energy">
             <maxReporter>100</maxReporter>
-            <setupReporter>random 3</setupReporter>
+            <setupReporter>random 100</setupReporter>
         </ownVar>
-
         <setupCode>
-    setxy random-xcor random-ycor
-    set size 1.5
-    set color random color
+		setxy random-xcor random-ycor
+		set size 1.5    
         </setupCode>
         <updateCode>
-        set age age + 1
-        </updateCode>
+        set energy energy - .5
+		if (count bugs = 1) and (energy &lt; 0) [user-message (word "Nearly all the bugs died out! They either all got caught by the predator or lost energy because they weren't eating grass.")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]           
+		if (count bugs &gt; 1) and (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+		</updateCode>
     </breed>
-    
-    <envt envtName="barrier">
-        <ownVar name="painted?"></ownVar>     
-        <setupCode>    
-        </setupCode>
-        <updateCode>            
-        </updateCode>
-    </envt>  
-    
-    
-    <trait name="speed">
-        <setupReporter>random 9</setupReporter>
-        <variation name="very-fast" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="fast" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="medium" value="3" color="" setupNumber="30"></variation>
-        <variation name="slow" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="very-slow" value="1" color=" + 2 " setupNumber="10"></variation>
-        <message>What is their speed?</message>
-        <visualizeCode>set-sense-speed</visualizeCode>
-        <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
-        </visualizeProcedure>
-        <visualizeGoCode>show-sense-cone</visualizeGoCode>
-        <visualizeGoProcedure>
-            ask my-out-links [set hidden? false]
-        </visualizeGoProcedure>
-        <traitShape>vision cone</traitShape>
-                
-    </trait>   
     
     <trait name="vision">
         <setupReporter>random 9</setupReporter>
-        <variation name="very-far" value="5" color=" - 2 " setupNumber="25"></variation>
-        <variation name="far" value="4" color=" - 1 " setupNumber="15"></variation>
-        <variation name="medium" value="3" color="" setupNumber="30"></variation>
-        <variation name="near" value="2" color=" + 1 " setupNumber="20"></variation>
-        <variation name="very-near" value="1" color=" + 2 " setupNumber="10"></variation>
+        <variation name="only very close" value="1" color="" setupNumber="10"></variation>
         <message>How far can they see?</message>
-        <visualizeCode>set-sense-vision</visualizeCode>
+        <visualizeCode>set-sense-cone1</visualizeCode>
         <visualizeProcedure>
-        ;let parent-speed speed
-        ;hatch 1 [
-        ;set breed sense-cones
-        ;create-link-from myself [tie]
-        ;set shape "box"
-        ;set color gray
-        ;set size parent-speed]
+            let this-xcor xcor
+            let this-ycor ycor
+            let this-vision vision
+            let this-heading heading
+            hatch 1 [
+            set breed sense-cones
+            set size this-vision
+            set shape "vision cone" fd .5
+            create-link-from myself [tie] ]            
         </visualizeProcedure>
         <visualizeGoCode>show-sense-cone</visualizeGoCode>
         <visualizeGoProcedure>
-            ask my-out-links [set hidden? false]
+            ask out-link-neighbors [set hidden? false]
         </visualizeGoProcedure>
         <traitShape>vision cone</traitShape>
     </trait>   
@@ -100,115 +66,83 @@
         <setupReporter>count turtles</setupReporter>
         <updateReporter>count turtles</updateReporter>        
     </global>
+	<global name="speed-factor">
+		<setupReporter>0.1</setupReporter>
+		<updateReporter>0.1</updateReporter>
+	</global>
 
     <go>
-    if not any? turtles [ 
-			user-message (word "There are no more turtles!")
-			stop
-		]
     </go>
-    
-    <condition name="any-here?" traits="">
-        <input name="breed-type" default="who?"></input>
-        <test>report any? other turtles-here with [ breed = breed-type ]</test>
-    </condition>
+
+	<setup>
+	ask patches [ set pcolor green + 2 ]
+	</setup>
     
     <condition name="any-in-sight?" traits="vision">
-        <behaviorInput name="vision1" default="1" tooltip="At what distance"></behaviorInput>
         <input name="breed-type" default="who?"></input>
-        <test>report count neighbors with [ any? other turtles in-radius vision1 with [ breed = breed-type ] ] > 0</test>
-    </condition>  
-    
-    
-    <condition name="age-more-than" traits="">
-        <input name="my-age" default="10"></input>        
-        <test>report age &gt; my-age</test>
+        <test>report any? other turtles in-cone vision 120 with [breed = breed-type ]</test>
     </condition>
     
-       <condition name="barrier-ahead" traits="vision">
-        <test>report painted?</test>
-    </condition>   
+    <behavior name="move" traits="">
+        <commands>
+        right (random-float 30 * 0.05 / speed-factor)
+        left (random-float 30 * 0.05 / speed-factor)
+        fd 2 * speed-factor
+        </commands>
+    </behavior>
+       
+    <behavior name="eat-grass" traits="">
+        <commands>set energy energy + 10</commands>
+    </behavior>
     
+    
+    <behavior name="flee" traits="">
+        <agentInput name="predator" default ="from who?" tooltip="Who do they run away from?"></agentInput>
+        <commands>
+	let candidate-predators other predator in-cone vision 120
+	if any? predator in-cone vision 120
+	[ let my-predator min-one-of candidate-predators [distance myself]
+	set heading 180 + towards my-predator]
+    fd 1
+        </commands>
+    </behavior>
 
-    <behavior name="move" traits="speed">
-        <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
+    <behavior name="eat" traits="" inputReporter="catch-prey">
+        <agentInput name="prey1" default="who?" tooltip="Who do they eat?"></agentInput>
         <commands>
-        rt (random-float 5 - random-float 5)
-        fd random-float speed1 * .25        
+		ifelse is-agentset? prey1 [
+			if any? other turtles-here with [breed = prey1] [
+				let food one-of turtles-here with [breed = prey1]
+				ask food [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+				set energy energy + 10
+			]
+		]
+		[
+			if prey1 != nobody and not empty? prey1 [
+				let food turtle item 0 prey1
+				face food fd .5 * speed-factor
+				if distance food &lt; 1 [
+					ask food [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+					set energy energy + 10
+				]
+			]
+		]
         </commands>
     </behavior>
     
-    <behavior name="turn-around" traits="">
+    <behavior name="have-babies" traits="" mutate="true">
         <commands>
-        set heading (heading + 180)
-        fd 4
+        ask one-of breedname with-max [energy] [
+        ;set energy (energy / 2)
+        ifelse count out-link-neighbors > 0 [
+        hatch 1 [rt random 180 fd 5 mutate set-sense-cone1]]
+        [hatch 1 [rt random 180 fd 5
+		         mutate]]
         </commands>
     </behavior>
-    
-    
-    <behavior name="eat" traits="">        
-        <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
-        <commands>
-        if any? other turtles-here with [breed = prey] [
-    let food one-of turtles-here with [breed = prey]
-    ask food [die]]  
-        </commands>
-    </behavior>
-    
-    <behavior name="die-with-chance" traits="">
-        <percentInput name="probability" default="1"></percentInput>		
-        <commands>if random-float 100 &lt; probability [die]       
-        </commands>            
-    </behavior>
-    
-    <behavior name="have-babies-with-chance" traits="" mutate="true">
-        <percentInput name="probability" default="1"></percentInput>
-        <commands>
-        if random-float 1 &lt; probability [
-        hatch 1 [set age 0 fd 1
-		         mutate]
-        </commands>
-    </behavior>
-    
-    <diveIn>
-        <setupCode>
-        create-predators 1 [
-        set size 2
-        set shape "x"]
-        </setupCode>
-        <reporterCode>
-        hide-turtle
-        setxy mouse-xcor mouse-ycor
-        ;; only show the predator if the mouse pointer is
-        ;; actually inside the view
-        set hidden? not mouse-inside?
-        report mouse-down?   
-        </reporterCode>
-    </diveIn>
-    
-    <draw>
-    if mouse-down?
-  [ if barrier-type = "highway" [
-      ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true] ]
-    if barrier-type = "river" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor blue set painted? true ] ]
-    if barrier-type = "city" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor grey set painted? true ] ]
-  ]
-  if barrier-type = "mountain" [
-       ask patch mouse-xcor mouse-ycor [ set pcolor brown set painted? true ] ]
-    </draw>
-    
-    <erase>
-    if mouse-down? [
-    ask patch mouse-xcor mouse-ycor [set pcolor white set painted? false]]
-    </erase>
-    
-    
-    
     
     <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
-        <input name="breed-type" default="species"></input>	
+        <input name="breed-type" default="species?"></input>	
         <reporter>report count turtles with [ breed = breed-type ]</reporter>
     </quantity>
     
@@ -239,9 +173,34 @@
     
     <interface>
         <numberSpecies>2</numberSpecies>
-        <mutationSlider>false</mutationSlider>
-        <drawFeature>true</drawFeature>
+        <mutationSlider>true</mutationSlider>
+        <drawFeature>false</drawFeature>
         <stepIn>false</stepIn>
+		<distributionButton>true</distributionButton>
     </interface>
+
+	<miscProcedure isReporter="true" name="catch-prey" parameters="breed-type">
+		<procedureCode>
+		report [who] of other turtles in-cone vision 120 with [ breed = breed-type ]
+		</procedureCode>
+	</miscProcedure>
+
+	<miscProcedure isReporter="false" name="mutate-breed-vision" parameters="breed-type,mutation-probability">
+		<procedureCode>
+		if breed = breed-type [
+		if random-float 100 &lt; mutation-probability [ ifelse random-float 100 &lt; 50
+			[set vision (vision + 1 )]
+			[set vision (vision - 1 )]
+		if vision &lt; 0 [set vision 0]
+		if vision &gt; 10 [set vision 10]
+		]
+		]
+		</procedureCode>
+	</miscProcedure>
+	
+	<miscProcedure isReporter="false" name="make-distribution" parameters="">
+		<procedureCode>
+		</procedureCode>
+	</miscProcedure>
     
 </library>

@@ -1,5 +1,6 @@
 package org.nlogo.deltatick.xml;
 
+import org.nlogo.api.Property;
 import org.nlogo.deltatick.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,6 +31,7 @@ public class ModelBackgroundInfo {
     String erase;
     boolean isThereDraw; //does the XML have a drawing procedure
     boolean enableMutationSlider = false;
+    boolean distributionButtonEnabled = false;
 
     String maxNumberSpecies;
     boolean activateStepIn;
@@ -139,6 +141,9 @@ public class ModelBackgroundInfo {
                     }                                            //
                     if (iNode.getNodeName().equalsIgnoreCase("mutationSlider")) {
                         enableMutationSlider = Boolean.parseBoolean(iNode.getTextContent());
+                    }
+                    if (iNode.getNodeName().equalsIgnoreCase("distributionButton")) {
+                        distributionButtonEnabled = Boolean.parseBoolean(iNode.getTextContent());
                     }
                 }
             }
@@ -394,6 +399,11 @@ public class ModelBackgroundInfo {
     public boolean getEnableMutationSlider() {
         return enableMutationSlider;
     }
+
+    public boolean isDistributionButtonEnabled() {
+        return distributionButtonEnabled;
+    }
+
     public String unPackMiscProcedures() {
         String passBack = "";
         for (MiscProcedure miscProcedure : miscProcedures) {

@@ -96,6 +96,7 @@ public class DeltaTickTab
     HashMap<String, WidgetWrapper> noteWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> chooserWidgets = new HashMap<String, WidgetWrapper>();
     HashMap<String, WidgetWrapper> monitorWidgets = new HashMap<String, WidgetWrapper>();
+    HashMap<String, WidgetWrapper> miscButtonWidgets = new HashMap<String, WidgetWrapper>();
 
     private final Double MUTATION_SLIDER_DEFAULT_VALUE = 0.0;
     private final Double CARRYING_CAPACITY_SLIDER_MIN_VALUE = 1.0;
@@ -1092,7 +1093,26 @@ public class DeltaTickTab
     }
 
 
+    public void populateMiscButtons() {
+        for (Map.Entry<String, WidgetWrapper> entry : miscButtonWidgets.entrySet()) {
+            String p = entry.getKey();
+            WidgetWrapper w = entry.getValue();
+            interfacePanel.removeWidget(w);
+        }
+        miscButtonWidgets.clear();
 
+        if (buildPanel.getBgInfo().isDistributionButtonEnabled()) {
+            String buttonName = "distributionButton";
+            ButtonWidget distriButtonWidget = (ButtonWidget) interfacePanel.makeWidget("BUTTON",false);
+            WidgetWrapper distriButtonWrapper = interfacePanel.addWidget(distriButtonWidget, 0, 50, true, false);
+            distriButtonWidget.wrapSource("make-distribution");
+            distriButtonWidget.displayName("Make Distribution");
+            distriButtonWidget.setPreferredSize(new Dimension(120, distriButtonWidget.getHeight()));
+            distriButtonWrapper.setPreferredSize(new Dimension(120, distriButtonWrapper.getHeight()));
+            // Add to hashmap
+            miscButtonWidgets.put(buttonName, distriButtonWrapper);
+        }
+    }
 
     public void populateMutationSlider() {
         boolean putNoteWidget = false;
@@ -1524,6 +1544,7 @@ public class DeltaTickTab
             populatePlots();
             removeMutationSlider();
             interfaceSliderCount = 0;
+            populateMiscButtons();
             populateMutationSlider();
             populateCarryingCapacitySlider();
             populateLabelChooser();
