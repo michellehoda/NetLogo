@@ -198,7 +198,9 @@ public strictfp class BreedBlock
                     // and this block isn't already waiting for the trait (with traitpanel)
                     // Remove behavior input and add the traitpanel
                     behaviorBlock.removeBehaviorInput();
-                    behaviorBlock.addTraitblockPanel();
+                    // Update 20140201
+                    // behaviorBlock.addTraitblockPanel();
+                    behaviorBlock.setTrait(traitBlock.getTraitName());
                 }
             }
             // If traits are removed but there are behavior blocks that depend of the (removed) traits,

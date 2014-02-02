@@ -50,7 +50,10 @@ public class BreedDropTarget
                     boolean addPanel = false;
                     for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
                         if (((BreedBlock) block).hasTrait(traitName)) {
-                            addPanel = true;
+                            // Trait applies, add it directly
+                            ((BehaviorBlock) o).removeBehaviorInput();
+                            ((BehaviorBlock) o).setTrait(traitName);
+                            // addPanel = true;
                         }
                     }
                     if (addPanel) {

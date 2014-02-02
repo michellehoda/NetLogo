@@ -46,7 +46,7 @@ public class BehaviorDropTarget
 
                     behBlock.removeTraitblockPanel();
                     behBlock.removeBehaviorInput(); // assuming only one behaviorInput so will correspond to trait (March 25, 2013)
-                    behBlock.setTrait((TraitBlockNew) o);
+                    behBlock.setTrait(((TraitBlockNew) o).getTraitName());
                     behBlock.getMyBreedBlock().addBlock((TraitBlockNew) o);// so BreedBlock knows it has a traitBlock in one of its behBlocks (March 25, 2013)
 
                     behBlock.validate();

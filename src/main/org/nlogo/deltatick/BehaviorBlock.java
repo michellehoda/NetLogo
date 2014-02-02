@@ -335,16 +335,16 @@ public strictfp class BehaviorBlock
         return waitingForTrait;
     }
 
-    public void setTrait(TraitBlockNew traitBlockNew) {
+    public void setTrait(String traitName) {
         //tBlockNew = traitBlockNew;
-        traitName = new String(traitBlockNew.getTraitName());
+        this.traitName = new String(traitName);
         // This block now HAS a trait block
         isTrait = true;
         // It is no longer waiting for a trait block
         waitingForTrait = false;
         // Display the traitBlockDisplayPanel
         traitBlockDisplayPanel.setTraitName(traitName);
-        traitBlockDisplayPanel.setVisible(true);
+        // traitBlockDisplayPanel.setVisible(true);
         revalidate();
     }
 

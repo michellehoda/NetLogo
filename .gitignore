@@ -9,6 +9,7 @@ tmp/
 .DS_Store
 
 # wildcards
+*.iml
 *.class
 *.tmp
 *_managed/
