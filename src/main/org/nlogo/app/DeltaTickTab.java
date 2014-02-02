@@ -1098,7 +1098,7 @@ public class DeltaTickTab
         boolean putNoteWidget = false;
 
         for (BreedBlock bBlock : buildPanel.getMyBreeds()) {
-            if (bBlock.getReproduceUsed() &&
+            if (//bBlock.getReproduceUsed() &&
                     (buildPanel.getMyTraits().size() > 0) &&
                     (buildPanel.getBgInfo().getEnableMutationSlider())) {
                 putNoteWidget = true;
