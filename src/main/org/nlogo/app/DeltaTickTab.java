@@ -4,6 +4,7 @@ import org.nlogo.agent.Observer;
 import org.nlogo.api.LogoListBuilder;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
+import org.nlogo.api.WorldDimensions;
 import org.nlogo.deltatick.*;
 //import org.nlogo.deltatick.PopupMenu;
 import org.nlogo.deltatick.dialogs.*;
@@ -40,7 +41,12 @@ public class DeltaTickTab
     //toolBar is an object of class org.nlogo.swing.Toolbar -A. (sept8)
     final org.nlogo.swing.ToolBar toolBar;
 
-
+    // NetLogo world dimensions
+    private final int MIN_PXCOR = -25;
+    private final int MAX_PXCOR = 25;
+    private final int MIN_PYCOR = -20;
+    private final int MAX_PYCOR = 20;
+    private final int PATCH_SIZE = 13;
     // breedTypeSelector is an object, BreedTypeSelector is a class -A. (sept 8)
     //an object is an instantiation of a class -A. (sept 8)
     BreedTypeSelector breedTypeSelector;
@@ -103,7 +109,7 @@ public class DeltaTickTab
     private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
 
-    private final int PLOTS_START_XOFFSET = 660;
+    private final int PLOTS_START_XOFFSET = 900;
     private final int PLOTS_START_YOFFSET = 10;
     private final int PLOTS_PER_COLUMN = 2;
     private final int PLOTS_WIDTH = 230;
@@ -1320,7 +1326,7 @@ public class DeltaTickTab
                 int plotRow = plotCount % PLOTS_PER_COLUMN; // row starts at 0
                 int plotX = PLOTS_START_XOFFSET + (plotColumn * (PLOTS_WIDTH + PLOTS_SEPARATION));
                 int plotY = PLOTS_START_YOFFSET + (plotRow * (PLOTS_HEIGHT + PLOTS_SEPARATION));
-                System.out.println("Row="+plotRow+" Col="+plotColumn+" X="+plotX+" Y="+plotY);
+                // System.out.println("Row="+plotRow+" Col="+plotColumn+" X="+plotX+" Y="+plotY);
                 if (plotWrappers.containsKey(plotBlock.getPlotName()) == false) {
                     // Plot not previously present ==> new plot must be created
                     org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
@@ -1539,6 +1545,7 @@ public class DeltaTickTab
             pt.select(0, pt.innerSource().length() );
             // pt.getIndenter().handleTab();
             pt.select(0,0);
+            this.workspace.setDimensions(new WorldDimensions(MIN_PXCOR, MAX_PXCOR, MIN_PYCOR, MAX_PYCOR), PATCH_SIZE);
             populateInterface();
             removePlots();
             populatePlots();
