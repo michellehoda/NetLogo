@@ -1101,14 +1101,14 @@ public class DeltaTickTab
         }
         miscButtonWidgets.clear();
 
-        if (buildPanel.getBgInfo().isDistributionButtonEnabled()) {
+        if ((buildPanel.getBgInfo().isDistributionButtonEnabled()) &&
+            (buildPanel.getMyTraits().size() > 0)) {
             String buttonName = "distributionButton";
             ButtonWidget distriButtonWidget = (ButtonWidget) interfacePanel.makeWidget("BUTTON",false);
             WidgetWrapper distriButtonWrapper = interfacePanel.addWidget(distriButtonWidget, 0, 50, true, false);
             distriButtonWidget.wrapSource("make-distribution");
             distriButtonWidget.displayName("Make Distribution");
-            distriButtonWidget.setPreferredSize(new Dimension(120, distriButtonWidget.getHeight()));
-            distriButtonWrapper.setPreferredSize(new Dimension(120, distriButtonWrapper.getHeight()));
+            distriButtonWrapper.setBounds(0, 50, 120, 50);
             // Add to hashmap
             miscButtonWidgets.put(buttonName, distriButtonWrapper);
         }

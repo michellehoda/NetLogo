@@ -404,10 +404,10 @@ public class ModelBackgroundInfo {
         return distributionButtonEnabled;
     }
 
-    public String unPackMiscProcedures() {
+    public String unPackMiscProcedures(boolean isTraitDefined) {
         String passBack = "";
         for (MiscProcedure miscProcedure : miscProcedures) {
-            passBack += miscProcedure.unPackAsProcedure();
+            passBack += miscProcedure.unPackAsProcedure(isTraitDefined);
         }
         return passBack;
     }
@@ -471,6 +471,7 @@ public class ModelBackgroundInfo {
         String name;
         boolean isReporter;
         String paramters;
+        boolean needsTraitDefined;
         String procedureCode;
 
         MiscProcedure(Node procedureNode) {
@@ -478,6 +479,7 @@ public class ModelBackgroundInfo {
             this.isReporter = procedureNode.getAttributes().getNamedItem("isReporter").getTextContent().equalsIgnoreCase("true");
             String aParamters = procedureNode.getAttributes().getNamedItem("parameters").getTextContent();
             this.paramters = new String (aParamters.replace(',', ' '));
+            this.needsTraitDefined = procedureNode.getAttributes().getNamedItem("needsTraitDefined").getTextContent().equalsIgnoreCase("true");
             NodeList childNodes = procedureNode.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 if (childNodes.item(i).getNodeName().equalsIgnoreCase("procedureCode")) {
@@ -485,13 +487,16 @@ public class ModelBackgroundInfo {
                 }
             }
         }
+        public boolean isNeedsTraitDefined() {
+            return needsTraitDefined;
+        }
         public String getName() {
             return name;
         }
         public String getProcedureCode() {
             return procedureCode;
         }
-        public String unPackAsProcedure() {
+        public String unPackAsProcedure(boolean isTraitDefined) {
             String passBack = "";
             // Check type
             if (isReporter) {
@@ -506,9 +511,11 @@ public class ModelBackgroundInfo {
                 passBack += " [ " + paramters + " ]\n";
             }
             // Procedure code
-            passBack += "\t" + procedureCode + "\n";
+            if (isTraitDefined) {
+                passBack += "\t" + procedureCode;
+            }
 
-            passBack += "end\n";
+            passBack += "\nend\n";
             return passBack;
         }
     }

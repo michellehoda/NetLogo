@@ -523,7 +523,7 @@ public String newSaveAsXML() {
         }
 
         // Unpack misc supporting procedures
-        passBack += getBgInfo().unPackMiscProcedures();
+        passBack += getBgInfo().unPackMiscProcedures(myTraitsNew.size() > 0);
         passBack += "\n";
 
         // Unpack visualize procedures
