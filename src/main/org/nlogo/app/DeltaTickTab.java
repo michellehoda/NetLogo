@@ -2,6 +2,7 @@ package org.nlogo.app;
 
 import org.nlogo.agent.Observer;
 import org.nlogo.api.LogoListBuilder;
+import org.nlogo.api.Property;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.api.CompilerException;
 import org.nlogo.api.WorldDimensions;
@@ -16,6 +17,8 @@ import org.nlogo.deltatick.SpeciesEditorPanel;
 
 import org.nlogo.plot.PlotPen;
 import org.nlogo.plot.PlotManager;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 // java.awt contains all of the classes for creating user interfaces and for painting graphics and images -A. (sept 8)
 import javax.swing.*;
@@ -42,11 +45,11 @@ public class DeltaTickTab
     final org.nlogo.swing.ToolBar toolBar;
 
     // NetLogo world dimensions
-    private final int MIN_PXCOR = -25;
-    private final int MAX_PXCOR = 25;
-    private final int MIN_PYCOR = -20;
-    private final int MAX_PYCOR = 20;
-    private final int PATCH_SIZE = 13;
+    private int MIN_PXCOR = -16;
+    private int MAX_PXCOR = 16;
+    private int MIN_PYCOR = -16;
+    private int MAX_PYCOR = 16;
+    private int PATCH_SIZE = 13;
     // breedTypeSelector is an object, BreedTypeSelector is a class -A. (sept 8)
     //an object is an instantiation of a class -A. (sept 8)
     BreedTypeSelector breedTypeSelector;
@@ -109,12 +112,12 @@ public class DeltaTickTab
     private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
 
-    private final int PLOTS_START_XOFFSET = 900;
-    private final int PLOTS_START_YOFFSET = 10;
-    private final int PLOTS_PER_COLUMN = 2;
-    private final int PLOTS_WIDTH = 230;
-    private final int PLOTS_HEIGHT = 200;
-    private final int PLOTS_SEPARATION = 10;
+    private int PLOTS_START_XOFFSET;
+    private int PLOTS_START_YOFFSET;
+    private int PLOTS_PER_COLUMN;
+    private int PLOTS_WIDTH;
+    private int PLOTS_HEIGHT;
+    private int PLOTS_SEPARATION;
 
     private final int MAX_DIVEIN_BLOCKS = 1;
     // HashMaps to store widget values
@@ -235,6 +238,30 @@ public class DeltaTickTab
         interfaceGraphCount = 0; //to combine plots and histos into one
     }
 
+    public void initializeLayoutConstantsFromXML(NodeList interfaceLayoutNodes) throws Exception {
+        for (int i = 0; i < interfaceLayoutNodes.getLength(); i++) {
+            Node interfaceLayoutNode = interfaceLayoutNodes.item(i);
+            NodeList iNodes = interfaceLayoutNode.getChildNodes();
+            for (int j = 0; j < iNodes.getLength(); j++) {
+                Node iNode = iNodes.item(j);
+                if (iNode.getNodeName().equalsIgnoreCase("world")) {
+                    MIN_PXCOR = Integer.parseInt(iNode.getAttributes().getNamedItem("min_pxcor").getTextContent());
+                    MAX_PXCOR = Integer.parseInt(iNode.getAttributes().getNamedItem("max_pxcor").getTextContent());
+                    MIN_PYCOR = Integer.parseInt(iNode.getAttributes().getNamedItem("min_pycor").getTextContent());
+                    MAX_PYCOR = Integer.parseInt(iNode.getAttributes().getNamedItem("max_pycor").getTextContent());
+                    PATCH_SIZE = Integer.parseInt(iNode.getAttributes().getNamedItem("patch_size").getTextContent());
+                }
+                else if (iNode.getNodeName().equalsIgnoreCase("plots")) {
+                    PLOTS_START_XOFFSET = Integer.parseInt(iNode.getAttributes().getNamedItem("start_xoffset").getTextContent());
+                    PLOTS_START_YOFFSET = Integer.parseInt(iNode.getAttributes().getNamedItem("start_yoffset").getTextContent());
+                    PLOTS_PER_COLUMN = Integer.parseInt(iNode.getAttributes().getNamedItem("num_per_column").getTextContent());
+                    PLOTS_WIDTH = Integer.parseInt(iNode.getAttributes().getNamedItem("width").getTextContent());
+                    PLOTS_HEIGHT = Integer.parseInt(iNode.getAttributes().getNamedItem("height").getTextContent());
+                    PLOTS_SEPARATION = Integer.parseInt(iNode.getAttributes().getNamedItem("separation").getTextContent());
+                }
+            }
+        }
+    }
 
     public void addCondition( ConditionBlock cBlock ) {
         new ConditionDropTarget(cBlock);

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
+<library name="Blocks Library" version="0.1">
+    <numberSpecies number="1" message="You need only 1 species in this activity"></numberSpecies>
+    
+    <breed singular="rabbit" plural="rabbits" setupNumber="45" setupNumbers="40,45" maxNumber="45">
+        <ownVar name="age">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 3</setupReporter>
+        </ownVar>
+        <ownVar name="energy">
+            <maxReporter>100</maxReporter>
+            <setupReporter>random 100</setupReporter>
+        </ownVar>            
+        <setupCode>
+    setxy random-xcor random-ycor
+    set size 1.5    
+        </setupCode>
+        <updateCode>
+        set age age + 1
+        set energy energy - 1
+        if (count rabbits &gt; 1) and (energy &lt; 0) [if any? out-link-neighbors [ask out-link-neighbors [die]] die]
+        if (count rabbits = 1) and (energy &lt; 0) [
+        user-message (word "All rabbits died out! Are they eating grass? Do they have babies?")
+			if any? out-link-neighbors [ask out-link-neighbors [die]] die]   
+        </updateCode>
+    </breed> 
+
+    
+    <envt envtName="barrier">
+        <ownVar name="marked-patches"></ownVar>
+        <ownVar name="marked-patches"></ownVar>     
+        <setupCode>    
+        </setupCode>
+        <updateCode>            
+        </updateCode>
+    </envt>  
+    
+    
+    <trait name="leg-length">
+        <setupReporter>random 9</setupReporter>
+        <variation name="Very long legs" value="5" color="" setupNumber="25"></variation>
+        <variation name="Long legs" value="4" color="" setupNumber="15"></variation>
+        <variation name="Medium-length legs" value="3" color="" setupNumber="30"></variation>
+        <variation name="Short legs" value="2" color="" setupNumber="20"></variation>
+        <variation name="Very short legs" value="1" color="" setupNumber="10"></variation>
+        <message>How long is its leg?</message>
+        <visualizeCode>set-sense-cone</visualizeCode>
+        <visualizeProcedure>        
+        let this-xcor xcor
+        let this-ycor ycor
+        let this-length leg-length
+        let this-heading heading
+        hatch 1 [
+          set breed sense-cones
+        create-link-from myself [tie] ]
+              
+        let this-arrowhead out-link-neighbors
+        ask this-arrowhead [
+          set xcor this-xcor
+    set ycor this-ycor
+    set heading this-heading
+    fd .5 + this-length / 2
+    set hidden? true] 
+    ask my-out-links [set hidden? true]        
+    </visualizeProcedure>
+    <visualizeGoCode>show-sense-cone</visualizeGoCode>
+    <visualizeGoProcedure>
+    ask my-out-links [set hidden? false]
+    </visualizeGoProcedure>
+        <traitShape>vision cone</traitShape>                
+    </trait>   
+    
+        
+    <global name="turtles-last-tick">
+        <setupReporter>count turtles</setupReporter>
+        <updateReporter>count turtles</updateReporter>        
+    </global>
+    
+    <global name="total-speed1-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-speed1-caught</updateReporter>        
+    </global>
+    
+    <global name="total-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-caught</updateReporter>        
+    </global>
+    
+    <global name="total-speed2-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-speed2-caught</updateReporter>        
+    </global>
+    
+    <global name="total-speed3-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-speed3-caught</updateReporter>        
+    </global>
+    
+    <global name="total-speed4-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-speed4-caught</updateReporter>        
+    </global>
+    
+    <global name="total-speed5-caught">
+        <setupReporter>0</setupReporter>
+        <updateReporter>total-speed5-caught</updateReporter>        
+    </global>
+
+    <go>
+    ask patches [set plabel ""]    
+    </go>
+    
+    <setup>
+    ask patches [ set pcolor green + 2 ]
+    length-patches
+    </setup>
+
+    <condition name="any-here?" traits="">
+        <input name="breed-type" default="who?"></input>
+        <test>report any? other turtles-here with [ breed = breed-type ]</test>
+    </condition>
+    
+    <behavior name="move" traits="leg-length">
+        <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
+        <commands>
+        rt (random-float 15 - random-float 15)
+        fd random-float speed1 * .25        
+        </commands>
+    </behavior>
+    
+    
+    <behavior name="eat-grass" traits="">
+        <commands>set energy energy + 10</commands>
+    </behavior>
+    
+    <behavior name="eat" traits="">        
+        <agentInput name="prey" default="who?" tooltip="Who do they eat?"></agentInput>
+        <commands>
+        if any? other turtles-here with [breed = prey] [
+    let food one-of turtles-here with [breed = prey]
+    ask food [
+    if leg-length = 1 [set total-speed1-caught total-speed1-caught + 1
+    set total-caught total-caught + 1]
+    if leg-length = 2 [set total-speed2-caught total-speed2-caught + 1
+    set total-caught total-caught + 1]
+    if leg-length = 3 [set total-speed3-caught total-speed3-caught + 1
+    set total-caught total-caught + 1]
+    if leg-length = 4 [set total-speed4-caught total-speed4-caught + 1
+    set total-caught total-caught + 1]
+    if leg-length = 5 [set total-speed5-caught total-speed5-caught + 1
+    set total-caught total-caught + 1]
+     if any? out-link-neighbors [ask out-link-neighbors [die]] die]]  
+        </commands>
+    </behavior>
+    
+    <behavior name="have-babies" traits="" mutate="true">
+        <commands>
+        ifelse count out-link-neighbors > 0 [ 
+        hatch 1 [set age 0 rt random 180 fd 1 set-sense-cone]]
+        [hatch 1 [set age 0 rt random 180 fd 1]
+        </commands>
+    </behavior>
+    
+    <diveIn validBlocks="eat">
+        <setupCode>
+        create-predators 1 [
+        set size 2.5
+        set shape "x"]
+        </setupCode>
+        <reporterCode>
+        hide-turtle
+        setxy mouse-xcor mouse-ycor
+        ;; only show the predator if the mouse pointer is
+        ;; actually inside the view
+        set hidden? not mouse-inside?
+        report mouse-down?   
+        </reporterCode>
+    </diveIn>
+    
+    
+    
+    <quantity name="number-of" histo="false" xlabel="Time" ylabel="Count" istrait="false">
+        <input name="breed-type" default="species"></input>	
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+    
+    <quantity name="average-of" histo="false" xlabel="Time" ylabel="Average" runresult="true" istrait="true">
+        <input name="breed-type" default="species"></input>
+        <input name="variable" default="trait"  tooltip="Trait"></input>        
+        <reporter>
+			ifelse not any? turtles with [breed = breed-type] [
+				report 0
+			]
+			[
+				report mean [runresult variable] of turtles with [breed = breed-type]
+			]
+		</reporter>
+    </quantity>
+    
+    <quantity name="trial" histo="true" xlabel="Variations" ylabel="Count" istrait="true">
+        <input name="tBlock" default="trait"></input>
+        <reporter>report count turtles with [ breed = breed-type ]</reporter>
+    </quantity>
+    
+    <quantity name="number-of-rabbits-caught" histo="false" xlabel="Time" ylabel="# rabbits caught" istrait="false">        
+        <reporter>report total-caught</reporter>
+    </quantity>
+       
+    
+    <visualization name="set-sense-cone" trait="vision">
+        <commands>
+        enter code here
+        </commands>
+    </visualization>
+    
+    <miscProcedure isReporter="false" name="set-plabel" parameters="" needsTraitDefined="false">
+		<procedureCode>
+		(foreach [1 2 3 4 5] [-8 -4 0 4 8] [
+  ask patches with [pxcor = ? and pycor = min-pycor] [
+    ask patch ?2 (min-pycor + 1) [set plabel ?1]
+    ask patch 0 min-pycor [set plabel "Leg length"]
+  ]
+  ])
+		</procedureCode>
+	</miscProcedure>
+    
+    <miscProcedure isReporter="false" name="make-distribution" parameters="" needsTraitDefined="false">
+		<procedureCode>
+        ;set-plabel
+        line-up
+		</procedureCode>
+	</miscProcedure>
+    
+    <miscProcedure isReporter="false" name="length-patches" parameters="" needsTraitDefined="false">
+		<procedureCode>
+        (foreach [1 2 3 4 5] [-8 -4 0 4 8] [
+  ask patches with [pxcor = ?2 and pycor &lt;= max-pycor and pycor &gt;= min-pycor] [
+    ;set marked-patches ?1 
+    let x ?2 - 1
+  ]
+  ])
+		</procedureCode>
+	</miscProcedure>
+    
+    <miscProcedure isReporter="false" name="line-up" parameters="" needsTraitDefined="true">
+		<procedureCode>
+        ask patch 0 min-pycor [set plabel "Leg length"]
+        (foreach [1 2 3 4 5] [-8 -4 0 4 8] [
+        ask patches with [pxcor = ? and pycor = min-pycor] [
+    ask patch ?2 (min-pycor + 1) [set plabel ?1]
+    ]
+    let ff rabbits with [leg-length = ?1]
+    let y min-pycor + 3
+    let x ?2
+    let gg sort ff
+    
+    
+    let track 0
+      foreach gg [
+        set track track + 1
+        ifelse track &lt;= max-pycor - min-pycor - 5 [
+          ask ? [
+            move-to patch x y 
+            set heading 90
+          ]
+          set y y + 1
+          if track = max-pycor - min-pycor - 5 [
+            set y min-pycor + 3
+            set x x + 1]
+          ]
+        
+        [
+          ask ? [            
+            move-to patch x y
+            set heading 90
+          ]
+          set y y + 1
+        ]
+      ]
+  ])  		
+    </procedureCode>
+	</miscProcedure>
+    
+    
+    <interface>
+        <numberSpecies>1</numberSpecies>
+        <mutationSlider>false</mutationSlider>
+        <drawFeature>false</drawFeature>
+        <stepIn>true</stepIn>
+		<distributionButton>true</distributionButton>
+    </interface>
+	
+	<interfaceLayout>
+		<world min_pycor="-20" max_pycor="20" min_pxcor="-25" max_pxcor="25" patch_size="13"/>
+		<plots start_xoffset="900" start_yoffset="10" num_per_column="2" width="230" height="200" separation="10"/>
+	</interfaceLayout>
+    
+</library>

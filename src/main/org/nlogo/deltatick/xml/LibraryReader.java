@@ -173,6 +173,9 @@ public class LibraryReader {
 
             );
 
+            // Initialize layout constants
+            deltaTickTab.initializeLayoutConstantsFromXML(library.getElementsByTagName("interfaceLayout"));
+
             NodeList miscProcedures = library.getElementsByTagName("miscProcedure");
             if (miscProcedures.getLength() > 0) {
                 deltaTickTab.getBuildPanel().getBgInfo().addMiscProcedures(miscProcedures);
