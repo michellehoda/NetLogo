@@ -29,7 +29,7 @@ public class ModelBackgroundInfo {
     String version;
     String draw;
     String erase;
-    boolean isThereDraw; //does the XML have a drawing procedure
+    boolean isThereDraw = false; //does the XML have a drawing procedure
     boolean enableMutationSlider = false;
     boolean distributionButtonEnabled = false;
 
@@ -63,14 +63,8 @@ public class ModelBackgroundInfo {
             }
 
             if (draw.getLength() > 0) {
-                //isThereDraw = true;
                 this.draw = draw.item(0).getTextContent();
             }
-
-//            else if (draw == null) {
-//                isThereDraw = false;
-//            }
-
             if (erase.getLength() > 0) {
                 this.erase = erase.item(0).getTextContent();
             }

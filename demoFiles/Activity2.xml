@@ -207,7 +207,9 @@
         <reporter>report total-caught</reporter>
     </quantity>
        
-    
+    <draw>
+	</draw>
+
     <visualization name="set-sense-cone" trait="vision">
         <commands>
         enter code here

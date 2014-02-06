@@ -1059,53 +1059,45 @@ public class DeltaTickTab
             button.goTime_$eq(true);
         }
 
-        if (buildPanel.getBgInfo().getIsDraw()) {
-            org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-            WidgetWrapper drawWrapper = interfacePanel.addWidget(drawWidget, 0, 300, true, false);
-            drawWrapper.setBounds(0, 300, 100, 50);
-            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
-                org.nlogo.window.ButtonWidget button =
-                    (org.nlogo.window.ButtonWidget) drawWidget;
-                button.displayName("Draw barrier");
-                button.wrapSource("draw-barrier");
-                button.setForeverOn();
-            }
-            org.nlogo.window.Widget eraseWidget = interfacePanel.makeWidget("BUTTON",false);
-            WidgetWrapper eraseWrapper = interfacePanel.addWidget(eraseWidget, 90, 300, true, false);
-            eraseWrapper.setBounds(100, 300, 100, 50);
-            if (eraseWidget instanceof org.nlogo.window.ButtonWidget) {
-                org.nlogo.window.ButtonWidget butto =
-                    (org.nlogo.window.ButtonWidget) eraseWidget;
-                butto.displayName("Erase barrier");
-                butto.wrapSource("erase-barrier");
-            }
 
-            org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
-            interfacePanel.addWidget(envtChooserWidget, 0, 250, true, false);
-            if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
-                org.nlogo.window.ChooserWidget chooser = (org.nlogo.window.ChooserWidget) envtChooserWidget;
-                chooser.displayName("barrier type");
-                chooser.nameWrapper("barrier-type");
-                LogoListBuilder choicesList = new LogoListBuilder();
-                choicesList.add("river");
-                choicesList.add("highway");
-                choicesList.add("city");
-                chooser.setChoices(choicesList.toLogoList());
-            }
+//            org.nlogo.window.Widget eraseWidget = interfacePanel.makeWidget("BUTTON",false);
+//            WidgetWrapper eraseWrapper = interfacePanel.addWidget(eraseWidget, 90, 300, true, false);
+//            eraseWrapper.setBounds(100, 300, 100, 50);
+//            if (eraseWidget instanceof org.nlogo.window.ButtonWidget) {
+//                org.nlogo.window.ButtonWidget butto =
+//                    (org.nlogo.window.ButtonWidget) eraseWidget;
+//                butto.displayName("Erase barrier");
+//                butto.wrapSource("erase-barrier");
+//            }
+//
+//            org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
+//            interfacePanel.addWidget(envtChooserWidget, 0, 250, true, false);
+//            if (envtChooserWidget instanceof org.nlogo.window.ChooserWidget) {
+//                org.nlogo.window.ChooserWidget chooser = (org.nlogo.window.ChooserWidget) envtChooserWidget;
+//                chooser.displayName("barrier type");
+//                chooser.nameWrapper("barrier-type");
+//                LogoListBuilder choicesList = new LogoListBuilder();
+//                choicesList.add("river");
+//                choicesList.add("highway");
+//                choicesList.add("city");
+//                chooser.setChoices(choicesList.toLogoList());
+//            }
 
-        }
+
+//        if (buildPanel.getBgInfo().getIsDraw()) {
+//            //Commented out because I don't want "draw" and "envtChooser" any more -Aditi (March 9, 2013)
+//            org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
+//            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
+//            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
+//                org.nlogo.window.ButtonWidget button =
+//                        (org.nlogo.window.ButtonWidget) drawWidget;
+//                button.displayName("draw");
+//                button.wrapSource("draw-barrier");
+//                button.setForeverOn();
+//            }
+//        }
 
       /*
-            //Commented out because I don't want "draw" and "envtChooser" any more -Aditi (March 9, 2013)
-        org.nlogo.window.Widget drawWidget = interfacePanel.makeWidget("BUTTON",false);
-            interfacePanel.addWidget(drawWidget, 0, 130, true, false);
-            if (drawWidget instanceof org.nlogo.window.ButtonWidget) {
-                org.nlogo.window.ButtonWidget button =
-                    (org.nlogo.window.ButtonWidget) drawWidget;
-                button.displayName("draw");
-                button.wrapSource("draw");
-                button.setForeverOn();
-        }
         org.nlogo.window.Widget envtChooserWidget = interfacePanel.makeWidget("CHOOSER",false);
         interfacePanel.addWidget(envtChooserWidget, 0, 100, true, false);
         //org.nlogo.window.ButtonWidget buttonWidget = interface
@@ -1144,6 +1136,18 @@ public class DeltaTickTab
             distriButtonWrapper.setBounds(0, 50, 120, 50);
             // Add to hashmap
             miscButtonWidgets.put(buttonName, distriButtonWrapper);
+        }
+        if (buildPanel.getBgInfo().getIsDraw()) {
+            String buttonName = "drawButton";
+            org.nlogo.window.ButtonWidget drawButtonWidget = (ButtonWidget) interfacePanel.makeWidget("BUTTON",false);
+            WidgetWrapper drawButtonWrapper = interfacePanel.addWidget(drawButtonWidget, 0, 300, true, false);
+            drawButtonWrapper.setBounds(0, 300, 100, 50);
+            drawButtonWidget.displayName("Draw barrier");
+            drawButtonWidget.wrapSource("draw-barrier");
+            drawButtonWidget.setForeverOn();
+            System.out.println("hello");
+            // Add to hashmap
+            miscButtonWidgets.put(buttonName, drawButtonWrapper);
         }
     }
 
