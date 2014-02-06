@@ -128,7 +128,7 @@ public class DeltaTickModelReader {
                     t.setMyParent(((BehaviorBlock) o).getMyBreedBlock());
                     t.hideRemoveButton();
                     ((BehaviorBlock) o).removeBehaviorInput();
-                    ((BehaviorBlock) o).setTrait(t.getTraitName());
+                    ((BehaviorBlock) o).setTrait(t.getTraitName(), t.getTraitOffsetVarName());
                     ((BehaviorBlock) o).getMyBreedBlock().addBlock(t);
 
                 }

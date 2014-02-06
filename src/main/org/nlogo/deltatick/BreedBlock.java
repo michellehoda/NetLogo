@@ -200,7 +200,7 @@ public strictfp class BreedBlock
                     behaviorBlock.removeBehaviorInput();
                     // Update 20140201
                     // behaviorBlock.addTraitblockPanel();
-                    behaviorBlock.setTrait(traitBlock.getTraitName());
+                    behaviorBlock.setTrait(traitBlock.getTraitName(), traitBlock.getTraitOffsetVarName());
                 }
             }
             // If traits are removed but there are behavior blocks that depend of the (removed) traits,
@@ -476,7 +476,7 @@ public strictfp class BreedBlock
                 }
             }
             for (TraitBlockNew tBlock : myTraitBlocks) {    // setting size of turtles if "body-size" is a trait (April 11, 2013)
-                if (tBlock.getMyTraitName().equalsIgnoreCase("body-size")) {
+                if (tBlock.getTraitName().equalsIgnoreCase("body-size")) {
                     code += "set size body-size\n";
                 }
             }
@@ -922,7 +922,14 @@ public strictfp class BreedBlock
     public List<TraitBlockNew> getMyTraitBlocks() {
         return myTraitBlocks;
     }
-
+    public TraitBlockNew getMyTraitBlock(String traitName) {
+        for (TraitBlockNew t : myTraitBlocks) {
+            if (t.getTraitName().equalsIgnoreCase(traitName)) {
+                return t;
+            }
+        }
+        return null;
+    }
     public List<BehaviorBlock> getMyBehaviorBlocks() {
         return myBehaviorBlocks;
     }

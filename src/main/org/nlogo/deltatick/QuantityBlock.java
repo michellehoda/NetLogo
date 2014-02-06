@@ -205,7 +205,7 @@ public strictfp class QuantityBlock
                 }
 
                 if (isTrait && (tBlock != null)) {
-                    variable = tBlock.getMyTraitName();
+                    variable = tBlock.getTraitName();
                     population = tBlock.getBreedName();
                 }
                 passBack += "\thistogram [ " + variable + " ] of " + population ;
@@ -225,7 +225,7 @@ public strictfp class QuantityBlock
                 }
                 // Generate plot task parameters
                 if (isTrait && (tBlock != null)) {
-                    variable = tBlock.getMyTraitName();
+                    variable = tBlock.getTraitName();
                     population = tBlock.getBreedName();
                 }
                 else {
@@ -387,7 +387,7 @@ public strictfp class QuantityBlock
         String passBack = new String();
         passBack += getName();
         if (isTrait && (tBlock != null)) {
-            passBack += "-" + tBlock.getMyTraitName();
+            passBack += "-" + tBlock.getTraitName();
             passBack += "-" + tBlock.getBreedName();
         }
         else {
@@ -425,12 +425,37 @@ public strictfp class QuantityBlock
             retLabel += " " + tBlock.getBreedName();
         }
         else if (isTrait && (tBlock != null)) {
-            retLabel += " " + tBlock.getMyTraitName();
+            retLabel += " " + tBlock.getTraitName();
         }
         else if (breedName != null) {
             retLabel += " " + breedName;
         }
         return retLabel;
+    }
+
+    public int getMinY() {
+        if (isTrait && !histo) {
+            return tBlock.getTraitOffsetVarValue();
+        }
+        return 0;
+    }
+    public int getMaxY() {
+        if (isTrait && !histo) {
+            return tBlock.getTraitOffsetVarValue() + 7;
+        }
+        return 10;
+    }
+    public int getMinX() {
+        if (isTrait && histo) {
+            return tBlock.getTraitOffsetVarValue();
+        }
+        return 10;
+    }
+    public int getMaxX() {
+        if (isTrait && histo) {
+            return tBlock.getTraitOffsetVarValue() + 7;
+        }
+        return 10;
     }
 
     public String getTrait() {

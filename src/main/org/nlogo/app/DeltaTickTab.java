@@ -1362,10 +1362,6 @@ public class DeltaTickTab
                     // Plot not previously present ==> new plot must be created
                     org.nlogo.window.Widget plotWidget = interfacePanel.makePlotWidget(plotBlock.getPlotName());
 
-//                    WidgetWrapper ww = interfacePanel.addWidget(plotWidget,
-//                                                                PLOTS_START_XOFFSET + ((plotCount/PLOTS_PER_COLUMN) * 250),
-//                                                                PLOTS_SEPARATION + ((plotCount%PLOTS_PER_COLUMN)*210),
-//                                                                true, false);
                     // Create the widget wrapper
                     WidgetWrapper ww = interfacePanel.addWidget(plotWidget, plotX, plotY, true, false);
                     // Set the X Y coordinates, height and width
@@ -1396,6 +1392,14 @@ public class DeltaTickTab
                             plotPen.updateCode(quantBlock.getPenUpdateCode());
                             ((PlotWidget) plotWidget).xLabel(quantBlock.getXLabel());
                             ((PlotWidget) plotWidget).yLabel(quantBlock.getYLabel());
+                        }
+                        if (!plotBlock.isHistogram()) {
+                            newPlot.defaultYMin_$eq(quantBlock.getMinY());
+                            newPlot.defaultYMax_$eq(quantBlock.getMaxY());
+                        }
+                        else {
+                            newPlot.defaultXMin_$eq(quantBlock.getMinX());
+                            newPlot.defaultXMax_$eq(quantBlock.getMaxX());
                         }
                     }
                 }

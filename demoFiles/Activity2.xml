@@ -39,32 +39,34 @@
     
     <trait name="leg-length">
         <setupReporter>random 9</setupReporter>
-        <variation name="Very long legs" value="5" color="" setupNumber="25"></variation>
-        <variation name="Long legs" value="4" color="" setupNumber="15"></variation>
-        <variation name="Medium-length legs" value="3" color="" setupNumber="30"></variation>
-        <variation name="Short legs" value="2" color="" setupNumber="20"></variation>
-        <variation name="Very short legs" value="1" color="" setupNumber="10"></variation>
+        <baseOffsetVar>leglength-offset</baseOffsetVar>
+        <baseOffsetVarValue>160</baseOffsetVarValue>
+        <variation name="Very long legs" value="165" color="" setupNumber="25"></variation>
+        <variation name="Long legs" value="164" color="" setupNumber="15"></variation>
+        <variation name="Medium-length legs" value="163" color="" setupNumber="30"></variation>
+        <variation name="Short legs" value="162" color="" setupNumber="20"></variation>
+        <variation name="Very short legs" value="161" color="" setupNumber="10"></variation>
         <message>How long is its leg?</message>
         <visualizeCode>set-sense-cone</visualizeCode>
-        <visualizeProcedure>        
-        let this-xcor xcor
-        let this-ycor ycor
-        let this-length leg-length
-        let this-heading heading
-        hatch 1 [
-          set breed sense-cones
-        create-link-from myself [tie] ]
-              
-        let this-arrowhead out-link-neighbors
-        ask this-arrowhead [
-          set xcor this-xcor
-    set ycor this-ycor
-    set heading this-heading
-    fd .5 + this-length / 2
-    set hidden? true] 
-    ask my-out-links [set hidden? true]        
-    </visualizeProcedure>
-    <visualizeGoCode>show-sense-cone</visualizeGoCode>
+        <visualizeProcedure>
+            let this-xcor xcor
+            let this-ycor ycor
+            let this-length leg-length - leglength-offset
+            let this-heading heading
+            hatch 1 [
+            set breed sense-cones
+            create-link-from myself [tie] ]
+
+            let this-arrowhead out-link-neighbors
+            ask this-arrowhead [
+            set xcor this-xcor
+            set ycor this-ycor
+            set heading this-heading
+            fd .5 + this-length / 2
+            set hidden? true]
+            ask my-out-links [set hidden? true]
+        </visualizeProcedure>
+        <visualizeGoCode>show-sense-cone</visualizeGoCode>
     <visualizeGoProcedure>
     ask my-out-links [set hidden? false]
     </visualizeGoProcedure>
@@ -106,6 +108,11 @@
         <setupReporter>0</setupReporter>
         <updateReporter>total-speed5-caught</updateReporter>        
     </global>
+	
+	<global name="leglength-offset">
+		<setupReporter>160</setupReporter>
+		<updateReporter>leglength-offset</updateReporter>
+	</global>
 
     <go>
     ask patches [set plabel ""]    
@@ -218,7 +225,7 @@
     
     <miscProcedure isReporter="false" name="set-plabel" parameters="" needsTraitDefined="false">
 		<procedureCode>
-		(foreach [1 2 3 4 5] [-8 -4 0 4 8] [
+		(foreach [161 162 163 164 165] [-8 -4 0 4 8] [
   ask patches with [pxcor = ? and pycor = min-pycor] [
     ask patch ?2 (min-pycor + 1) [set plabel ?1]
     ask patch 0 min-pycor [set plabel "Leg length"]
@@ -236,7 +243,7 @@
     
     <miscProcedure isReporter="false" name="length-patches" parameters="" needsTraitDefined="false">
 		<procedureCode>
-        (foreach [1 2 3 4 5] [-8 -4 0 4 8] [
+        (foreach [161 162 163 164 165] [-8 -4 0 4 8] [
   ask patches with [pxcor = ?2 and pycor &lt;= max-pycor and pycor &gt;= min-pycor] [
     ;set marked-patches ?1 
     let x ?2 - 1
@@ -248,8 +255,8 @@
     <miscProcedure isReporter="false" name="line-up" parameters="" needsTraitDefined="true">
 		<procedureCode>
         ask patch 0 min-pycor [set plabel "Leg length"]
-        (foreach [1 2 3 4 5] [-8 -4 0 4 8] [
-        ask patches with [pxcor = ? and pycor = min-pycor] [
+        (foreach [161 162 163 164 165] [-8 -4 0 4 8] [
+        ask patches with [pxcor = ?2 and pycor = min-pycor] [
     ask patch ?2 (min-pycor + 1) [set plabel ?1]
     ]
     let ff rabbits with [leg-length = ?1]

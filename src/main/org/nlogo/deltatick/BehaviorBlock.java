@@ -34,6 +34,7 @@ public strictfp class BehaviorBlock
     // The trait has been dropped in this block
     // As of now only one trait can be dropped
     String traitName = new String();
+    String traitOffsetVarName = new String();
     //CodeBlock container = null;
     BreedBlock myBreedBlock = null;
     private JToolTip toolTip;
@@ -246,7 +247,7 @@ public strictfp class BehaviorBlock
         }
         if (isTrait) {
             //passBack += tBlockNew.getTraitName();
-            passBack += traitName;
+            passBack += "(" + traitName + " - " + traitOffsetVarName + ")";
         }
         else {
             for (JTextField behaviorInput : behaviorInputs.values()) {
@@ -335,9 +336,10 @@ public strictfp class BehaviorBlock
         return waitingForTrait;
     }
 
-    public void setTrait(String traitName) {
+    public void setTrait(String traitName, String traitOffsetName) {
         //tBlockNew = traitBlockNew;
         this.traitName = new String(traitName);
+        this.traitOffsetVarName = new String(traitOffsetName);
         // This block now HAS a trait block
         isTrait = true;
         // It is no longer waiting for a trait block

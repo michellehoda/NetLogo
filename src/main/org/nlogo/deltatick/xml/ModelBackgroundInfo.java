@@ -180,6 +180,9 @@ public class ModelBackgroundInfo {
     public String setupBlock(List<BreedBlock> usedBreeds, List<TraitBlockNew> usedTraits, List<EnvtBlock> usedEnvts, List<PlotBlock> myPlots, List<DiveInBlock> usedDiveIns) {
         String code = "to setup\n";
         code += "  clear-all\n";
+        for (Global global : globals) {
+            code += global.setup();
+        }
         //code += "ask patches [set pcolor white]\n";
         if (setup != null) {
             code += setup + "\n";
@@ -198,9 +201,6 @@ public class ModelBackgroundInfo {
             code += dBlock.setup();
         }
 
-        for (Global global : globals) {
-            code += global.setup();
-        }
         for (EnvtBlock envtBlock : usedEnvts) {
             //code += "to set";
             code += envtBlock.setup();

@@ -505,7 +505,7 @@ public String newSaveAsXML() {
         for (BreedBlock breedBlock : myBreeds) {
             for (TraitBlockNew traitBlock : breedBlock.getMyTraitBlocks()) {
                 if (!visualizeProcedures.containsKey(traitBlock.getTraitName())) {
-                    visualizeProcedures.put(traitBlock.getMyTraitName(), traitBlock);
+                    visualizeProcedures.put(traitBlock.getTraitName(), traitBlock);
                 }
             }
         }

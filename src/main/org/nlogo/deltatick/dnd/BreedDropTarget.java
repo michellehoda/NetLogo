@@ -52,7 +52,7 @@ public class BreedDropTarget
                         if (((BreedBlock) block).hasTrait(traitName)) {
                             // Trait applies, add it directly
                             ((BehaviorBlock) o).removeBehaviorInput();
-                            ((BehaviorBlock) o).setTrait(traitName);
+                            ((BehaviorBlock) o).setTrait(traitName, ((BreedBlock) block).getMyTraitBlock(traitName).getTraitOffsetVarName());
                             // addPanel = true;
                         }
                     }

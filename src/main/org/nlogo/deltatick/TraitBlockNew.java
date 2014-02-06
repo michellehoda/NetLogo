@@ -27,6 +27,8 @@ public class TraitBlockNew
     String breedNameTMP = new String(); // This may not be valid if the user changes the text field in breed block
     BreedBlock myBreedBlock = null;
     String traitName;
+    String traitOffsetVarName;
+    int traitOffsetVarValue;
     String varColor;
     JLabel breedName = new JLabel();
     String visualizeCode;
@@ -51,6 +53,8 @@ public class TraitBlockNew
 
         this.traitState = new TraitState(traitState);
         this.traitName = this.traitState.getNameTrait();
+        this.traitOffsetVarName = this.traitState.getOffsetName();
+        this.traitOffsetVarValue = this.traitState.getOffsetValue();
         this.variationHashMap.clear();
         this.variationHashMap.putAll(variationHashMap);
         this.varColor = traitState.getColor();
@@ -82,6 +86,10 @@ public class TraitBlockNew
     public String getTraitName() {
         return traitName;
     }
+
+    public String getTraitOffsetVarName() { return traitOffsetVarName; }
+
+    public int getTraitOffsetVarValue() { return traitOffsetVarValue; }
 
     public String unPackAsCode() {
         if (myParent == null) {
@@ -122,12 +130,6 @@ public class TraitBlockNew
         return varNum;
     }
 
-    public String getMyTraitName() {
-        String passback = "";
-        // passback += traitName + "\n "; // Why the \n -- new-line????
-        passback += traitName;
-        return passback;
-    }
 
     public BreedBlock getMyParent() {
         return ((BreedBlock) myParent);

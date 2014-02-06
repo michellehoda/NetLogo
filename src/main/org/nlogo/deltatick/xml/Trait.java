@@ -28,6 +28,8 @@ public class Trait implements Serializable {
     HashMap<String, Variation> variationHashMap = new HashMap<String, Variation>();
     String message = new String();
     String mutateCode = new String();
+    String baseOffsetVar = new String();
+    int baseOffsetVarValue = 0;
 
 
     public Trait() {
@@ -51,6 +53,8 @@ public class Trait implements Serializable {
         }
         // variationHashMap = new HashMap<String, Variation>(trait.variationHashMap);
         mutateCode = new String(trait.mutateCode);
+        baseOffsetVar = new String(trait.baseOffsetVar);
+        baseOffsetVarValue = trait.baseOffsetVarValue;
     }
 
     public Trait(Node traitNode) {
@@ -85,6 +89,12 @@ public class Trait implements Serializable {
             if (traitNodes.item(i).getNodeName().equalsIgnoreCase("message")) {
                 message = traitNodes.item(i).getTextContent();
             }
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("baseOffsetVar")) {
+                baseOffsetVar = traitNodes.item(i).getTextContent();
+            }
+            if (traitNodes.item(i).getNodeName().equalsIgnoreCase("baseOffsetVarValue")) {
+                baseOffsetVarValue = Integer.parseInt(traitNodes.item(i).getTextContent());
+            }
             /*if (traitNodes.item(i).getNodeName() == "mutateCode") {
                 mutateCode = traitNodes.item(i).getTextContent();
             }*/
@@ -94,6 +104,10 @@ public class Trait implements Serializable {
     public String getNameTrait() {
         return traitName;
     }
+
+    public String getOffsetName() { return baseOffsetVar; }
+
+    public int getOffsetValue() { return baseOffsetVarValue; }
 
     public String getVisualizeCode() {
         return visualizeCode;
