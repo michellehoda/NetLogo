@@ -437,7 +437,7 @@ public strictfp class QuantityBlock
         return tBlock.getTraitName();
     }
 
-    public String getHistoBreed() {
+    public String getTraitBreed() {
         return tBlock.getBreedName();
     }
 

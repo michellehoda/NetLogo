@@ -558,6 +558,7 @@ public class SpeciesEditorPanel extends JPanel {
             return myShapeSelector.getShape();
         }
         public void setBreedShape(String breedShape) {
+            this.breedShape = new String(breedShape);
             myShapeSelector.setChosenShape(breedShape);
         }
     }

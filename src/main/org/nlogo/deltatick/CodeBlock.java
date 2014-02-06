@@ -409,10 +409,10 @@ public abstract class CodeBlock
         return null;
     }
 
-    public CodeBlock getMyBreedBlock() {
+    public BreedBlock getMyBreedBlock() {
         if (myParent != null) {
             if (myParent instanceof BreedBlock) {
-                return myParent;
+                return (BreedBlock) myParent;
             }
             else {
                 return myParent.getMyBreedBlock();

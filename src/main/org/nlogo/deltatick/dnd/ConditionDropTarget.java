@@ -53,16 +53,16 @@ public class ConditionDropTarget
 
                 addCodeBlock((BehaviorBlock) o);
                 // Set this behavior's parent BreedBlock
-                ((BehaviorBlock) o).setMyBreedBlock(((BreedBlock) block.getMyBreedBlock()));
+                ((BehaviorBlock) o).setMyBreedBlock((block.getMyBreedBlock()));
 
                 if (((BehaviorBlock) o).getIsMutate() == true) {
-                    ((BreedBlock) (block).getMyBreedBlock()).setReproduceUsed(true);
+                    ((block).getMyBreedBlock()).setReproduceUsed(true);
                 }
                 // If breed has traits, and any trait is applicable to this behavior block then show a the panel
-                if (((BreedBlock) block.getMyBreedBlock()).numTraits() > 0) {
+                if ((block.getMyBreedBlock()).numTraits() > 0) {
                     boolean addPanel = false;
                     for (String traitName : ((BehaviorBlock) o).getApplicableTraits()) {
-                        if (((BreedBlock) block.getMyBreedBlock()).hasTrait(traitName)) {
+                        if ((block.getMyBreedBlock()).hasTrait(traitName)) {
                             addPanel = true;
                         }
                     }

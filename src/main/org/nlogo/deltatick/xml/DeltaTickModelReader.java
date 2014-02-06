@@ -110,8 +110,9 @@ public class DeltaTickModelReader {
                 if (isTrait.equalsIgnoreCase("true")) {
                     // There is a trait associated with this behavior block
                     String traitName = node.getAttributes().getNamedItem("traitName").getTextContent();
+                    String traitBreedName = node.getAttributes().getNamedItem("traitBreedName").getTextContent();
                     // Get the traitblock and put it here
-                    TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName);
+                    TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName, traitBreedName);
                     // Make a copy of the trait block
                     TraitBlockNew t = (TraitBlockNew) DeepCopyStream.deepClone(traitBlock.getTransferData(CodeBlock.codeBlockFlavor));
                     // Attach the trait block to this behavior block
@@ -183,8 +184,9 @@ public class DeltaTickModelReader {
                 if (isTrait.equalsIgnoreCase("true")) {
                     // There is a trait associated with this condition block
                     String traitName = node.getAttributes().getNamedItem("traitName").getTextContent();
+                    String traitBreedName = node.getAttributes().getNamedItem("traitBreedName").getTextContent();
                     // Get the traitblock and put it here
-                    TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName);
+                    TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName, traitBreedName);
                     // Make a copy of the trait block
                     TraitBlockNew t = (TraitBlockNew) DeepCopyStream.deepClone(traitBlock.getTransferData(CodeBlock.codeBlockFlavor));
                     // Attach the trait block to this condition block
@@ -257,8 +259,9 @@ public class DeltaTickModelReader {
         if (isTrait.equalsIgnoreCase("true")) {
             // There is a trait associated with this behavior block
             String traitName = quantityBlockNode.getAttributes().getNamedItem("traitName").getTextContent();
+            String traitBreedName = quantityBlockNode.getAttributes().getNamedItem("traitBreedName").getTextContent();
             // Get the traitblock and put it here
-            TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName);
+            TraitBlockNew traitBlock = deltaTickTab.getBuildPanel().getMyTrait(traitName, traitBreedName);
             // Make a copy of the trait block
             TraitBlockNew t = (TraitBlockNew) DeepCopyStream.deepClone(traitBlock.getTransferData(CodeBlock.codeBlockFlavor));
             // Attach the trait block to this behavior block
@@ -356,6 +359,8 @@ public class DeltaTickModelReader {
                 String number = breedBlockNode.getAttributes().getNamedItem("number").getTextContent();
                 String shape = breedBlockNode.getAttributes().getNamedItem("shape").getTextContent();
                 String color = breedBlockNode.getAttributes().getNamedItem("color").getTextContent();
+                String xcor = breedBlockNode.getAttributes().getNamedItem("xcor").getTextContent();
+                String ycor = breedBlockNode.getAttributes().getNamedItem("ycor").getTextContent();
                 String maxAge = new String();
                 String maxEnergy = new String();
                 String traitName = new String("");
@@ -365,6 +370,9 @@ public class DeltaTickModelReader {
                 //BreedBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
                 //CodeBlock bBlock = (BreedBlock) deltaTickTab.makeBreedBlock(plural, number);
                 CodeBlock bBlock = deltaTickTab.makeBreedBlock(plural, number);
+                // Set the X,Y location
+                bBlock.setLocation(Integer.parseInt(xcor), Integer.parseInt(ycor));
+                bBlock.repaint();
                 // Create the species editor
                 SpeciesEditorPanel speciesEditorPanel = deltaTickTab.createSpeciesEditorPanel();
                 speciesEditorPanel.getMyFrame().setTitle("Species Editor: " + plural);
@@ -379,6 +387,7 @@ public class DeltaTickModelReader {
                 // Other setup
                 speciesEditorPanel.setMakeNewBreedBlock(false);
                 speciesEditorPanel.setMyBreedBlock((BreedBlock) bBlock);
+                speciesEditorPanel.removeBreedNameComboBox();
                 // Add this species editor panel to deltaticktab's hashmap
                 deltaTickTab.putSpeciesEditorPanelInHashMap(plural, speciesEditorPanel);
                 // Update breedblock
@@ -490,10 +499,14 @@ public class DeltaTickModelReader {
                 Node plotBlockNode = plotBlockNodeList.item(i);
                 String plotName = plotBlockNode.getAttributes().getNamedItem("name").getTextContent();
                 boolean isHisto = plotBlockNode.getAttributes().getNamedItem("isHisto").getTextContent().equalsIgnoreCase("true");
+                String xcor = plotBlockNode.getAttributes().getNamedItem("xcor").getTextContent();
+                String ycor = plotBlockNode.getAttributes().getNamedItem("ycor").getTextContent();
 
                 // Make the plot block
                 PlotBlock plotBlock = deltaTickTab.makePlotBlock(isHisto);
                 plotBlock.setPlotName(plotName);
+                // Set the X,Y location
+                plotBlock.setLocation(Integer.parseInt(xcor), Integer.parseInt(ycor));
 
                 // Iterate over Quantity Blocks
                 NodeList plotChildNodes = plotBlockNode.getChildNodes();
@@ -553,6 +566,8 @@ public class DeltaTickModelReader {
                 breedBlockElement.setAttribute("number", bBlock.getNumber());
                 breedBlockElement.setAttribute("shape", bBlock.getBreedShape());
                 breedBlockElement.setAttribute("color", Integer.toHexString(bBlock.getColorRGB()));
+                breedBlockElement.setAttribute("xcor", Integer.toString(bBlock.getX()));
+                breedBlockElement.setAttribute("ycor", Integer.toString(bBlock.getY()));
 
                 // Save labels (traitLabels)
                 for (String traitLabel : bBlock.getTraitLabels()) {
@@ -599,6 +614,8 @@ public class DeltaTickModelReader {
                 // Set its attributes
                 plotBlockElement.setAttribute("name", plotBlock.getPlotName());
                 plotBlockElement.setAttribute("isHisto", plotBlock.isHistogram()?"true":"false");
+                plotBlockElement.setAttribute("xcor", Integer.toString(plotBlock.getX()));
+                plotBlockElement.setAttribute("ycor", Integer.toString(plotBlock.getY()));
                 // Append to root element (<model>)
                 rootElement.appendChild(plotBlockElement);
 
@@ -613,7 +630,9 @@ public class DeltaTickModelReader {
                     quantityBlockElement.setAttribute("isTrait", isTrait);
                     if (quantityBlock.getIsTrait()) {
                         String traitName = quantityBlock.getTrait();
+                        String traitBreedName = quantityBlock.getTraitBreed();
                         quantityBlockElement.setAttribute("traitName", traitName);
+                        quantityBlockElement.setAttribute("traitBreedName", traitBreedName);
                     }
                     // Append to plotblock
                     plotBlockElement.appendChild(quantityBlockElement);
@@ -690,7 +709,9 @@ public class DeltaTickModelReader {
         conditionBlock.setAttribute("isTrait", isTrait);
         if (block.getIsTrait()) {
             String traitName = block.getTraitName();
+            String traitBreedName = block.getMyBreedBlock().plural();
             conditionBlock.setAttribute("traitName", traitName);
+            conditionBlock.setAttribute("traitBreedName", traitBreedName);
         }
         // Process PrettyInputs (INPUTS)
         for (Map.Entry entry : block.getInputs().entrySet()) {
@@ -741,7 +762,9 @@ public class DeltaTickModelReader {
         behaviorBlock.setAttribute("isTrait", isTrait);
         if (block.getIsTrait()) {
             String traitName = block.getTrait();
+            String traitBreedName = block.getMyBreedBlock().plural();
             behaviorBlock.setAttribute("traitName", traitName);
+            behaviorBlock.setAttribute("traitBreedName", traitBreedName);
         }
         // Uses Input reporter
         String usesInputReporter = (block.usesInputReporter())? "true" : "false";

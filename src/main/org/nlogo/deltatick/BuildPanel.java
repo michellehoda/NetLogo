@@ -157,7 +157,7 @@ public class BuildPanel
                 if (qBlock.histo == true) {
                     int i = qBlock.getHistoVariation().size();
                     for (Variation var : qBlock.getHistoVariation().values()) {
-                        String breed = qBlock.getHistoBreed();
+                        String breed = qBlock.getTraitBreed();
                         String trait = qBlock.getTrait();
                         String variation = var.value;
                         passBack += "to-report " + qBlock.getName() + i + " [" + breed + variation + "]\n";
@@ -437,9 +437,10 @@ public String newSaveAsXML() {
         return myMonitors;
     }
 
-    public TraitBlockNew getMyTrait(String traitName) {
+    public TraitBlockNew getMyTrait(String traitName, String breedName) {
         for (TraitBlockNew traitBlockNew : myTraitsNew) {
-            if (traitBlockNew.getTraitName().equalsIgnoreCase(traitName)) {
+            if (traitBlockNew.getTraitName().equalsIgnoreCase(traitName) &&
+                    traitBlockNew.getBreedName().equalsIgnoreCase(breedName)) {
                 return traitBlockNew;
             }
         }
