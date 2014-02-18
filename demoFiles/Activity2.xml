@@ -147,15 +147,15 @@
         if any? other turtles-here with [breed = prey] [
     let food one-of turtles-here with [breed = prey]
     ask food [
-    if leg-length = 1 [set total-speed1-caught total-speed1-caught + 1
+    if leg-length = 161 [set total-speed1-caught total-speed1-caught + 1
     set total-caught total-caught + 1]
-    if leg-length = 2 [set total-speed2-caught total-speed2-caught + 1
+    if leg-length = 162 [set total-speed2-caught total-speed2-caught + 1
     set total-caught total-caught + 1]
-    if leg-length = 3 [set total-speed3-caught total-speed3-caught + 1
+    if leg-length = 163 [set total-speed3-caught total-speed3-caught + 1
     set total-caught total-caught + 1]
-    if leg-length = 4 [set total-speed4-caught total-speed4-caught + 1
+    if leg-length = 164 [set total-speed4-caught total-speed4-caught + 1
     set total-caught total-caught + 1]
-    if leg-length = 5 [set total-speed5-caught total-speed5-caught + 1
+    if leg-length = 165 [set total-speed5-caught total-speed5-caught + 1
     set total-caught total-caught + 1]
      if any? out-link-neighbors [ask out-link-neighbors [die]] die]]  
         </commands>
