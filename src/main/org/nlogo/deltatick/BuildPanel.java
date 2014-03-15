@@ -78,21 +78,25 @@ public class BuildPanel
         passBack += "breed [speed-icons speed-icon]\n";
 
         for (BreedBlock breedBlock : myBreeds) {
-            passBack += breedBlock.breedVars();
-            // traitBlock declared as breed variable here -A. (Aug 8, 2012)
-            HashSet<String> allTraits = new HashSet<String>(); // exclusive list of myTraits & myUsedBehInputs to add in breeds-own
-                                                                        //-A. (Aug 10, 2012)
-            if ( myTraitsNew.size() > 0 ) {
-                for ( TraitBlockNew traitBlock : myTraitsNew ) {
-                    if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {      // TODO check if works March 8, 2013
-                        allTraits.add(traitBlock.getName());
+            if ((breedBlock.getOwnVarNames().size() > 0) || (myTraitsNew.size() > 0)) {
+                passBack += breedBlock.plural() + "-own [\n";
+                passBack += breedBlock.breedVars();
+
+                // traitBlock declared as breed variable here -A. (Aug 8, 2012)
+                HashSet<String> allTraits = new HashSet<String>(); // exclusive list of myTraits & myUsedBehInputs to add in breeds-own
+                //-A. (Aug 10, 2012)
+                if ( myTraitsNew.size() > 0 ) {
+                    for ( TraitBlockNew traitBlock : myTraitsNew ) {
+                        if ( traitBlock.getMyParent().plural().equals(breedBlock.plural()) ) {      // TODO check if works March 8, 2013
+                            allTraits.add(traitBlock.getName());
+                        }
                     }
                 }
+                for ( String string : allTraits ) {
+                    passBack += string + "\n";
+                }
+                passBack += "]\n";
             }
-            for ( String string : allTraits ) {
-                passBack += string + "\n";
-            }
-            passBack += "]\n";
         }
 
         passBack += "\n";

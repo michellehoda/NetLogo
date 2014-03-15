@@ -326,7 +326,6 @@ public strictfp class BreedBlock
     public String breedVars() {
         String code = "";
         if (breed.getOwnVars().size() > 0) {
-            code += plural() + "-own [\n";
             for (OwnVar var : breed.getOwnVars()) {
                 code += "  " + var.name + "\n";
             }
