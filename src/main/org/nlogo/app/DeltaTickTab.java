@@ -112,12 +112,12 @@ public class DeltaTickTab
     private final Double CARRYING_CAPACITY_SLIDER_MAX_VALUE = 100.0;
     private final Double CARRYING_CAPACITY_SLIDER_DEFAULT_VALUE = 50.0;
 
-    private int PLOTS_START_XOFFSET;
-    private int PLOTS_START_YOFFSET;
-    private int PLOTS_PER_COLUMN;
-    private int PLOTS_WIDTH;
-    private int PLOTS_HEIGHT;
-    private int PLOTS_SEPARATION;
+    private int PLOTS_START_XOFFSET = 660;
+    private int PLOTS_START_YOFFSET = 10;
+    private int PLOTS_PER_COLUMN = 2;
+    private int PLOTS_WIDTH = 230;
+    private int PLOTS_HEIGHT = 200;
+    private int PLOTS_SEPARATION = 10;
 
     private final int MAX_DIVEIN_BLOCKS = 1;
     // HashMaps to store widget values

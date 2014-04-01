@@ -33,8 +33,8 @@ public class ModelBackgroundInfo {
     boolean enableMutationSlider = false;
     boolean distributionButtonEnabled = false;
 
-    String maxNumberSpecies;
-    boolean activateStepIn;
+    String maxNumberSpecies = new String("50");
+    boolean activateStepIn = false;
 
     public ModelBackgroundInfo() {
     }
@@ -125,18 +125,18 @@ public class ModelBackgroundInfo {
                     if (iNode.getNodeName().equalsIgnoreCase("numberSpecies")) {
                         maxNumberSpecies = iNode.getTextContent();
                     }
-                    if (iNode.getNodeName().equalsIgnoreCase("stepIn")) {
+                    else if (iNode.getNodeName().equalsIgnoreCase("stepIn")) {
                         String tempActivateStepIn = new String(iNode.getTextContent());
                         activateStepIn = Boolean.parseBoolean(tempActivateStepIn);
                     }
-                    if (iNode.getNodeName().equalsIgnoreCase("drawFeature")) {
+                    else if (iNode.getNodeName().equalsIgnoreCase("drawFeature")) {
                         String temp = new String(iNode.getTextContent());
                         isThereDraw = Boolean.parseBoolean(temp);
                     }                                            //
-                    if (iNode.getNodeName().equalsIgnoreCase("mutationSlider")) {
+                    else if (iNode.getNodeName().equalsIgnoreCase("mutationSlider")) {
                         enableMutationSlider = Boolean.parseBoolean(iNode.getTextContent());
                     }
-                    if (iNode.getNodeName().equalsIgnoreCase("distributionButton")) {
+                    else if (iNode.getNodeName().equalsIgnoreCase("distributionButton")) {
                         distributionButtonEnabled = Boolean.parseBoolean(iNode.getTextContent());
                     }
                 }
