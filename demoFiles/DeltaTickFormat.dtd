@@ -2,18 +2,41 @@
 
 <!--
 This file specifies the XML format for DeltaTick libraries.
-WARNING: Work in progress.  ~Michelle (03/02/2010)
+Text inserted between the symbols before and after this text are comments that are ignored by the DTD parser that reads this file.
+-->
+
+<!--
+XML files consist of Elements, the main blocks that make up the XML. Using an XML, you can create or declare hierarchies of elements. For e.g., here we define an element called "Library" which can contain subordinate or child elements such as "go", "setup", "global" and so on. Each of these child elements will also need to be declared in the DTD.
 -->
 
 <!ELEMENT library 	(go?,setup?,global*,breed*,behavior*,quantity*,condition*)>
+
+<!--
+The character after each sub-element defined above has a special meaning.
+"?" indicates that the child element "go" can occur 0 or 1 time in the element, Library. 
+"*" indicates that the child element "global" can occur 0 or more times in the element, Library.  
+-->
+
+<!--
+Here, we declare the child element "go".
+PCDATA stands for Parsed Character Data. Go does not contain any child elements.  
+-->
+
+<!ELEMENT numberSpecies		(#PCDATA)>
 
 <!ELEMENT go		(#PCDATA)>
 
 <!ELEMENT setup		(#PCDATA)>
 
+<!--
+Here, we declare the child element "interface". Interface can contain 3 child elements. Notice that these child elements do not have any special character following them. That means that these child elements can occur only once in the parent element, interface.
+-->
+
 <!ELEMENT interface (numberSpecies, mutationSlider, drawFeature, stepIn)>
 
 <!ELEMENT global 	(setupReporter*,updateReporter*)>
+
+<!ELEMENT trait 	(setupReporter*,baseOffsetVar,baseOffsetVarValue,variation*,message,visualizeCode)>
 
 <!ELEMENT breed 	(ownVar*,setupCode*,updateCode*)>
 <!ELEMENT ownVar	(setupReporter*,updateReporter*)>
@@ -29,11 +52,25 @@ WARNING: Work in progress.  ~Michelle (03/02/2010)
 <!ELEMENT test 		(#PCDATA)>
 <!ELEMENT input 	EMPTY>
 
+<!ELEMENT visualization (commands)>
+<!ELEMENT miscProcedure (procedureCode)>
+<!ELEMENT interface (numberSpecies,mutationSlider,drawFeature,stepIn,distributionButton)>
+<!ELEMENT interfaceLayout (world,plots)>
+
 <!ELEMENT quantity 	(reporter, input*)>
 <!ELEMENT reporter 	(#PCDATA)>
 
+<!--
+For each element, you can also define Attributes or special information about the element. Here, we specify an attribute "name" for the element, Library. This attribute contains parsed character data, and is mandatory. 
+-->
+
 <!ATTLIST library
 	name 	CDATA #REQUIRED
+>
+
+<!ATTLIST numberSpecies
+	number 	CDATA #REQUIRED
+	message CDATA #REQUIRED
 >
 
 <!ATTLIST global
@@ -43,22 +80,43 @@ WARNING: Work in progress.  ~Michelle (03/02/2010)
 <!ATTLIST breed
 	singular CDATA #REQUIRED
 	plural	 CDATA #REQUIRED
-	setupNumber CDATA #REQUIRED>
+	setupNumber CDATA #REQUIRED
+	setupNumbers CDATA #REQUIRED>
 
 <!ATTLIST ownVar
 	name 	CDATA #REQUIRED>
 
 <!ATTLIST behavior
-	name CDATA #REQUIRED>
+	name CDATA #REQUIRED
+	trait CDATA #IMPLIED>
 
 <!ATTLIST condition
 	name CDATA #REQUIRED>
-
-<!ATTLIST input
-	name CDATA #REQUIRED
-	default CDATA #REQUIRED>
 
 <!ATTLIST quantity
 	name CDATA #REQUIRED
 	histo CDATA "false"
 	bars CDATA "0">
+
+<!ATTLIST input
+	name CDATA #REQUIRED
+	default CDATA #REQUIRED>
+
+<!ATTLIST visualization
+	name CDATA #REQUIRED
+	trait CDATA #REQUIRED>
+
+<!ATTLIST miscProcedure
+	isReporter CDATA #REQUIRED
+	name CDATA #REQUIRED
+	parameters CDATA #REQUIRED
+	needsTraitDefined CDATA #REQUIRED>
+
+<!ATTLIST world
+	min_pxcor CDATA #REQUIRED
+	max_pxcor CDATA #REQUIRED
+	min_pcyor CDATA #REQUIRED
+	max_pycor CDATA #REQUIRED
+	patch_size CDATA #REQUIRED>
+
+

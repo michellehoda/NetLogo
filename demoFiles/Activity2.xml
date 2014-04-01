@@ -128,7 +128,7 @@
         <test>report any? other turtles-here with [ breed = breed-type ]</test>
     </condition>
     
-    <behavior name="move" traits="leg-length">
+    <behavior name="hop" traits="leg-length">
         <behaviorInput name="speed1" default ="5" tooltip="At what speed to move?"></behaviorInput>
         <commands>
         rt (random-float 15 - random-float 15)

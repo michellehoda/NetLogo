@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!DOCTYPE library SYSTEM "DeltaTickFormat.dtd">
 <library name="Population Growth" version="0.5">
+<numberSpecies number="2" message="You need only 2 species in this activity"></numberSpecies>
     <breed singular="male" plural="males" setupNumber="100">
         <ownVar name="age">
             <setupReporter>random 50</setupReporter>
@@ -121,4 +122,17 @@
     <condition name="enough-space?">
         <test>count neighbors with [ not any? people-here ] >= 4</test>
     </condition>
+    
+    <interface>
+        <numberSpecies>1</numberSpecies>
+        <mutationSlider>false</mutationSlider>
+        <drawFeature>false</drawFeature>
+        <stepIn>true</stepIn>
+		<distributionButton>true</distributionButton>
+    </interface>
+	
+	<interfaceLayout>
+		<world min_pycor="-20" max_pycor="20" min_pxcor="-25" max_pxcor="25" patch_size="13"/>
+		<plots start_xoffset="900" start_yoffset="10" num_per_column="2" width="230" height="200" separation="10"/>
+	</interfaceLayout>
 </library>
